@@ -48,15 +48,6 @@
     .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
     .btn-outline { display: inline-block; border: 1px solid var(--border); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
     .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
-
-    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; text-align: center; }
-    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 35% 40% at 90% 70%, rgba(46,196,182,0.06) 0%, transparent 60%); pointer-events: none; }
-    .hero-eyebrow { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
-    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 800px; margin: 0 auto 1.5rem; }
-    .hero h1 span { color: var(--magenta); }
-    .hero-sub { max-width: 620px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.05rem; font-weight: 300; line-height: 1.75; }
-    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-
     .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
     .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
     .section-title { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 1rem; }
@@ -108,10 +99,7 @@
     .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 300; margin-bottom: 0.6rem; transition: color 0.2s; }
     .footer-col a:hover { color: var(--white); }
     .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
-
-          .hero h1 { font-size: 1.85rem; }
-      .section { padding: 2.5rem 1rem; }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }      .section { padding: 2.5rem 1rem; }
     }
       .solution-card { grid-template-columns: 1fr; gap: 2rem; }    }
 
@@ -166,6 +154,15 @@
     }
 
     /* ── RESPONSIVE ── */
+
+    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; text-align: center; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 60%, rgba(46,196,182,0.06) 0%, transparent 60%); pointer-events: none; }
+    .hero-eyebrow { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
+    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 780px; margin: 0 auto 1.5rem; }
+    .hero h1 span { color: var(--magenta); }
+    .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
