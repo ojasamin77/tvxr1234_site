@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How It Works — TransformVXR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0D1B2A; --navy-mid: #111F30; --navy-card: #162840;
+      --teal: #2EC4B6; --magenta: #FF4DD0; --magenta-dim: #D93CB0;
+      --coral: #E05C4B; --white: #F2F4F3; --muted: #7A96AB;
+      --border: rgba(46, 196, 182, 0.13);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; font-weight: 400; background: var(--navy); color: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      mix-blend-mode: screen;
+      flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--magenta); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.9rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-utils { display: flex; align-items: center; gap: 1rem; }
+    .nav-login { font-size: 0.875rem; font-weight: 600; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-login:hover { color: var(--white); }
+    .btn-primary { display: inline-block; background: var(--magenta); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+    .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
+
+    /* HERO */
+    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 4rem; text-align: center; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 30% 40% at 90% 80%, rgba(46,196,182,0.07) 0%, transparent 60%); pointer-events: none; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
+    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 720px; margin: 0 auto 1.5rem; }
+    .hero h1 span { color: var(--magenta); }
+    .hero-sub { max-width: 560px; margin: 0 auto; color: var(--muted); font-size: 1.05rem; font-weight: 300; line-height: 1.7; }
+
+    .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
+    .section-title { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); font-size: 1rem; font-weight: 300; max-width: 560px; line-height: 1.7; }
+
+    /* PROCESS WALKTHROUGH */
+    .process-section { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+    .process-inner { max-width: 1100px; margin: 0 auto; }
+    .process-steps { display: flex; flex-direction: column; gap: 0; margin-top: 3.5rem; }
+    .process-step {
+      display: grid;
+      grid-template-columns: 80px 1fr 1fr;
+      gap: 2.5rem;
+      align-items: start;
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+    .process-step:last-child { border-bottom: none; }
+    .process-step.visible { opacity: 1; }
+    .step-indicator { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .step-circle { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1rem; color: var(--muted); background: var(--navy); transition: border-color 0.3s, color 0.3s; }
+    .process-step.visible .step-circle { border-color: var(--magenta); color: var(--magenta); }
+    .step-line { width: 2px; height: 40px; background: var(--border); margin-top: 8px; }
+    .process-step:last-child .step-line { display: none; }
+    .step-body h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.3rem; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .step-body p { color: var(--muted); font-weight: 300; line-height: 1.75; font-size: 0.925rem; }
+    .step-visual { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; min-height: 160px; }
+    .step-visual-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.75rem; }
+
+    /* SCENARIO SELECTOR MOCK */
+    .scenario-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .s-chip { background: var(--navy-mid); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.8rem; color: var(--muted); cursor: default; }
+    .s-chip.sel { border-color: var(--magenta); color: var(--magenta); background: rgba(255,77,208,0.08); }
+
+    /* CHAT MOCK */
+    .chat-mock { display: flex; flex-direction: column; gap: 0.75rem; }
+    .chat-row { display: flex; flex-direction: column; gap: 0.2rem; }
+    .chat-from { font-size: 0.7rem; color: var(--muted); }
+    .chat-bubble { border-radius: 10px; padding: 0.7rem 0.9rem; font-size: 0.8rem; line-height: 1.5; }
+    .chat-bubble.ai { background: rgba(46,196,182,0.08); border: 1px solid rgba(46,196,182,0.18); color: var(--white); max-width: 90%; }
+    .chat-bubble.user { background: rgba(255,77,208,0.08); border: 1px solid rgba(255,77,208,0.18); color: var(--white); max-width: 90%; align-self: flex-end; }
+
+    /* FEEDBACK MOCK */
+    .feedback-screenshot {
+      margin-top: 1.25rem;
+      max-width: 360px;
+    }
+    .feedback-screenshot-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      opacity: 0.7;
+    }
+    .feedback-screenshot-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    }
+    .feedback-screenshot-wrap img {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* Feedback panel card */
+    .feedback-panel-card {
+      padding: 0 !important;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .fp-topbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.65rem 1rem;
+      background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid var(--border);
+    }
+    .fp-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .fp-dot.green  { background: #3ddc84; }
+    .fp-dot.yellow { background: #f5c542; }
+    .fp-dot.red    { background: var(--coral); }
+    .fp-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+    .fp-body {
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+    }
+    .fp-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+    .fp-tag {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.55rem;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+    .fp-tag.strength   { background: rgba(46,196,182,0.15); color: var(--teal); border: 1px solid rgba(46,196,182,0.3); }
+    .fp-tag.growth     { background: rgba(255,77,208,0.12); color: var(--magenta); border: 1px solid rgba(255,77,208,0.3); }
+    .fp-tag.opportunity { background: rgba(224,92,75,0.12); color: var(--coral); border: 1px solid rgba(224,92,75,0.3); }
+    .fp-tag-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+    .fp-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.55;
+      margin-bottom: 0.25rem;
+    }
+    .fp-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.4rem 0;
+    }
+    .fp-next {
+      margin-top: 0.5rem;
+      padding: 0.6rem 0.85rem;
+      background: rgba(46,196,182,0.06);
+      border: 1px solid rgba(46,196,182,0.15);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .fp-next-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--teal);
+      flex-shrink: 0;
+    }
+    .fp-next-text {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .feedback-mock { display: flex; flex-direction: column; gap: 0.75rem; }
+    .feedback-row { display: flex; gap: 0.6rem; align-items: flex-start; }
+    .feedback-tag { flex-shrink: 0; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 99px; }
+    .feedback-tag.pos { background: rgba(46,196,182,0.12); color: var(--teal); }
+    .feedback-tag.neg { background: rgba(224,92,75,0.12); color: var(--coral); }
+    .feedback-row p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* CERT MOCK */
+    .cert-mock { display: flex; align-items: center; gap: 1rem; }
+    .cert-badge-big { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--magenta), var(--teal)); display: flex; align-items: center; justify-content: center; font-size: 1.75rem; flex-shrink: 0; }
+    .cert-meta .cert-title { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1rem; margin-bottom: 0.25rem; }
+    .cert-meta .cert-sub { font-size: 0.8rem; color: var(--muted); }
+
+    /* COMPARISON */
+    .compare-table { margin-top: 3rem; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .compare-header { display: grid; grid-template-columns: 2fr 1fr 1fr; background: var(--navy-card); padding: 1.25rem 2rem; border-bottom: 1px solid var(--border); gap: 1rem; }
+    .compare-header-cell { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+    .compare-header-cell.ours { color: var(--teal); }
+    .compare-row { display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 1rem 2rem; gap: 1rem; border-bottom: 1px solid var(--border); align-items: center; }
+    .compare-row:last-child { border-bottom: none; }
+    .compare-row:nth-child(odd) { background: rgba(22, 40, 64, 0.4); }
+    .compare-attr { font-size: 0.875rem; color: var(--white); font-weight: 400; }
+    .compare-val { font-size: 0.875rem; text-align: center; }
+    .check { color: var(--teal); font-size: 1rem; }
+    .cross { color: var(--coral); font-size: 1rem; }
+
+    /* PERSONAS */
+    .personas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .persona-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; transition: border-color 0.2s; }
+    .persona-card:hover { border-color: rgba(255,77,208,0.3); }
+    .persona-role { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta); margin-bottom: 0.5rem; }
+    .persona-name { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1.05rem; margin-bottom: 0.75rem; }
+    .persona-quote { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.7; font-style: normal; }
+    .persona-use { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); }
+    .persona-use strong { color: var(--teal); }
+
+    .cta-band { padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .cta-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,77,208,0.09) 0%, transparent 70%); pointer-events: none; }
+    .cta-band h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .cta-band p { color: var(--muted); font-weight: 300; max-width: 480px; margin: 0 auto 2rem; line-height: 1.7; }
+
+    footer { background: var(--navy-mid); border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    .footer-brand p { color: var(--muted); font-size: 0.875rem; font-weight: 300; line-height: 1.65; margin-top: 0.75rem; max-width: 260px; }
+    .footer-col h4 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 300; margin-bottom: 0.6rem; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+
+          .hero h1 { font-size: 1.85rem; }
+      .section { padding: 2.5rem 1rem; }
+    }
+    .nav-hamburger { display: flex !important; flex-direction: column; }
+      .process-step { grid-template-columns: 52px 1fr; }
+      .step-visual { display: none; }
+      .compare-header, .compare-row { grid-template-columns: 1.5fr 1fr 1fr; padding: 0.75rem 1rem; }    }
+
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px; height: 36px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+      z-index: 201; flex-shrink: 0;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s; transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE DRAWER ── */
+    .nav-mobile-menu {
+      display: none; position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(13,27,42,0.99);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem 2rem;
+      z-index: 199; flex-direction: column; gap: 0;
+      transform: translateY(-8px); opacity: 0;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+    .nav-mobile-menu a {
+      display: block; font-size: 1.1rem; font-weight: 600;
+      color: var(--muted); text-decoration: none;
+      padding: 0.9rem 0; border-bottom: 1px solid var(--border); transition: color 0.2s;
+    }
+    .nav-mobile-menu a:hover, .nav-mobile-menu a.active { color: var(--white); }
+    .nav-mobile-cta {
+      margin-top: 1.25rem; display: block; text-align: center;
+      background: var(--magenta); color: var(--navy) !important;
+      font-weight: 700 !important; border-radius: 8px;
+      padding: 0.85rem !important; border-bottom: none !important;
+    }
+    .nav-mobile-login {
+      text-align: center; font-size: 0.875rem !important;
+      color: var(--muted) !important; margin-top: 0.5rem; border-bottom: none !important;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .nav-utils { display: none; }
+      .nav-hamburger { display: flex !important; flex-direction: column; }
+      .section { padding: 3rem 1.25rem; }
+      .section-title { font-size: 1.6rem; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      .hero h1 { font-size: 2.1rem; }
+      .process-step { grid-template-columns: 52px 1fr; }
+      .step-visual { display: none; }
+      .personas-grid { grid-template-columns: 1fr; }
+      .compare-header { font-size: 0.72rem; padding: 0.75rem 1rem; }
+      .compare-row { font-size: 0.8rem; padding: 0.75rem 1rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 1rem; }
+      .footer-inner { grid-template-columns: 1fr; gap: 1.25rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .hero h1 { font-size: 1.85rem; }
+      .section { padding: 2.5rem 1rem; }
+      .section-title { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+    <ul class="nav-links">
+      <li><a href="coaching.html">AI Coaching</a></li>
+      <li><a href="certification.html">Certification</a></li>
+      <li><a href="how-it-works.html" class="active">How It Works</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-utils">
+      <a href="https://app.transformvxr.com/login" class="nav-login">Login</a>
+      <a href="contact.html#demo" class="btn-primary">Try a Free 10-Min Demo</a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <a href="coaching.html">AI Coaching</a>
+    <a href="certification.html">Certification</a>
+    <a href="how-it-works.html" class="active">How It Works</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
+  </div>
+
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <a href="coaching.html">AI Coaching</a>
+    <a href="certification.html">Certification</a>
+    <a href="how-it-works.html" class="active">How It Works</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-eyebrow">How It Works</div>
+    <h1>Ten minutes in, you'll understand <span>why practice changes everything</span></h1>
+    <p class="hero-sub">Here is exactly what happens when you use TransformVXR, step by step, with no marketing in the way.</p>
+  </section>
+
+  <div class="process-section">
+    <div class="process-inner">
+      <div class="section-label">The Experience</div>
+      <h2 class="section-title">From first login to behavioral fluency</h2>
+
+      <div class="process-steps">
+
+        <div class="process-step visible">
+          <div class="step-indicator">
+            <div class="step-circle">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <h3>Choose the scenario that fits your situation</h3>
+            <p>You start by selecting the type of conversation you need to practice. The library covers the full range of high-stakes BCBA interactions: parent resistance, staff performance, caseload negotiation, clinical disagreements with leadership, and more. Or you can describe your own situation in plain language and the AI will build a scenario around it.</p>
+          </div>
+          <div class="step-visual">
+            <div class="step-visual-label">Scenario selector</div>
+            <div class="scenario-chips">
+              <span class="s-chip sel">Parent pushback on recommendations</span>
+              <span class="s-chip">RBT corrective feedback</span>
+              <span class="s-chip">Caseload negotiation</span>
+              <span class="s-chip">Data integrity conversation</span>
+              <span class="s-chip">Managing staff burnout</span>
+              <span class="s-chip">Custom scenario</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step visible">
+          <div class="step-indicator">
+            <div class="step-circle">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <h3>The AI plays the other person. You respond.</h3>
+            <p>The AI takes on the role of the parent, staff member, or supervisor. It does not give you an easy version of the conversation. It pushes back, deflects, escalates, and redirects the way people actually do. Your job is to respond in real time, using whatever language comes naturally.</p>
+          </div>
+          <div class="step-visual">
+            <div class="step-visual-label">Live session</div>
+            <div class="chat-mock">
+              <div class="chat-row">
+                <div class="chat-from">Parent</div>
+                <div class="chat-bubble ai">I've been doing this for three years and I've never seen any real progress. I don't think this program is working.</div>
+              </div>
+              <div class="chat-row" style="align-items:flex-end">
+                <div class="chat-bubble user">I understand how frustrating that is. Can we look at the data together so I can show you what's changed?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step visible">
+          <div class="step-indicator">
+            <div class="step-circle">3</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <h3>You receive precise feedback after every exchange</h3>
+            <p>After each response you give, the AI analyzes what worked, what missed, and why. Feedback is framed in behavioral terms, not generic coaching language. You will see exactly where your response de-escalated the situation, where it inadvertently reinforced the other person's resistance, and what to try differently.</p>
+          </div>
+          <div class="step-visual feedback-panel-card">
+            <div class="fp-topbar">
+              <div class="fp-dot green"></div>
+              <div class="fp-dot yellow"></div>
+              <div class="fp-dot red"></div>
+              <span class="fp-title">Feedback</span>
+            </div>
+            <div class="fp-body">
+              <div class="fp-row">
+                <div class="fp-tag strength">Strength</div>
+                <div class="fp-tag-label">Commitment</div>
+              </div>
+              <p class="fp-text">Your statement "I'll do whatever it takes" shows a strong willingness to improve and address the feedback provided.</p>
+
+              <div class="fp-divider"></div>
+
+              <div class="fp-row">
+                <div class="fp-tag growth">Growth</div>
+                <div class="fp-tag-label">Clarity</div>
+              </div>
+              <p class="fp-text">When you said "Let's see if you can do it," it was unclear and could be perceived as defensive.</p>
+
+              <div class="fp-divider"></div>
+
+              <div class="fp-row">
+                <div class="fp-tag opportunity">Opportunity</div>
+                <div class="fp-tag-label">Responsiveness</div>
+              </div>
+              <p class="fp-text">Enhancing your responsiveness to staff could positively impact your performance.</p>
+
+              <div class="fp-next">
+                <span class="fp-next-label">Try this next</span>
+                <span class="fp-next-text">Pause for Processing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step visible">
+          <div class="step-indicator">
+            <div class="step-circle">4</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <h3>Repeat, vary, and build fluency</h3>
+            <p>Run the same scenario again. Change the severity. Try the other end of the emotional spectrum. Each repetition is tracked. Over time you will see clear data on where your responses have improved and where you still hesitate. This is behavioral rehearsal with the same logic you apply to your clients.</p>
+          </div>
+          <div class="step-visual">
+            <div class="step-visual-label">Session history</div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem">
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem">
+                <span style="color:var(--muted)">Attempt 1</span>
+                <span style="color:var(--coral)">Escalated early</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem">
+                <span style="color:var(--muted)">Attempt 2</span>
+                <span style="color:var(--teal)">Improved de-escalation</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem">
+                <span style="color:var(--muted)">Attempt 3</span>
+                <span style="color:var(--teal)">Clinical limit maintained</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="process-step visible">
+          <div class="step-indicator">
+            <div class="step-circle">5</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <h3>Earn certification by demonstrating skill</h3>
+            <p>When you are ready, you can take a certification assessment. It is a live roleplay evaluation scored across multiple dimensions. Pass, and you receive a credential with CEU credit that reflects what you can actually do. It is not awarded for completing modules. It is earned by performing well under pressure.</p>
+          </div>
+          <div class="step-visual">
+            <div class="step-visual-label">Certification earned</div>
+            <div class="cert-mock">
+              <div class="cert-badge-big">🏅</div>
+              <div class="cert-meta">
+                <div class="cert-title">Clinical Leadership Certificate</div>
+                <div class="cert-sub" style="color:var(--teal);margin-bottom:0.25rem">Performance verified</div>
+                <div class="cert-sub">6 CEU credits · Digital badge issued</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE -->
+  <section class="section">
+    <div class="section-label">Why This Approach</div>
+    <h2 class="section-title">Traditional training is not practice</h2>
+    <p class="section-sub">Most professional development tells you what to do. TransformVXR trains you to do it.</p>
+
+    <div class="compare-table">
+      <div class="compare-header">
+        <div class="compare-header-cell">Capability</div>
+        <div class="compare-header-cell ours">TransformVXR</div>
+        <div class="compare-header-cell">Typical CEU Training</div>
+      </div>
+      <div class="compare-row"><div class="compare-attr">Simulates real conversation dynamics</div><div class="compare-val check">Yes</div><div class="compare-val cross">No</div></div>
+      <div class="compare-row"><div class="compare-attr">Feedback after each response</div><div class="compare-val check">Yes</div><div class="compare-val cross">No</div></div>
+      <div class="compare-row"><div class="compare-attr">Available at 11pm the night before</div><div class="compare-val check">Yes</div><div class="compare-val cross">No</div></div>
+      <div class="compare-row"><div class="compare-attr">Unlimited repetitions</div><div class="compare-val check">Yes</div><div class="compare-val cross">No</div></div>
+      <div class="compare-row"><div class="compare-attr">Behavior-analytic framing throughout</div><div class="compare-val check">Yes</div><div class="compare-val cross">Rarely</div></div>
+      <div class="compare-row"><div class="compare-attr">Scenario-specific to BCBA situations</div><div class="compare-val check">Yes</div><div class="compare-val cross">Rarely</div></div>
+      <div class="compare-row"><div class="compare-attr">Certification based on performance</div><div class="compare-val check">Yes</div><div class="compare-val cross">No</div></div>
+      <div class="compare-row"><div class="compare-attr">CEU credits</div><div class="compare-val check">Yes</div><div class="compare-val check">Yes</div></div>
+    </div>
+  </section>
+
+  <!-- WHO IT FITS -->
+  <section class="section" style="padding-top:0">
+    <div class="section-label">Who Uses TransformVXR</div>
+    <h2 class="section-title">Across the BCBA career arc</h2>
+
+    <div class="personas-grid">
+      <div class="persona-card">
+        <div class="persona-role">Early career</div>
+        <div class="persona-name">The new BCBA</div>
+        <p class="persona-quote">Fresh certification, strong clinical skills, but no one taught you how to hold a parent meeting when a family is skeptical or angry. The textbook did not cover this part.</p>
+        <div class="persona-use"><strong>Uses TransformVXR for:</strong> Parent communication and managing up to leadership</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-role">Mid career</div>
+        <div class="persona-name">The supervisor who avoids</div>
+        <p class="persona-quote">You have given hundreds of hours of supervision. But you still dread corrective feedback conversations and tend to soften things that needed to be said plainly two months ago.</p>
+        <div class="persona-use"><strong>Uses TransformVXR for:</strong> Staff performance and data integrity conversations</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-role">Senior</div>
+        <div class="persona-name">The clinical director under pressure</div>
+        <p class="persona-quote">You are now responsible for clinical standards in an organization where leadership makes decisions based on revenue, not behavior analysis. You need fluency in a different kind of persuasion.</p>
+        <div class="persona-use"><strong>Uses TransformVXR for:</strong> Organizational advocacy and caseload negotiation</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <h2>The only way to know<br>is to try it</h2>
+    <p>Ten minutes. One scenario. Real feedback. No card required.</p>
+    <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Free 10-Min Demo</a>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+        <p>AI-powered coaching and certification for BCBAs navigating the hardest parts of the job.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="coaching.html">AI Coaching</a>
+        <a href="certification.html">Certification</a>
+        <a href="assessment.html">Assessment</a>
+        <a href="family-development.html">Family Development</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="riq-foundation.html">RIQ Foundation</a>
+        <a href="careers.html">Careers</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="blog.html">Blog</a>
+        <a href="solutions.html">Solutions</a>
+        <a href="bcba-landing-parent-v2.html">Parent Conversations</a>
+        <a href="bcba-landing-managing-up.html">Managing Up</a>
+        <a href="bcba-landing-performance.html">Performance Reviews</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>2026 TransformVXR. All rights reserved.</p>
+      <div style="display:flex;gap:1.25rem">
+        <a href="https://www.linkedin.com/company/transformvxr/" style="font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
+        <a href="https://www.instagram.com/transform.vxr/" style="font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Instagram</a>
+        <a href="https://www.tiktok.com/@transformvxr" style="font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('navHamburger');
+    const mobileMenu = document.getElementById('navMobileMenu');
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+      });
+      mobileMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          hamburger.classList.remove('open');
+          mobileMenu.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+  </script>
+</body>
+</html>

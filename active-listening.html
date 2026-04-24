@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Active Listening — TransformVXR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0D1B2A; --navy-mid: #111F30; --navy-card: #162840;
+      --teal: #2EC4B6; --magenta: #FF4DD0; --magenta-dim: #D93CB0;
+      --coral: #E05C4B; --white: #F2F4F3; --muted: #7A96AB;
+      --border: rgba(46,196,182,0.13);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; font-weight: 400; background: var(--navy); color: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 900;
+      font-size: 1.25rem;
+      color: var(--white);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      mix-blend-mode: screen;
+      flex-shrink: 0;
+    }
+    .nav-logo span { color: var(--magenta); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.9rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-utils { display: flex; align-items: center; gap: 1rem; }
+    .nav-login { font-size: 0.875rem; font-weight: 600; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-login:hover { color: var(--white); }
+    .btn-primary { display: inline-block; background: var(--magenta); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+    .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
+    .btn-outline { display: inline-block; border: 1px solid var(--border); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+
+    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; text-align: center; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 50% at 50% 0%, rgba(46,196,182,0.12) 0%, transparent 70%), radial-gradient(ellipse 35% 40% at 15% 70%, rgba(255,77,208,0.06) 0%, transparent 60%); pointer-events: none; }
+    .ceu-pill { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid rgba(46,196,182,0.3); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; margin-bottom: 1.75rem; background: rgba(46,196,182,0.08); }
+    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 800px; margin: 0 auto 1.5rem; }
+    .hero h1 span { color: var(--teal); }
+    .hero-sub { max-width: 600px; margin: 0 auto 1rem; color: var(--muted); font-size: 1.05rem; font-weight: 300; line-height: 1.75; }
+    .hero-tagline { font-size: 0.9rem; color: var(--muted); margin-bottom: 2.5rem; font-style: normal; }
+    .hero-tagline strong { color: var(--white); font-weight: 600; }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
+    .section-title { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); font-size: 1rem; font-weight: 300; max-width: 580px; line-height: 1.75; }
+
+    /* SCENARIOS */
+    .scenarios-section { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+    .scenarios-inner { max-width: 1100px; margin: 0 auto; }
+    .scenarios-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2px; background: var(--border); margin-top: 3rem; }
+    .scenario-card { background: var(--navy-card); padding: 2rem 1.75rem; position: relative; overflow: hidden; }
+    .scenario-card::after { content: attr(data-num); position: absolute; bottom: -10px; right: 10px; font-family: 'Nunito Sans', sans-serif; font-size: 5rem; font-weight: 900; color: rgba(46,196,182,0.04); line-height: 1; pointer-events: none; }
+    .scenario-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.75rem; }
+    .scenario-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 0.6rem; line-height: 1.3; }
+    .scenario-card p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+
+    /* LEARNING OBJECTIVES */
+    .objectives-section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .objectives-list { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 3rem; }
+    .objective-item { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.75rem; display: flex; gap: 1.25rem; align-items: flex-start; transition: border-color 0.2s; }
+    .objective-item:hover { border-color: rgba(46,196,182,0.3); }
+    .objective-num { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.5rem; color: rgba(46,196,182,0.2); flex-shrink: 0; line-height: 1; margin-top: 0.1rem; }
+    .objective-item p { font-size: 0.9rem; color: var(--muted); font-weight: 300; line-height: 1.7; }
+    .objective-item p strong { color: var(--white); font-weight: 600; display: block; margin-bottom: 0.2rem; }
+
+    /* SKILL FOCUS */
+    .skill-band { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+    .skill-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .skill-text h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(1.75rem, 3vw, 2.25rem); letter-spacing: -0.025em; margin-bottom: 1rem; }
+    .skill-text p { color: var(--muted); font-weight: 300; line-height: 1.8; font-size: 0.95rem; margin-bottom: 0.85rem; }
+    .skill-steps { display: flex; flex-direction: column; gap: 1rem; }
+    .skill-step { background: var(--navy-card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; }
+    .skill-step h4 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.9rem; color: var(--teal); margin-bottom: 0.3rem; }
+    .skill-step p { font-size: 0.85rem; color: var(--muted); font-weight: 300; line-height: 1.6; }
+
+    /* CEU NOTE */
+    .ceu-band { padding: 3rem 2rem; max-width: 700px; margin: 0 auto; text-align: center; }
+    .ceu-card { background: var(--navy-card); border: 1px solid rgba(46,196,182,0.25); border-radius: 14px; padding: 2.5rem; }
+    .ceu-title { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--teal); }
+    .ceu-card p { font-size: 0.9rem; color: var(--muted); font-weight: 300; line-height: 1.7; }
+
+    .cta-band { padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .cta-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(46,196,182,0.08) 0%, transparent 70%); pointer-events: none; }
+    .cta-band h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .cta-band p { color: var(--muted); font-weight: 300; max-width: 480px; margin: 0 auto 2rem; line-height: 1.7; }
+
+    footer { background: var(--navy-mid); border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    .footer-brand p { color: var(--muted); font-size: 0.875rem; font-weight: 300; line-height: 1.65; margin-top: 0.75rem; max-width: 260px; }
+    .footer-col h4 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 300; margin-bottom: 0.6rem; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+
+          .hero h1 { font-size: 1.85rem; }
+      .section { padding: 2.5rem 1rem; }
+    }
+    .nav-hamburger { display: flex !important; flex-direction: column; }
+      .skill-inner { grid-template-columns: 1fr; gap: 2.5rem; }    }
+
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px; height: 36px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+      z-index: 201; flex-shrink: 0;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s; transform-origin: center;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ── MOBILE DRAWER ── */
+    .nav-mobile-menu {
+      display: none; position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(13,27,42,0.99);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem 2rem;
+      z-index: 199; flex-direction: column; gap: 0;
+      transform: translateY(-8px); opacity: 0;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .nav-mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+    .nav-mobile-menu a {
+      display: block; font-size: 1.1rem; font-weight: 600;
+      color: var(--muted); text-decoration: none;
+      padding: 0.9rem 0; border-bottom: 1px solid var(--border); transition: color 0.2s;
+    }
+    .nav-mobile-menu a:hover, .nav-mobile-menu a.active { color: var(--white); }
+    .nav-mobile-cta {
+      margin-top: 1.25rem; display: block; text-align: center;
+      background: var(--magenta); color: var(--navy) !important;
+      font-weight: 700 !important; border-radius: 8px;
+      padding: 0.85rem !important; border-bottom: none !important;
+    }
+    .nav-mobile-login {
+      text-align: center; font-size: 0.875rem !important;
+      color: var(--muted) !important; margin-top: 0.5rem; border-bottom: none !important;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .nav-utils { display: none; }
+      .nav-hamburger { display: flex !important; flex-direction: column; }
+      .section { padding: 3rem 1.25rem; }
+      .section-title { font-size: 1.6rem; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      .hero h1 { font-size: 2.1rem; }
+      .scenarios-grid { grid-template-columns: 1fr; }
+      .skill-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 0 1rem; }
+      .footer-inner { grid-template-columns: 1fr; gap: 1.25rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .hero h1 { font-size: 1.85rem; }
+      .section { padding: 2.5rem 1rem; }
+      .section-title { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+    <ul class="nav-links">
+      <li><a href="coaching.html">AI Coaching</a></li>
+      <li><a href="certification.html">Certification</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-utils">
+      <a href="https://app.transformvxr.com/login" class="nav-login">Login</a>
+      <a href="contact.html#demo" class="btn-primary">Try a Free 10-Min Demo</a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <a href="coaching.html">AI Coaching</a>
+    <a href="certification.html">Certification</a>
+    <a href="how-it-works.html">How It Works</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
+  </div>
+
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <a href="coaching.html">AI Coaching</a>
+    <a href="certification.html">Certification</a>
+    <a href="how-it-works.html">How It Works</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="ceu-pill">2 BACB, QABA, and IBAO Supervision CEUs</div>
+    <h1>Practice. Reflect. <span>Grow.</span></h1>
+    <p class="hero-sub">You do not just watch. You do. Step into realistic supervisory moments and strengthen your skills to stay present, composed, and connected when it matters most.</p>
+    <p class="hero-tagline">Part of <strong>AI Coaching</strong> by TransformVXR</p>
+    <div class="hero-ctas">
+      <a href="contact.html" class="btn-primary">Experience Active Listening</a>
+      <a href="coaching.html" class="btn-outline">See All AI Coaching</a>
+    </div>
+  </section>
+
+  <div class="scenarios-section">
+    <div class="scenarios-inner">
+      <div class="section-label">Real Supervisory Moments</div>
+      <h2 class="section-title">Step into three scenarios that BCBAs navigate every week</h2>
+      <p class="section-sub">Each scenario adapts in real time to how you communicate. The situation is real. The stakes are safe.</p>
+      <div class="scenarios-grid">
+        <div class="scenario-card" data-num="01">
+          <div class="scenario-label">Scenario 01</div>
+          <h3>Navigating a sensitive conversation with a parent about their child's treatment progress</h3>
+          <p>The data tells one story. The parent's experience tells another. Practice staying present, validating the relationship, and holding the clinical plan at the same time.</p>
+        </div>
+        <div class="scenario-card" data-num="02">
+          <div class="scenario-label">Scenario 02</div>
+          <h3>Coaching an RBT who is struggling with timeliness and attendance</h3>
+          <p>A staff member who matters to the team is starting to slip. Practice addressing the pattern directly without making it personal or losing the relationship.</p>
+        </div>
+        <div class="scenario-card" data-num="03">
+          <div class="scenario-label">Scenario 03</div>
+          <h3>Receiving a difficult performance review from a supervisor</h3>
+          <p>Feedback that catches you off guard. Practice staying regulated, asking the right questions, and leaving the conversation with clarity rather than defensiveness.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="objectives-section">
+    <div class="section-label">Learning Objectives</div>
+    <h2 class="section-title">What you will be able to do by the end</h2>
+    <p class="section-sub">Objectives are behavioral and observable, not theoretical. You will know you have met them because your responses in the scenarios will change.</p>
+    <div class="objectives-list">
+      <div class="objective-item">
+        <div class="objective-num">01</div>
+        <p><strong>Describe and model effective supervisory communication</strong>Using immersive case scenarios as instructional examples, identify the specific behaviors that move high-stakes conversations toward productive outcomes.</p>
+      </div>
+      <div class="objective-item">
+        <div class="objective-num">02</div>
+        <p><strong>Demonstrate active listening skills during realistic role-plays</strong>Including perspective-taking and emotional regulation, applied in conversation with the AI Coach across all three scenario types.</p>
+      </div>
+      <div class="objective-item">
+        <div class="objective-num">03</div>
+        <p><strong>Apply real-time evidence-based feedback to improve performance</strong>Use the behavioral feedback provided after each exchange to identify specific changes and improve active listening across repeated practice sessions.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="skill-band">
+    <div class="skill-inner">
+      <div class="skill-text">
+        <div class="section-label">The Skill That Shapes Every Conversation</div>
+        <h2>The conversations you handle as a supervisor shape outcomes for everyone</h2>
+        <p>For clients. For teams. For your own leadership trajectory. Active listening is not a single behavior. It is a set of observable skills that can be built through deliberate practice.</p>
+        <p>The Transform AI Coach gives you immediate, actionable feedback so you grow faster, build confidence, and improve your real-world impact in the moments that actually count.</p>
+      </div>
+      <div class="skill-steps">
+        <div class="skill-step">
+          <h4>Practice with intention</h4>
+          <p>Engage with realistic scenarios that match the situations you actually face, not generic communication exercises.</p>
+        </div>
+        <div class="skill-step">
+          <h4>Reflect with insight</h4>
+          <p>Behavioral feedback after each exchange tells you specifically what moved the conversation forward and what held it back.</p>
+        </div>
+        <div class="skill-step">
+          <h4>Grow with confidence</h4>
+          <p>Repeat until the language comes naturally. Build fluency so the real conversation does not feel like the first time.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ceu-band">
+    <div class="ceu-card">
+      <div class="ceu-title">2 Supervision CEUs included</div>
+      <p>Earn 2 BACB, QABA, and IBAO Supervision continuing education units while developing the human skills that drive clinical excellence and team trust. Contact us for current approval status and details.</p>
+    </div>
+  </div>
+
+  <section class="cta-band">
+    <h2>Strengthen the skill<br>that shapes every conversation.</h2>
+    <p>Ten minutes in a real scenario is enough to see what behavioral feedback feels like when it is specific and grounded.</p>
+    <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Free 10-Min Demo</a>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+        <p>AI-powered coaching and certification for BCBAs navigating the hardest parts of the job.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="coaching.html">AI Coaching</a>
+        <a href="certification.html">Certification</a>
+        <a href="assessment.html">Assessment</a>
+        <a href="family-development.html">Family Development</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="riq-foundation.html">RIQ Foundation</a>
+        <a href="careers.html">Careers</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="blog.html">Blog</a>
+        <a href="solutions.html">Solutions</a>
+        <a href="bcba-landing-parent-v2.html">Parent Conversations</a>
+        <a href="bcba-landing-managing-up.html">Managing Up</a>
+        <a href="bcba-landing-performance.html">Performance Reviews</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>2026 TransformVXR. All rights reserved.</p>
+      <div style="display:flex;gap:1.25rem">
+        <a href="https://www.linkedin.com/company/transformvxr/" style="font-size:0.8rem;color:var(--muted);text-decoration:none">LinkedIn</a>
+        <a href="https://www.instagram.com/transform.vxr/" style="font-size:0.8rem;color:var(--muted);text-decoration:none">Instagram</a>
+        <a href="https://www.tiktok.com/@transformvxr" style="font-size:0.8rem;color:var(--muted);text-decoration:none">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('navHamburger');
+    const mobileMenu = document.getElementById('navMobileMenu');
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+      });
+      mobileMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          hamburger.classList.remove('open');
+          mobileMenu.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+  </script>
+</body>
+</html>
