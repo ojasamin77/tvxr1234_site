@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ROI Calculator — Transform VXR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;800;900&family=DM+Sans:wght@300;400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --navy-mid: #111F30;
+    --navy-card: #162840;
+    --navy-light: #1C3450;
+    --teal: #2EC4B6;
+    --teal-dim: rgba(46,196,182,0.15);
+    --magenta: #FF4DD0;
+    --magenta-dim: rgba(255,77,208,0.15);
+    --coral: #E05C4B;
+    --white: #F2F4F3;
+    --muted: #7A96AB;
+    --border: rgba(46,196,182,0.15);
+    --border-mag: rgba(255,77,208,0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,27,42,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .nav-logo-mark {
+    width: 36px;
+    height: 36px;
+    position: relative;
+  }
+
+  .nav-logo-mark svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 8px rgba(255,77,208,0.5));
+  }
+
+  .nav-logo-text {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-logo-text span { color: var(--teal); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--magenta) !important;
+    color: var(--magenta) !important;
+    padding: 9px 22px;
+    font-size: 12px !important;
+    letter-spacing: 0.1em !important;
+    transition: all 0.25s !important;
+    box-shadow: 0 0 16px rgba(255,77,208,0.15);
+  }
+
+  .nav-cta:hover {
+    background: var(--magenta) !important;
+    color: #fff !important;
+    box-shadow: 0 0 28px rgba(255,77,208,0.4) !important;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .hamburger span {
+    width: 24px;
+    height: 2px;
+    background: var(--white);
+    transition: all 0.3s;
+    display: block;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 80px 48px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(46,196,182,0.06) 0%, transparent 70%);
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal);
+    border: 1px solid var(--border);
+    padding: 6px 16px;
+    margin-bottom: 24px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--teal);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .hero h1 {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 900;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--magenta);
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 40px;
+    font-weight: 300;
+  }
+
+  /* ── ORG SIZE PRESETS ── */
+  .presets-section {
+    padding: 0 48px 48px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .presets-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .presets-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .preset-card {
+    border: 1px solid var(--border);
+    background: var(--navy-card);
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .preset-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transition: transform 0.25s;
+  }
+
+  .preset-card:hover::before,
+  .preset-card.active::before {
+    transform: scaleX(1);
+  }
+
+  .preset-card.active {
+    border-color: var(--teal);
+    background: rgba(46,196,182,0.05);
+  }
+
+  .preset-name {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .preset-size {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .preset-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .preset-stat {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .preset-stat strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  /* ── CALCULATOR LAYOUT ── */
+  .calc-section {
+    padding: 0 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  /* ── CALC CARD ── */
+  .calc-card {
+    background: var(--navy-card);
+    border: 1px solid var(--border);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .calc-card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .accent-teal { background: var(--teal); }
+  .accent-magenta { background: var(--magenta); }
+  .accent-coral { background: var(--coral); }
+
+  .calc-card-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .calc-card-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--white);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+
+  .calc-card-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  /* ── SLIDERS ── */
+  .slider-group {
+    margin-bottom: 20px;
+  }
+
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+  }
+
+  .slider-name {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
+
+  .slider-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--navy-light);
+    outline: none;
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .calc-card:nth-child(1) input[type="range"] { accent-color: var(--teal); }
+  .calc-card:nth-child(2) input[type="range"] { accent-color: var(--magenta); }
+  .calc-card:nth-child(3) input[type="range"] { accent-color: var(--coral); }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .calc-card:nth-child(1) input[type="range"]::-webkit-slider-thumb { background: var(--teal); box-shadow: 0 0 8px rgba(46,196,182,0.6); }
+  .calc-card:nth-child(2) input[type="range"]::-webkit-slider-thumb { background: var(--magenta); box-shadow: 0 0 8px rgba(255,77,208,0.6); }
+  .calc-card:nth-child(3) input[type="range"]::-webkit-slider-thumb { background: var(--coral); box-shadow: 0 0 8px rgba(224,92,75,0.6); }
+
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 3px;
+    background: linear-gradient(to right, currentColor var(--pct, 0%), var(--navy-light) var(--pct, 0%));
+  }
+
+  .calc-card:nth-child(1) input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--teal) var(--fill, 0%), var(--navy-light) var(--fill, 0%)); }
+  .calc-card:nth-child(2) input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--magenta) var(--fill, 0%), var(--navy-light) var(--fill, 0%)); }
+  .calc-card:nth-child(3) input[type="range"]::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--coral) var(--fill, 0%), var(--navy-light) var(--fill, 0%)); }
+
+  /* ── RESULT BOX (per card) ── */
+  .card-result {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .card-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+
+  .card-result-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .card-result-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .val-teal { color: var(--teal); }
+  .val-magenta { color: var(--magenta); }
+  .val-coral { color: var(--coral); }
+
+  .card-result-annual {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 900;
+    font-size: 28px;
+    margin-top: 8px;
+  }
+
+  /* ── TOTAL EXPOSURE ── */
+  .total-section {
+    background: var(--navy-mid);
+    border: 1px solid var(--border-mag);
+    padding: 48px;
+    margin-bottom: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .total-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal), var(--magenta), var(--coral));
+  }
+
+  .total-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .total-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .total-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .total-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .total-line:last-child { border-bottom: none; }
+
+  .total-line-label {
+    font-size: 13px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-teal { background: var(--teal); }
+  .dot-magenta { background: var(--magenta); }
+  .dot-coral { background: var(--coral); }
+
+  .total-line-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+  }
+
+  .total-hero {
+    text-align: right;
+    min-width: 260px;
+  }
+
+  .total-hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .total-hero-value {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 900;
+    font-size: clamp(40px, 5vw, 60px);
+    line-height: 1;
+    color: var(--magenta);
+    text-shadow: 0 0 40px rgba(255,77,208,0.3);
+    filter: blur(6px);
+    transition: filter 0.3s;
+  }
+
+  .total-hero-value.revealed {
+    filter: blur(0);
+  }
+
+  .total-hero-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── EMAIL GATE ── */
+  .email-gate {
+    background: var(--navy-card);
+    border: 1px solid var(--border-mag);
+    padding: 40px 48px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .email-gate.hidden { display: none; }
+
+  .gate-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 12px;
+  }
+
+  .gate-title {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .gate-sub {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 420px;
+    margin-bottom: 28px;
+  }
+
+  .gate-form {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .gate-input {
+    flex: 1;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .gate-input::placeholder { color: var(--muted); }
+  .gate-input:focus { border-color: var(--magenta); }
+
+  .gate-btn {
+    background: var(--magenta);
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.25s;
+    white-space: nowrap;
+    box-shadow: 0 0 24px rgba(255,77,208,0.3);
+  }
+
+  .gate-btn:hover {
+    background: #ff6dd8;
+    box-shadow: 0 0 40px rgba(255,77,208,0.5);
+    transform: translateY(-1px);
+  }
+
+  .gate-privacy {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  /* ── RESULTS SECTION (post gate) ── */
+  .results-section {
+    padding: 40px 48px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: none;
+  }
+
+  .results-section.visible { display: block; }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .results-header h2 {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .results-header p {
+    font-size: 15px;
+    color: var(--muted);
+  }
+
+  .results-cta-block {
+    background: linear-gradient(135deg, rgba(46,196,182,0.08), rgba(255,77,208,0.08));
+    border: 1px solid var(--border-mag);
+    padding: 48px;
+    text-align: center;
+  }
+
+  .results-cta-block h3 {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    margin-bottom: 12px;
+  }
+
+  .results-cta-block p {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--magenta);
+    color: #fff;
+    text-decoration: none;
+    padding: 16px 40px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    transition: all 0.25s;
+    box-shadow: 0 0 32px rgba(255,77,208,0.3);
+  }
+
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 48px rgba(255,77,208,0.5);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 68px;
+      left: 0; right: 0;
+      background: var(--navy-mid);
+      border-bottom: 1px solid var(--border);
+      padding: 24px;
+      gap: 20px;
+      z-index: 99;
+    }
+    .hamburger { display: flex; }
+
+    .hero { padding: 60px 24px 40px; }
+    .presets-section { padding: 0 24px 40px; }
+    .presets-grid { grid-template-columns: 1fr; }
+
+    .calc-section { padding: 0 24px 60px; }
+    .calc-grid { grid-template-columns: 1fr; }
+
+    .total-section { padding: 32px 24px; }
+    .total-inner { grid-template-columns: 1fr; gap: 32px; }
+    .total-hero { text-align: left; min-width: unset; }
+
+    .email-gate { padding: 32px 24px; }
+    .gate-form { flex-direction: column; }
+
+    .results-section { padding: 32px 24px 60px; }
+    .results-cta-block { padding: 32px 24px; }
+
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .calc-card {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .calc-card:nth-child(1) { animation-delay: 0.1s; }
+  .calc-card:nth-child(2) { animation-delay: 0.2s; }
+  .calc-card:nth-child(3) { animation-delay: 0.3s; }
+
+  .revealed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
+  }
+
+  .revealed-badge::before {
+    content: '✓';
+    width: 16px;
+    height: 16px;
+    background: var(--teal);
+    color: var(--navy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 4 C18 4 8 10 8 20 C8 26 12 30 18 32 C24 30 28 26 28 20 C28 10 18 4 18 4Z" stroke="#FF4DD0" stroke-width="1.5" fill="none"/>
+        <path d="M18 4 C18 4 28 10 28 20 C28 26 24 30 18 32" stroke="#2EC4B6" stroke-width="1.5" fill="none"/>
+        <circle cx="18" cy="18" r="3" fill="#FF4DD0"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">Transform<span>VXR</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#">Platform</a></li>
+    <li><a href="#">For BCBAs</a></li>
+    <li><a href="#">Science</a></li>
+    <li><a href="#">Resources</a></li>
+    <li><a href="#" class="nav-cta">Request Demo</a></li>
+  </ul>
+  <div class="hamburger" onclick="toggleNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Revenue Impact Calculator</div>
+  <h1>What is your organization<br>leaving on the <em>table?</em></h1>
+  <p>Adjust the sliders to model your actual exposure across caregiver guidance utilization, BCBA turnover, and RBT turnover.</p>
+</section>
+
+<!-- ORG SIZE PRESETS -->
+<section class="presets-section">
+  <p class="presets-label">Select your organization size to load defaults</p>
+  <div class="presets-grid">
+    <div class="preset-card" onclick="setPreset('small')" id="preset-small">
+      <div class="preset-name">Small</div>
+      <div class="preset-size">20–75 clients</div>
+      <div class="preset-stats">
+        <div class="preset-stat"><strong>40</strong> active clients</div>
+        <div class="preset-stat"><strong>8</strong> BCBAs</div>
+        <div class="preset-stat"><strong>40</strong> RBTs</div>
+      </div>
+    </div>
+    <div class="preset-card active" onclick="setPreset('mid')" id="preset-mid">
+      <div class="preset-name">Mid-Size</div>
+      <div class="preset-size">75–250 clients</div>
+      <div class="preset-stats">
+        <div class="preset-stat"><strong>150</strong> active clients</div>
+        <div class="preset-stat"><strong>20</strong> BCBAs</div>
+        <div class="preset-stat"><strong>100</strong> RBTs</div>
+      </div>
+    </div>
+    <div class="preset-card" onclick="setPreset('enterprise')" id="preset-enterprise">
+      <div class="preset-name">Enterprise</div>
+      <div class="preset-size">250+ clients</div>
+      <div class="preset-stats">
+        <div class="preset-stat"><strong>400</strong> active clients</div>
+        <div class="preset-stat"><strong>60</strong> BCBAs</div>
+        <div class="preset-stat"><strong>300</strong> RBTs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULATORS -->
+<section class="calc-section">
+  <div class="calc-grid">
+
+    <!-- CARD 1: Revenue Leakage -->
+    <div class="calc-card">
+      <div class="calc-card-accent accent-teal"></div>
+      <div class="calc-card-num">01</div>
+      <div class="calc-card-title">Caregiver Guidance<br>Revenue Leakage</div>
+      <div class="calc-card-sub">Authorized hours not delivered = unbilled revenue</div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Active Clients</span>
+          <span class="slider-value" id="val-clients">150</span>
+        </div>
+        <input type="range" id="sl-clients" min="10" max="600" value="150" oninput="updateSlider(this,'val-clients','',0); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Authorized Hours / Month</span>
+          <span class="slider-value" id="val-auth">4</span>
+        </div>
+        <input type="range" id="sl-auth" min="1" max="10" value="4" step="0.5" oninput="updateSlider(this,'val-auth','',1); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Delivered Hours / Month</span>
+          <span class="slider-value" id="val-del">2</span>
+        </div>
+        <input type="range" id="sl-del" min="0.5" max="10" value="2" step="0.5" oninput="updateSlider(this,'val-del','',1); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Reimbursement Rate / Hour</span>
+          <span class="slider-value" id="val-rate">$140</span>
+        </div>
+        <input type="range" id="sl-rate" min="80" max="250" value="140" step="5" oninput="updateSlider(this,'val-rate','$',0); calc()">
+      </div>
+
+      <div class="card-result">
+        <div class="card-result-row">
+          <span class="card-result-label">Monthly Lost Revenue</span>
+          <span class="card-result-value val-teal" id="res-leak-mo">—</span>
+        </div>
+        <div class="card-result-annual val-teal" id="res-leak-yr">—</div>
+        <div class="card-result-label" style="margin-top:4px">Annual Lost Revenue</div>
+      </div>
+    </div>
+
+    <!-- CARD 2: BCBA Turnover -->
+    <div class="calc-card">
+      <div class="calc-card-accent accent-magenta"></div>
+      <div class="calc-card-num">02</div>
+      <div class="calc-card-title">BCBA Turnover<br>Cost</div>
+      <div class="calc-card-sub">Recruiting, onboarding, ramp time, lost productivity</div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Total BCBAs</span>
+          <span class="slider-value" id="val-bcbas">20</span>
+        </div>
+        <input type="range" id="sl-bcbas" min="1" max="150" value="20" oninput="updateSlider(this,'val-bcbas','',0); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Annual Turnover Rate</span>
+          <span class="slider-value" id="val-bcba-turn">25%</span>
+        </div>
+        <input type="range" id="sl-bcba-turn" min="5" max="75" value="25" oninput="updateSlider(this,'val-bcba-turn','','%'); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Cost per Departure</span>
+          <span class="slider-value" id="val-bcba-cost">$37,500</span>
+        </div>
+        <input type="range" id="sl-bcba-cost" min="15000" max="75000" value="37500" step="2500" oninput="updateSliderK(this,'val-bcba-cost'); calc()">
+      </div>
+
+      <div class="card-result" style="margin-top: 76px;">
+        <div class="card-result-row">
+          <span class="card-result-label">BCBAs Leaving / Year</span>
+          <span class="card-result-value val-magenta" id="res-bcba-count">—</span>
+        </div>
+        <div class="card-result-annual val-magenta" id="res-bcba-yr">—</div>
+        <div class="card-result-label" style="margin-top:4px">Annual Turnover Cost</div>
+      </div>
+    </div>
+
+    <!-- CARD 3: RBT Turnover -->
+    <div class="calc-card">
+      <div class="calc-card-accent accent-coral"></div>
+      <div class="calc-card-num">03</div>
+      <div class="calc-card-title">RBT Turnover<br>Cost</div>
+      <div class="calc-card-sub">Hiring, onboarding, training, missed billable hours</div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Total RBTs</span>
+          <span class="slider-value" id="val-rbts">100</span>
+        </div>
+        <input type="range" id="sl-rbts" min="5" max="500" value="100" oninput="updateSlider(this,'val-rbts','',0); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Annual Turnover Rate</span>
+          <span class="slider-value" id="val-rbt-turn">60%</span>
+        </div>
+        <input type="range" id="sl-rbt-turn" min="10" max="130" value="60" oninput="updateSlider(this,'val-rbt-turn','','%'); calc()">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-label">
+          <span class="slider-name">Cost per Departure</span>
+          <span class="slider-value" id="val-rbt-cost">$7,500</span>
+        </div>
+        <input type="range" id="sl-rbt-cost" min="3000" max="20000" value="7500" step="500" oninput="updateSliderK(this,'val-rbt-cost'); calc()">
+      </div>
+
+      <div class="card-result" style="margin-top: 76px;">
+        <div class="card-result-row">
+          <span class="card-result-label">RBTs Leaving / Year</span>
+          <span class="card-result-value val-coral" id="res-rbt-count">—</span>
+        </div>
+        <div class="card-result-annual val-coral" id="res-rbt-yr">—</div>
+        <div class="card-result-label" style="margin-top:4px">Annual Turnover Cost</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOTAL EXPOSURE -->
+  <div class="total-section">
+    <div class="total-inner">
+      <div class="total-breakdown">
+        <div class="total-label">Annual Breakdown</div>
+        <div class="total-line">
+          <span class="total-line-label"><span class="dot dot-teal"></span>Caregiver Guidance Leakage</span>
+          <span class="total-line-val" id="total-leak">—</span>
+        </div>
+        <div class="total-line">
+          <span class="total-line-label"><span class="dot dot-magenta"></span>BCBA Turnover Cost</span>
+          <span class="total-line-val" id="total-bcba">—</span>
+        </div>
+        <div class="total-line">
+          <span class="total-line-label"><span class="dot dot-coral"></span>RBT Turnover Cost</span>
+          <span class="total-line-val" id="total-rbt">—</span>
+        </div>
+      </div>
+      <div class="total-hero">
+        <div class="total-hero-label">Total Annual Exposure</div>
+        <div class="total-hero-value" id="total-grand">$1,245,000</div>
+        <div class="total-hero-sub">Unlock your full report below</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMAIL GATE -->
+  <div class="email-gate" id="emailGate">
+    <div class="gate-eyebrow">Your results are ready</div>
+    <div class="gate-title">Get your full exposure report</div>
+    <div class="gate-sub">Enter your work email to reveal the complete breakdown and see how Transform addresses each cost driver.</div>
+    <div class="gate-form">
+      <input type="email" class="gate-input" placeholder="you@organization.com" id="gateEmail">
+      <button class="gate-btn" onclick="submitGate()">Reveal My Report</button>
+    </div>
+    <div class="gate-privacy">No spam. One email with your report. Unsubscribe anytime.</div>
+  </div>
+</section>
+
+<!-- RESULTS (post gate) -->
+<section class="results-section" id="resultsSection">
+  <div class="results-header">
+    <div class="revealed-badge">Report Unlocked</div>
+    <h2>Here's where the money is going</h2>
+    <p id="results-summary-text">Based on your inputs, your organization has significant recoverable exposure.</p>
+  </div>
+
+  <div class="results-cta-block">
+    <h3>Transform can address all three cost drivers.</h3>
+    <p>Our behavioral coaching platform is built specifically for ABA organizations — designed to improve caregiver guidance delivery, reduce BCBA burnout, and stabilize your RBT workforce.</p>
+    <a href="#" class="cta-btn">Schedule a Conversation →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2026 Transform VXR. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/company/transformvxr/">LinkedIn</a>
+    <a href="https://www.instagram.com/transform.vxr/">Instagram</a>
+    <a href="#">Privacy</a>
+  </div>
+</footer>
+
+<script>
+  // ── PRESETS ──
+  const presets = {
+    small:      { clients: 40,  auth: 3.5, del: 1.5, rate: 130, bcbas: 8,  bcbaTurn: 20, bcbaCost: 32500, rbts: 40,  rbtTurn: 55, rbtCost: 6000 },
+    mid:        { clients: 150, auth: 4,   del: 2,   rate: 140, bcbas: 20, bcbaTurn: 25, bcbaCost: 37500, rbts: 100, rbtTurn: 60, rbtCost: 7500 },
+    enterprise: { clients: 400, auth: 4,   del: 1.5, rate: 150, bcbas: 60, bcbaTurn: 30, bcbaCost: 45000, rbts: 300, rbtTurn: 70, rbtCost: 8500 }
+  };
+
+  function setPreset(size) {
+    const p = presets[size];
+    document.querySelectorAll('.preset-card').forEach(c => c.classList.remove('active'));
+    document.getElementById('preset-' + size).classList.add('active');
+
+    setSlider('sl-clients', p.clients, 'val-clients', '', 0);
+    setSlider('sl-auth', p.auth, 'val-auth', '', 1);
+    setSlider('sl-del', p.del, 'val-del', '', 1);
+    setSlider('sl-rate', p.rate, 'val-rate', '$', 0);
+    setSlider('sl-bcbas', p.bcbas, 'val-bcbas', '', 0);
+    setSlider('sl-bcba-turn', p.bcbaTurn, 'val-bcba-turn', '', '%');
+    setSliderK('sl-bcba-cost', p.bcbaCost, 'val-bcba-cost');
+    setSlider('sl-rbts', p.rbts, 'val-rbts', '', 0);
+    setSlider('sl-rbt-turn', p.rbtTurn, 'val-rbt-turn', '', '%');
+    setSliderK('sl-rbt-cost', p.rbtCost, 'val-rbt-cost');
+    calc();
+  }
+
+  function setSlider(id, val, labelId, prefix, decimals) {
+    const el = document.getElementById(id);
+    el.value = val;
+    updateFill(el);
+    let display = decimals === '%' ? val + '%' : (prefix + (decimals > 0 ? val.toFixed(decimals) : Math.round(val)));
+    document.getElementById(labelId).textContent = display;
+  }
+
+  function setSliderK(id, val, labelId) {
+    const el = document.getElementById(id);
+    el.value = val;
+    updateFill(el);
+    document.getElementById(labelId).textContent = '$' + val.toLocaleString();
+  }
+
+  // ── SLIDER DISPLAY ──
+  function updateSlider(el, labelId, prefix, decimals) {
+    updateFill(el);
+    const v = parseFloat(el.value);
+    let display;
+    if (decimals === '%') display = v + '%';
+    else display = prefix + (decimals > 0 ? v.toFixed(decimals) : Math.round(v));
+    document.getElementById(labelId).textContent = display;
+  }
+
+  function updateSliderK(el, labelId) {
+    updateFill(el);
+    document.getElementById(labelId).textContent = '$' + parseInt(el.value).toLocaleString();
+  }
+
+  function updateFill(el) {
+    const min = parseFloat(el.min);
+    const max = parseFloat(el.max);
+    const val = parseFloat(el.value);
+    const pct = ((val - min) / (max - min)) * 100;
+    el.style.setProperty('--fill', pct + '%');
+  }
+
+  // ── CALCULATIONS ──
+  function calc() {
+    const clients  = parseFloat(document.getElementById('sl-clients').value);
+    const auth     = parseFloat(document.getElementById('sl-auth').value);
+    const del      = parseFloat(document.getElementById('sl-del').value);
+    const rate     = parseFloat(document.getElementById('sl-rate').value);
+
+    const bcbas     = parseFloat(document.getElementById('sl-bcbas').value);
+    const bcbaTurn  = parseFloat(document.getElementById('sl-bcba-turn').value) / 100;
+    const bcbaCost  = parseFloat(document.getElementById('sl-bcba-cost').value);
+
+    const rbts     = parseFloat(document.getElementById('sl-rbts').value);
+    const rbtTurn  = parseFloat(document.getElementById('sl-rbt-turn').value) / 100;
+    const rbtCost  = parseFloat(document.getElementById('sl-rbt-cost').value);
+
+    // Revenue Leakage
+    const gap      = Math.max(0, auth - del);
+    const leakMo   = gap * rate * clients;
+    const leakYr   = leakMo * 12;
+
+    // BCBA Turnover
+    const bcbaDep  = Math.round(bcbas * bcbaTurn);
+    const bcbaYr   = bcbaDep * bcbaCost;
+
+    // RBT Turnover
+    const rbtDep   = Math.round(rbts * rbtTurn);
+    const rbtYr    = rbtDep * rbtCost;
+
+    const total = leakYr + bcbaYr + rbtYr;
+
+    // Update per-card displays
+    document.getElementById('res-leak-mo').textContent = fmt(leakMo);
+    document.getElementById('res-leak-yr').textContent = fmt(leakYr);
+    document.getElementById('res-bcba-count').textContent = bcbaDep + ' BCBAs';
+    document.getElementById('res-bcba-yr').textContent = fmt(bcbaYr);
+    document.getElementById('res-rbt-count').textContent = rbtDep + ' RBTs';
+    document.getElementById('res-rbt-yr').textContent = fmt(rbtYr);
+
+    // Update totals
+    document.getElementById('total-leak').textContent = fmt(leakYr);
+    document.getElementById('total-bcba').textContent = fmt(bcbaYr);
+    document.getElementById('total-rbt').textContent = fmt(rbtYr);
+    document.getElementById('total-grand').textContent = fmt(total);
+
+    // Update results summary
+    document.getElementById('results-summary-text').textContent =
+      `Based on your inputs, your organization has an estimated ${fmt(total)} in annual recoverable exposure — across revenue leakage, BCBA turnover, and RBT instability.`;
+  }
+
+  function fmt(n) {
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(2) + 'M';
+    if (n >= 1000)    return '$' + Math.round(n / 1000) + 'K';
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  // ── EMAIL GATE ──
+  function submitGate() {
+    const email = document.getElementById('gateEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('gateEmail').focus();
+      document.getElementById('gateEmail').style.borderColor = '#E05C4B';
+      return;
+    }
+
+    // TODO: Wire to HubSpot endpoint here
+    // fetch('YOUR_HUBSPOT_ENDPOINT', { method: 'POST', body: JSON.stringify({ email }) });
+
+    document.getElementById('emailGate').classList.add('hidden');
+    document.getElementById('total-grand').classList.add('revealed');
+    document.getElementById('resultsSection').classList.add('visible');
+
+    // Scroll to results
+    document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Allow Enter key on email input
+  document.getElementById('gateEmail').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submitGate();
+  });
+
+  // ── NAV ──
+  function toggleNav() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // ── INIT ──
+  // Initialize all slider fills and run first calc
+  document.querySelectorAll('input[type="range"]').forEach(updateFill);
+  calc();
+</script>
+</body>
+</html>
