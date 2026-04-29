@@ -383,15 +383,67 @@
   </footer>
 
   <script>
-    function handleSubmit() {
-      const email = document.getElementById('email').value;
-      const fname = document.getElementById('fname').value;
+    async function handleSubmit() {
+      const fname = document.getElementById('fname').value.trim();
+      const lname = document.getElementById('lname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const credential = document.getElementById('credential').value;
+      const scenario = document.getElementById('scenario').value;
+      const notes = document.getElementById('notes').value.trim();
+
       if (!fname || !email) {
         alert('Please fill in your name and email to continue.');
         return;
       }
-      document.getElementById('form-content').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
+
+      const btn = document.querySelector('.btn-submit');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      const portalId = '146509359';
+      const formGuid = 'fcb3bfb7-6d57-4b2f-9b12-e2bbb64fbf5e';
+
+      const payload = {
+        fields: [
+          { name: 'firstname', value: fname },
+          { name: 'lastname', value: lname },
+          { name: 'email', value: email },
+          { name: 'bcba_credential', value: credential },
+          { name: 'coaching_scenario', value: scenario },
+          { name: 'session_notes', value: notes }
+        ],
+        context: {
+          pageUri: window.location.href,
+          pageName: document.title
+        }
+      };
+
+      try {
+        const res = await fetch(
+          `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        if (res.ok) {
+          document.getElementById('form-content').style.display = 'none';
+          document.getElementById('form-success').style.display = 'block';
+        } else {
+          const err = await res.json();
+          console.error('HubSpot error:', err);
+          alert('Something went wrong. Please try again or email us directly at hello@transformvxr.com');
+          btn.disabled = false;
+          btn.textContent = 'Send me my free session link';
+        }
+      } catch (e) {
+        console.error('Submission error:', e);
+        alert('Something went wrong. Please try again or email us directly at hello@transformvxr.com');
+        btn.disabled = false;
+        btn.textContent = 'Send me my free session link';
+      }
     }
 
     // Scroll to form if hash is #demo or #free-session
