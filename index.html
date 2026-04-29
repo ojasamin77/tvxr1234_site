@@ -149,6 +149,44 @@
 
   .hero-text { position: relative; }
 
+  /* Sound Familiar — full-width footer row inside hero */
+  .hero-footer {
+    position: relative;
+    max-width: 1100px;
+    margin: 3rem auto 0;
+    width: 100%;
+    border-top: 1px solid rgba(46,196,182,0.12);
+    padding-top: 2.5rem;
+    text-align: center;
+  }
+
+  .hero-footer-label {
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 4vw, 3rem);
+    color: var(--white);
+    font-style: normal;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .hero-footer-text {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.8;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .hero-footer-text em {
+    color: var(--white);
+    font-style: normal;
+    font-weight: 400;
+  }
+
   .hero-image-wrap {
     position: relative;
     border-radius: 16px;
@@ -454,8 +492,9 @@
     padding: 20px 48px;
     display: flex;
     align-items: center;
-    gap: 40px;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    overflow: hidden;
     animation: fadeUp 0.5s 0.32s ease both;
   }
 
@@ -478,7 +517,8 @@
 
   .proof-items {
     display: flex;
-    gap: 40px;
+    flex-wrap: wrap;
+    gap: 12px 32px;
     align-items: center;
   }
 
@@ -486,7 +526,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    white-space: nowrap;
+    white-space: normal;
   }
 
   .proof-item-dot {
@@ -1190,6 +1230,7 @@
     .hero { padding: 60px 24px; min-height: auto; padding-top: 80px; }
     .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
     .hero-image-wrap { max-height: 380px; overflow: hidden; }
+    .hero-footer { margin-top: 2rem; padding-top: 1.5rem; }
     .hero-ui-signals { padding: 10px 14px; }
     .hero-signal-name { min-width: 120px; font-size: 11px; }
     .proof-strip { padding: 16px 24px; flex-wrap: wrap; gap: 12px; }
@@ -1293,9 +1334,9 @@
 <nav>
   <a href="index.html" class="logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
   <ul class="nav-links">
-    <li><a href="coaching.html">AI Coaching</a></li>
+    <li><a href="coaching.html">AI Practice</a></li>
     <li><a href="certification.html">Certification</a></li>
-    <li><a href="how-it-works.html">How It Works</a></li>
+    <li><a href="how-it-works.html">How Practice Works</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="blog.html">Blog</a></li>
     <li><a href="contact.html">Contact</a></li>
@@ -1310,9 +1351,9 @@
 </nav>
 
 <div class="nav-mobile-menu" id="navMobileMenu">
-  <a href="coaching.html">AI Coaching</a>
+  <a href="coaching.html">AI Practice</a>
   <a href="certification.html">Certification</a>
-  <a href="how-it-works.html">How It Works</a>
+  <a href="how-it-works.html">How Practice Works</a>
   <a href="about.html">About</a>
   <a href="blog.html">Blog</a>
   <a href="contact.html">Contact</a>
@@ -1326,7 +1367,8 @@
   <div class="hero-grid"></div>
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-tag">AI Coaching for ABA Clinicians</div>
+      <div class="hero-tag">AI Practice for ABA Clinicians</div>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.75rem;font-weight:300;">Built specifically for BCBAs, not adapted from generic leadership training.</p>
       <h1>You know the clinical answer.<br>But the conversation<br><em>still goes wrong.</em></h1>
       <p class="hero-body">
         TransformVXR gives BCBAs a private place to practice the real conversations that affect parent trust, staff performance, clinical judgment, and client outcomes, with behavioral feedback grounded in ABA principles.
@@ -1335,6 +1377,7 @@
         <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
         <span class="hero-cta-note">Free 10-minute practice session. No account required. CEU scenarios available.</span>
       </div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:0.75rem;font-weight:300;">You do not need to be perfect. That is the point of practice.</p>
     </div>
     <div class="hero-image-wrap">
       <!-- Top bar -->
@@ -1380,7 +1423,16 @@
       </div>
     </div>
   </div>
+
+  <!-- Sound Familiar — full width below both columns -->
+  <div class="hero-footer">
+    <div class="hero-footer-label">Sound familiar?</div>
+    <p class="hero-footer-text">
+      You explain the clinical recommendation clearly. The parent nods, but follow-through does not change. An RBT says they understand, but the data still comes back inconsistent. A director asks for more, <em>even when the clinical situation says slow down.</em> These are the moments TransformVXR helps you practice.
+    </p>
+  </div>
 </section>
+
 
 <!-- PROOF STRIP -->
 <div class="proof-strip">
@@ -1498,7 +1550,7 @@
           <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
         <h3>See what your communication did</h3>
-        <p>Receive feedback on observable behaviors such as open questions, reflective statements, interruptions, pacing, and missed opportunities to repair or reframe.</p>
+        <p>Feedback is based on what you actually said, not what you clicked. Receive feedback on observable behaviors such as open questions, reflective statements, interruptions, pacing, and missed opportunities to repair or reframe.</p>
       </div>
     </div>
   </div>
@@ -1514,6 +1566,7 @@
     <a href="contact.html#demo" class="btn-primary" style="flex-shrink:0">Try a Real Clinical Scenario</a>
   </div>
 
+  <p style="font-size:0.9rem;color:var(--muted);font-weight:300;margin-bottom:1.5rem;max-width:1100px;margin-left:auto;margin-right:auto;display:block;">Every scenario is designed around conversations that affect implementation, trust, and follow-through.</p>
   <div class="scenarios-grid">
     <a href="bcba-landing-parent-v2.html" class="scenario-card">
       <div class="sc-num">01</div>
@@ -1547,16 +1600,17 @@
         <div class="stat-label">High-stakes conversations BCBAs face every week</div>
       </div>
       <div class="stat-row">
-        <div class="stat-num">10<span style="font-size:22px;letter-spacing:0">min</span></div>
-        <div class="stat-label">Per session. Practice on your schedule, not a classroom's</div>
+        <div class="stat-num">10<span style="font-size:1rem;letter-spacing:0;font-weight:600;"> min</span></div>
+        <div class="stat-label">To experience a real practice conversation</div>
       </div>
       <div class="stat-row">
         <div class="stat-num">0</div>
-        <div class="stat-label">Colleagues watching. Private practice produces authentic behavioral signal</div>
+        <div class="stat-label">Colleagues watching — practice privately before the real conversation</div>
       </div>
     </div>
 
     <div class="testimonial">
+      <p style="font-size:0.85rem;color:var(--teal);font-weight:600;margin-bottom:1rem;letter-spacing:0.02em;">Built by people who understand that human connection is part of clinical effectiveness.</p>
       <blockquote>
         "Their immersive, AI-supported learning environment does not replace human connection. It strengthens it. At a time when many organizations struggle to translate insight into real-world behavior, TransformVXR offers a powerful model for building the relational capacities that drive effective leadership."
       </blockquote>
@@ -1569,23 +1623,59 @@
 </section>
 
 <!-- CORPORATE CAPTURE -->
-<section class="corporate-section">
+<section class="corporate-section" style="opacity:0.85;border-top:1px solid var(--border);">
   <div class="corporate-inner">
     <div class="corporate-left">
-      <div class="section-tag">For Organizations</div>
-      <h2>Working with an<br>ABA organization?</h2>
+      <div class="section-tag">For ABA Organizations</div>
+      <h2>Want to see how relational practice<br>changes team performance?</h2>
       <p>
-        We are building something for practice owners and clinical leaders: operational data that shows the before and after in your own retention, session adherence, and escalation numbers. We are expanding. Get early access.
+        TransformVXR is expanding from individual CEU practice into organizational dashboards that help clinical leaders understand how communication patterns connect to retention, supervision quality, escalation risk, session adherence, and client experience.
       </p>
     </div>
     <div class="capture-form">
       <div class="capture-label">Early Access</div>
-      <p><strong>We're building something for you.</strong> Leave your email and we will reach out when we are ready to work with your organization.</p>
+      <p>Join the early access list for ABA organizations interested in piloting TransformVXR with supervisors, BCBAs, and clinical teams.</p>
       <div class="input-row">
         <input type="email" class="capture-input" placeholder="Work email address">
-        <button class="btn-capture">Get Early Access</button>
+        <button class="btn-capture">Join Organization Early Access</button>
       </div>
-      <p class="capture-note">No sales pressure. No commitment. Just early access when it is ready.</p>
+      <p class="capture-note">No commitment. We'll reach out when organization pilots open.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU'LL GET -->
+<section class="section" style="padding-top:4rem;padding-bottom:4rem;">
+  <div class="section-inner" style="max-width:780px;margin:0 auto;">
+    <div class="section-tag">What you'll get</div>
+    <h2 style="font-family:'Nunito Sans',sans-serif;font-weight:900;font-size:clamp(1.75rem,3vw,2.25rem);letter-spacing:-0.025em;margin-bottom:2rem;">Everything you need to practice before the real conversation.</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;">
+      <div style="background:var(--navy-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:0.75rem;">
+        <span style="color:var(--teal);font-size:1rem;flex-shrink:0;margin-top:0.1rem;">&#10003;</span>
+        <span style="font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.6;">A realistic ABA conversation scenario</span>
+      </div>
+      <div style="background:var(--navy-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:0.75rem;">
+        <span style="color:var(--teal);font-size:1rem;flex-shrink:0;margin-top:0.1rem;">&#10003;</span>
+        <span style="font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.6;">A private practice environment</span>
+      </div>
+      <div style="background:var(--navy-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:0.75rem;">
+        <span style="color:var(--teal);font-size:1rem;flex-shrink:0;margin-top:0.1rem;">&#10003;</span>
+        <span style="font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.6;">Behavioral feedback after the interaction</span>
+      </div>
+      <div style="background:var(--navy-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:0.75rem;">
+        <span style="color:var(--teal);font-size:1rem;flex-shrink:0;margin-top:0.1rem;">&#10003;</span>
+        <span style="font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.6;">2 BACB CEUs per completed scenario <span style="font-size:0.75rem;color:var(--muted);display:block;margin-top:0.2rem;">BACB CEU credit available for eligible completed scenarios.</span></span>
+      </div>
+      <div style="background:var(--navy-card);border:1px solid var(--border);border-radius:10px;padding:1.25rem 1.5rem;display:flex;align-items:flex-start;gap:0.75rem;grid-column:1/-1;">
+        <span style="color:var(--teal);font-size:1rem;flex-shrink:0;margin-top:0.1rem;">&#10003;</span>
+        <span style="font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.6;">A clearer sense of what to say differently next time</span>
+      </div>
+    </div>
+    <div style="text-align:center;padding:2rem;background:var(--navy-card);border:1px solid var(--border);border-radius:12px;">
+      <div style="font-family:'Nunito Sans',sans-serif;font-weight:900;font-size:3rem;color:var(--white);letter-spacing:-0.03em;line-height:1;">$250</div>
+      <div style="font-size:0.85rem;color:var(--muted);margin-top:0.35rem;margin-bottom:1.5rem;">per scenario, including CEU credit</div>
+      <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Real Clinical Scenario</a>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:1rem;font-weight:300;">Free 10-minute session first. No account required.</p>
     </div>
   </div>
 </section>
@@ -1593,8 +1683,8 @@
 <!-- FINAL CTA -->
 <section class="final-cta">
   <div class="ceu-pill">BACB Continuing Education Credit Available</div>
-  <h2>Ten minutes.<br><em>One real scenario.</em><br>No audience.</h2>
-  <p>Try a clinical scenario now. See what behavioral feedback looks like when it is specific, observable, and grounded in how the conversation actually went.</p>
+  <h2>Practice once.<br><em>See what your communication reveals.</em></h2>
+  <p>Try a 10-minute clinical scenario and see how TransformVXR turns a real conversation into specific, observable behavioral feedback.</p>
   <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
 </section>
 
@@ -1603,12 +1693,12 @@
   <div class="footer-top">
     <div class="footer-brand">
       <a href="index.html" class="logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
-      <p>AI coaching for ABA clinicians. Practice the hardest conversations in a private, low-stakes environment. Measure what changes.</p>
+      <p>AI-powered practice for ABA clinicians. Rehearse difficult conversations privately, earn CEUs, and build the relational behaviors that support clinical outcomes.</p>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
       <ul>
-        <li><a href="coaching.html">AI Coaching</a></li>
+        <li><a href="coaching.html">AI Practice</a></li>
         <li><a href="certification.html">Certification</a></li>
         <li><a href="assessment.html">Assessment</a></li>
         <li><a href="family-development.html">Family Development</a></li>
@@ -1619,7 +1709,7 @@
       <h4>Company</h4>
       <ul>
         <li><a href="about.html">About</a></li>
-        <li><a href="how-it-works.html">How It Works</a></li>
+        <li><a href="how-it-works.html">How Practice Works</a></li>
         <li><a href="riq-foundation.html">RIQ Foundation</a></li>
         <li><a href="careers.html">Careers</a></li>
         <li><a href="contact.html">Contact</a></li>
@@ -1637,7 +1727,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <p>Copyright 2026 Transform VXR. All rights reserved.</p>
+    <p>Copyright 2026 Transform VXR. All rights reserved. &nbsp;·&nbsp; <span style="font-size:0.75rem;opacity:0.7;">CEU availability may vary by scenario and completion requirements.</span></p>
     <div class="footer-social">
       <a href="https://www.linkedin.com/company/transformvxr/">LinkedIn</a>
       <a href="https://www.instagram.com/transform.vxr/">Instagram</a>
