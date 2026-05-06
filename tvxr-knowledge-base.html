@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transform VXR — Instruction Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0D1B2A;
+  --navy-mid:#111F30;
+  --navy-card:#162840;
+  --teal:#2EC4B6;
+  --magenta:#FF4DD0;
+  --magenta-dim:#D93CB0;
+  --white:#F2F4F3;
+  --body:#C0D4DE;
+  --muted:#7A96AB;
+  --border:rgba(46,196,182,.13);
+  --border-hover:rgba(46,196,182,.35);
+  --shadow:0 8px 32px rgba(0,0,0,.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,-apple-system,sans-serif;font-weight:400;font-size:15px;line-height:1.75;color:var(--white);background:var(--navy);-webkit-font-smoothing:antialiased}
+a{color:var(--teal);text-decoration:none}
+a:hover{color:var(--white)}
+
+/* LAYOUT */
+.wrap{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{position:sticky;top:0;height:100vh;width:256px;min-width:256px;background:var(--navy-mid);border-right:1px solid var(--border);overflow-y:auto;padding-bottom:40px;flex-shrink:0}
+.sb-brand{padding:22px 20px 18px;border-bottom:1px solid var(--border)}
+.sb-brand-name{font-family:'Nunito Sans',sans-serif;font-weight:900;font-size:14px;color:var(--magenta);letter-spacing:-.01em;text-transform:uppercase}
+.sb-brand-ver{font-size:11px;color:var(--muted);margin-top:3px}
+.search-box{padding:12px 16px;border-bottom:1px solid var(--border)}
+.search-input{width:100%;padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:var(--navy);color:var(--white);font-size:13px;font-family:inherit;outline:none;transition:.15s}
+.search-input:focus{border-color:var(--teal)}
+.search-input::placeholder{color:var(--muted)}
+.search-hint{font-size:11px;color:#3a4f63;padding:5px 18px 10px;border-bottom:1px solid var(--border)}
+.search-hint strong{color:#4a6070}
+.sb-head{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:16px 20px 5px}
+.sidebar a{display:block;padding:7px 20px 7px 28px;font-size:13px;color:var(--muted);text-decoration:none;border-left:3px solid transparent;transition:.15s}
+.sidebar a:hover{color:var(--white);background:rgba(46,196,182,.05);border-left-color:var(--magenta)}
+.sidebar a.sub{padding-left:36px;font-size:12px;color:#3d5568}
+.sidebar a.sub:hover{color:var(--white)}
+.sidebar a.active{color:var(--white);background:rgba(46,196,182,.07);border-left-color:var(--teal)}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(13,27,42,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;margin:-52px -52px 48px;padding:12px 52px}
+.topbar-title{font-size:13px;font-weight:600;color:var(--muted)}
+.topbar-badge{background:var(--magenta);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.03em;font-family:'DM Sans',sans-serif}
+
+/* MAIN */
+.main{flex:1;max-width:900px;padding:52px 52px 100px;min-width:0}
+
+/* HEADER */
+.doc-header{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--navy-card) 0%,#1a2d47 60%,#0f2235 100%);border:1px solid var(--border);border-radius:16px;padding:48px 44px 44px;margin-bottom:52px}
+.doc-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 90% 20%,rgba(46,196,182,.12) 0%,transparent 60%),radial-gradient(ellipse 40% 50% at 10% 80%,rgba(255,77,208,.08) 0%,transparent 60%);pointer-events:none}
+.doc-eyebrow{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:99px;padding:.3rem .9rem;font-size:.75rem;font-weight:600;color:var(--teal);letter-spacing:.06em;text-transform:uppercase;background:rgba(46,196,182,.06);margin-bottom:1.25rem}
+.doc-title{font-family:'Nunito Sans',sans-serif;font-weight:900;font-size:2.4rem;color:var(--white);line-height:1.1;letter-spacing:-.03em;margin-bottom:10px}
+.doc-title span{color:var(--teal)}
+.doc-meta{font-size:13px;color:var(--muted)}
+
+/* SECTIONS */
+.section{margin-bottom:72px;scroll-margin-top:68px}
+h2{font-family:'Nunito Sans',sans-serif;font-weight:800;font-size:1.5rem;color:var(--white);border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:26px;letter-spacing:-.02em}
+h3{font-family:'Nunito Sans',sans-serif;font-weight:800;font-size:1rem;color:var(--white);margin:34px 0 14px;letter-spacing:-.01em}
+p{margin-bottom:14px;color:var(--body);font-size:15px}
+ul,ol{margin:0 0 14px 24px}
+li{margin-bottom:6px;font-size:15px;color:var(--body)}
+b,strong{font-weight:600;color:var(--white)}
+
+/* SECTION EYEBROW LABELS via CSS */
+#overview h2::before,#requirements h2::before,#setup h2::before,
+#customization h2::before,#interface h2::before,
+#ending h2::before,#tips h2::before,#technical h2::before{
+  display:block;font-family:'DM Sans',sans-serif;font-size:.7rem;
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:.6rem
+}
+#overview h2::before{content:'Getting Started'}
+#requirements h2::before{content:'Requirements'}
+#setup h2::before{content:'Setup'}
+#customization h2::before{content:'Customization'}
+#interface h2::before{content:'Gameplay'}
+#ending h2::before{content:'Session'}
+#tips h2::before{content:'Reference'}
+#technical h2::before{content:'Reference'}
+
+/* CALLOUTS */
+.note{background:var(--navy-card);border:1px solid var(--border);border-left:3px solid var(--magenta);padding:16px 18px;border-radius:0 10px 10px 0;margin:20px 0;font-size:14px;color:var(--body)}
+.tip{background:var(--navy-card);border:1px solid var(--border);border-left:3px solid var(--teal);padding:16px 18px;border-radius:0 10px 10px 0;margin:20px 0;font-size:14px;color:var(--body)}
+.warn{background:var(--navy-card);border:1px solid var(--border);border-left:3px solid #F59E0B;padding:16px 18px;border-radius:0 10px 10px 0;margin:20px 0;font-size:14px;color:var(--body)}
+
+/* TABLES */
+table{width:100%;border-collapse:collapse;margin:16px 0 24px;font-size:14px;border:1px solid var(--border)}
+th{background:var(--navy-mid);color:var(--teal);padding:12px 16px;text-align:left;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+td{padding:11px 16px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--body)}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+tr:hover td{background:rgba(46,196,182,.04)}
+
+/* STEPS */
+.steps{margin-top:8px}
+.step{display:flex;gap:18px;margin-bottom:34px}
+.sn{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--magenta);color:var(--navy);font-family:'Nunito Sans',sans-serif;font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:4px}
+.sb{flex:1}
+.sb h3{margin-top:0}
+
+/* GAUGE */
+.gauge-demo{display:flex;align-items:center;gap:14px;margin:12px 0;font-size:14px;color:var(--body)}
+.gauge-bar{height:14px;width:160px;border-radius:7px;border:1px solid rgba(255,255,255,.06);flex-shrink:0}
+
+/* SCREENSHOTS */
+.ss{margin:24px 0;text-align:center}
+.ss img{max-width:100%;display:block;margin:0 auto;border:1px solid var(--border);border-radius:12px 12px 0 0;box-shadow:var(--shadow)}
+.ss .cap{margin-top:0;font-size:12px;color:var(--muted);font-style:normal;background:var(--navy-card);border:1px solid var(--border);border-top:none;padding:10px 14px;border-radius:0 0 12px 12px;text-align:left}
+.ss-label{display:inline-flex;align-items:center;background:rgba(46,196,182,.1);border:1px solid rgba(46,196,182,.25);color:var(--teal);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .8rem;border-radius:99px;margin-bottom:10px}
+.ss-row{display:flex;gap:16px;margin:24px 0;flex-wrap:wrap}
+.ss-row .ss{flex:1;min-width:220px;margin:0}
+.ss-btn img{max-height:160px;width:auto}
+.ss-strip img{width:100%;height:auto}
+.ss-portrait img{max-height:480px;width:auto}
+
+/* SEARCH OVERLAY */
+#search-overlay{display:none;position:fixed;top:0;left:256px;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;align-items:flex-start;justify-content:center;padding-top:60px}
+#search-modal{background:var(--navy-card);border:1px solid var(--border);width:100%;max-width:580px;border-radius:14px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+#search-modal-header{padding:14px 18px;background:var(--navy-mid);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+#search-modal-label{font-size:13px;font-weight:600;color:var(--muted)}
+#search-modal-close{background:none;border:none;color:var(--muted);font-size:22px;line-height:1;cursor:pointer;padding:0 2px}
+#search-modal-close:hover{color:var(--white)}
+#search-results-list{max-height:420px;overflow-y:auto}
+.sr-item{padding:14px 18px;border-bottom:1px solid var(--border);cursor:pointer;transition:.1s}
+.sr-item:hover{background:rgba(46,196,182,.06)}
+.sr-item:last-child{border-bottom:none}
+.sr-title{font-weight:600;font-size:14px;color:var(--white);margin-bottom:3px}
+.sr-excerpt{font-size:12px;color:var(--muted);line-height:1.5}
+.sr-section{font-size:11px;color:var(--teal);font-weight:700;margin-top:4px;text-transform:uppercase;letter-spacing:.05em}
+.sr-empty{padding:28px;color:var(--muted);text-align:center;font-size:14px}
+mark{background:rgba(46,196,182,.22);color:var(--teal);padding:1px 3px;border-radius:2px}
+
+/* FOOTER */
+.doc-footer{border-top:1px solid var(--border);padding-top:22px;margin-top:48px;text-align:center;font-size:13px;color:var(--muted)}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+  .wrap{flex-direction:column}
+  .sidebar{position:relative;height:auto;width:100%}
+  .main{padding:28px 20px 60px}
+  .topbar{margin:-28px -20px 32px;padding:12px 20px}
+  #search-overlay{left:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-name">Transform VXR</div>
+    <div class="sb-brand-ver">Instruction Manual &mdash; v1.12.8</div>
+  </div>
+  <div class="search-box">
+    <input type="text" class="search-input" id="search-input" placeholder="🔍 Search knowledge base..." oninput="handleSearch(this.value)" autocomplete="off">
+  </div>
+  <div class="search-hint">Press <strong style="color:#5a7a8a">/</strong> to focus &nbsp;&middot;&nbsp; <strong style="color:#5a7a8a">Esc</strong> to close</div>
+  <div class="sb-head">Contents</div>
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#requirements">What You&rsquo;ll Need</a>
+    <a href="#setup">Setup: Step-by-Step</a>
+    <a href="#step1" class="sub">Step 1 &mdash; Welcome Screen</a>
+    <a href="#step2" class="sub">Step 2 &mdash; Disclaimer</a>
+    <a href="#step3" class="sub">Step 3 &mdash; Webcam / Mic</a>
+    <a href="#customization">Customization</a>
+    <a href="#choice1" class="sub">Choice 1 &mdash; Partner</a>
+    <a href="#choice2" class="sub">Choice 2 &mdash; Personality</a>
+    <a href="#choice3" class="sub">Choice 3 &mdash; Setting</a>
+    <a href="#choice4" class="sub">Choice 4 &mdash; Scenario</a>
+    <a href="#choice5" class="sub">Choice 5 &mdash; Skill Set</a>
+    <a href="#interface">Game Interface</a>
+    <a href="#hud" class="sub">HUD</a>
+    <a href="#heat-gauge" class="sub">The Heat Gauge</a>
+    <a href="#listen-speak" class="sub">Listen / Speak Toggle</a>
+    <a href="#chat-history" class="sub">Chat History</a>
+    <a href="#ending">Ending a Session</a>
+    <a href="#tips">Tips for Success</a>
+    <a href="#technical">Technical Notes</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<div class="topbar">
+  <span class="topbar-title">Transform VXR &mdash; Instruction Manual</span>
+  <span class="topbar-badge">v1.12.8</span>
+</div>
+
+<div class="doc-header">
+  <div class="doc-eyebrow">Instruction Manual</div>
+  <div class="doc-title">Transform <span>VXR</span><br>Knowledge Base</div>
+  <div class="doc-meta">Version 1.12.8 &nbsp;&bull;&nbsp; &copy; Transform 2025</div>
+</div>
+
+<!-- OVERVIEW -->
+<section class="section" id="overview">
+  <h2>Overview</h2>
+  <p>Transform VXR is an AI-powered conversational simulation game designed to help you practice <strong>crucial communication skills</strong> in emotionally charged, real-world scenarios. You speak out loud with a lifelike AI Coach character who responds dynamically to what you say. The goal is not to fix or explain situations &mdash; it is to <strong>understand and listen with intention</strong>. After each session, your active participation time counts toward <strong>CEU (Continuing Education Unit)</strong> credits.</p>
+  <div class="tip"><strong>Core idea:</strong> This is not about having the &ldquo;right&rdquo; answer. It&rsquo;s about practicing genuine listening and empathy in realistic, emotionally charged situations.</div>
+</section>
+
+<!-- REQUIREMENTS -->
+<section class="section" id="requirements">
+  <h2>What You&rsquo;ll Need</h2>
+  <ul>
+    <li>A computer with a working <strong>webcam</strong> and <strong>microphone</strong></li>
+    <li>A stable internet connection <em>(note: slower connections may cause the AI&rsquo;s responses to lag)</em></li>
+    <li>A web browser &mdash; the game runs at <strong>app.transformvxr.com/game</strong></li>
+  </ul>
+</section>
+
+<!-- SETUP -->
+<section class="section" id="setup">
+  <h2>Setup: Step-by-Step</h2>
+  <div class="steps">
+
+    <div class="step" id="step1">
+      <div class="sn">1</div>
+      <div class="sb">
+        <h3>Welcome Screen</h3>
+        <p>The game opens with a Welcome screen that explains the core premise:</p>
+        <ul>
+          <li>You will talk with a lifelike Transform AI Coach in a real-world scenario.</li>
+          <li>Your goal is to <strong>understand and listen with intention</strong>, not to fix or explain.</li>
+          <li>You will receive real-time feedback to help you grow.</li>
+        </ul>
+        <p>Click <strong>Next</strong> to proceed.</p>
+        <div class="ss">
+          <span class="ss-label">Screenshot &mdash; Welcome Screen</span><br>
+          <img src="images/tvxr-welcome.png" alt="Transform VXR Welcome Screen">
+          <div class="cap">The Welcome Screen introduces the core purpose of Transform VXR. Click Next to begin setup.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step" id="step2">
+      <div class="sn">2</div>
+      <div class="sb">
+        <h3>Heads Up Before You Start (Disclaimer)</h3>
+        <p>A brief disclaimer reminds you that while the simulation is grounded in the Relational Intelligence Framework and learning science principles, Transform cannot guarantee every statement the AI Coach makes. Click <strong>Next</strong> to continue.</p>
+        <div class="ss">
+          <span class="ss-label">Screenshot &mdash; Disclaimer</span><br>
+          <img src="images/tvxr-before-you-start.png" alt="Heads Up Before You Start">
+          <div class="cap">The Disclaimer screen. Read it and click Next to proceed to device setup.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step" id="step3">
+      <div class="sn">3</div>
+      <div class="sb">
+        <h3>Webcam / Microphone Setup</h3>
+        <p>Your camera feed appears on screen so you can verify your webcam is working. Click <strong>Request Permissions</strong> to grant the browser access to your microphone. Once detected, a green <strong>&ldquo;Mic Detected &amp; Ready!&rdquo;</strong> button confirms your mic is active. Click <strong>Next</strong> to continue.</p>
+        <div class="ss-row">
+          <div class="ss">
+            <span class="ss-label">Webcam / Mic Setup Page</span><br>
+            <img src="images/tvxr-mic-camera-setup.png" alt="Webcam and microphone setup page">
+            <div class="cap">The Webcam/Microphone Setup page. Your camera feed appears in the preview window. Click Request Permissions to activate your microphone.</div>
+          </div>
+          <div class="ss ss-btn">
+            <span class="ss-label">Click: Request Permissions</span><br>
+            <img src="images/tvxr-request-permission.png" alt="Request Permissions button">
+            <div class="cap">The Request Permissions button. Clicking it prompts your browser to grant microphone access.</div>
+          </div>
+          <div class="ss ss-btn">
+            <span class="ss-label">After &mdash; Mic Detected &amp; Ready!</span><br>
+            <img src="images/tvxr-mic-detected.png" alt="Mic Detected and Ready confirmation">
+            <div class="cap">After granting permissions, a green &ldquo;Mic Detected &amp; Ready!&rdquo; button confirms your microphone is active. Click Next.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CUSTOMIZATION -->
+<section class="section" id="customization">
+  <h2>Customization: Building Your Scenario</h2>
+  <p>You make five consecutive choices that together define your practice session. Each choice flows directly into the next based on your selection.</p>
+
+  <div id="choice1">
+    <h3>Choice 1 &mdash; Conversation Partner</h3>
+    <p>Pick the AI character you want to interact with. There are four options, each a unique avatar:</p>
+    <table>
+      <thead><tr><th>Character</th><th>Appearance</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Imani</strong></td><td>Professional woman, short natural hair</td></tr>
+        <tr><td><strong>Cynthia</strong></td><td>Character with stylized hair</td></tr>
+        <tr><td><strong>River</strong></td><td>Young man, dark hair</td></tr>
+        <tr><td><strong>Luis</strong></td><td>Man with shorter hair</td></tr>
+      </tbody>
+    </table>
+    <div class="ss">
+      <span class="ss-label">Screenshot &mdash; Conversation Partner Selection</span><br>
+      <img src="images/tvxr-choose-partner.png" alt="Character selection showing Imani, Cynthia, River, Luis">
+      <div class="cap">Choose from four AI conversation partners. Click a character portrait to select them and advance to Personality selection.</div>
+    </div>
+  </div>
+
+  <div id="choice2">
+    <h3>Choice 2 &mdash; Personality</h3>
+    <p>Choose how your conversation partner will behave during the session:</p>
+    <table>
+      <thead><tr><th>Personality</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Personality 1</strong></td><td>Speaks with a firm tone; quickly corrects misunderstandings to make their point.</td></tr>
+        <tr><td><strong>Personality 2</strong></td><td>Speaks with low energy; shows little interest or engagement in the conversation.</td></tr>
+        <tr><td><strong>Personality 3</strong></td><td>Speaks with urgency; seeks reassurance and tries hard to connect.</td></tr>
+        <tr><td><strong>Personality 4</strong></td><td>Speaks with hesitation; often asks questions to understand what&rsquo;s being said.</td></tr>
+      </tbody>
+    </table>
+    <div class="ss">
+      <span class="ss-label">Screenshot &mdash; Personality Selection</span><br>
+      <img src="images/tvxr-choose-personality.png" alt="Personality selection with four options">
+      <div class="cap">Select a personality type. Each creates a distinctly different communication challenge. Personality 1 is the most direct; Personality 4 the most tentative.</div>
+    </div>
+  </div>
+
+  <div id="choice3">
+    <h3>Choice 3 &mdash; Setting</h3>
+    <p>Choose the environment where the conversation takes place:</p>
+    <ul>
+      <li><strong>Office</strong> &mdash; A professional workplace setting</li>
+      <li><strong>Clinic</strong> &mdash; A medical or clinical environment</li>
+      <li><strong>Coffee Shop</strong> &mdash; An informal, casual setting</li>
+      <li><strong>Living Room</strong> &mdash; A personal, home setting</li>
+    </ul>
+    <div class="ss">
+      <span class="ss-label">Screenshot &mdash; Setting Selection</span><br>
+      <img src="images/tvxr-choose-setting.png" alt="Setting selection with Office, Clinic, Coffee Shop, Living Room">
+      <div class="cap">Choose the environment. Each setting is rendered as a realistic 3D backdrop in the game, providing authentic context for the conversation.</div>
+    </div>
+  </div>
+
+  <div id="choice4">
+    <h3>Choice 4 &mdash; Scenario</h3>
+    <p>Choose the specific situation you want to practice. Available scenarios are tied to your chosen setting. In the <strong>Office</strong> setting, for example, you will see:</p>
+    <ul>
+      <li>&ldquo;Parent of a child with Autism expresses frustration about your services.&rdquo;</li>
+      <li>&ldquo;Your supervisor gives you an unfair quarterly review.&rdquo;</li>
+      <li>&ldquo;Your direct report arrives late after dealing with family stress.&rdquo;</li>
+    </ul>
+    <div class="ss">
+      <span class="ss-label">Screenshot &mdash; Scenario Selection (Office Setting)</span><br>
+      <img src="images/tvxr-choose-scenario.png" alt="Three office scenario options">
+      <div class="cap">Scenario options vary by setting. The Office setting offers three distinct situations. Click one to proceed to Skill Set selection.</div>
+    </div>
+  </div>
+
+  <div id="choice5">
+    <h3>Choice 5 &mdash; Skill Set to Practice</h3>
+    <p>Select which communication skill(s) you want to focus on during the session:</p>
+    <table>
+      <thead><tr><th>Skill Set</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Taking Perspective</strong></td><td>Practice seeing the situation through the other person&rsquo;s eyes.</td></tr>
+        <tr><td><strong>Recognizing &amp; Regulating Emotions</strong></td><td>Practice identifying and managing emotional signals.</td></tr>
+        <tr><td><strong>Listening with Curiosity</strong></td><td>Practice open, non-judgmental listening.</td></tr>
+        <tr><td><strong>Showing Empathy</strong></td><td>Practice expressing understanding and care.</td></tr>
+        <tr><td><strong>Practice All of the Skills</strong></td><td>Combines all four skills in one session.</td></tr>
+      </tbody>
+    </table>
+    <div class="ss">
+      <span class="ss-label">Screenshot &mdash; Skill Set to Practice</span><br>
+      <img src="images/tvxr-choose-skill.png" alt="Skill set selection with five options">
+      <div class="cap">Choose one skill to focus on, or select &ldquo;Practice All of the Skills&rdquo; for a comprehensive session. Note the reminder at the bottom: aim for 5 minutes in the green heat gauge zone.</div>
+    </div>
+    <div class="note"><strong>Before the session starts:</strong> The game displays a summary of your choices (e.g., &ldquo;You selected to practice &lsquo;Practice All of the Skills&rsquo; in the office with Imani, the parent of a child with autism&hellip;&rdquo;). Review this summary and click <strong>Start Practicing</strong> to begin.</div>
+    <div class="ss">
+      <span class="ss-label">Screenshot &mdash; Session Summary &amp; Start</span><br>
+      <img src="images/tvxr-ready.png" alt="You are Ready to Role Play summary screen">
+      <div class="cap">The summary screen confirms all your selections. Review them and click &ldquo;Start Practicing&rdquo; to launch the session.</div>
+    </div>
+  </div>
+
+</section>
+
+<!-- GAME INTERFACE -->
+<section class="section" id="interface">
+  <h2>During the Session: The Game Interface</h2>
+  <p>Once the session starts, the main screen shows the AI character in a realistic 3D environment. Here is an overview of the full interface:</p>
+  <div class="ss">
+    <span class="ss-label">Screenshot &mdash; Full Game Interface</span><br>
+    <img src="images/tvxr-session.png" alt="Full game interface with all HUD elements visible">
+    <div class="cap">The main game screen: the AI character (Imani, shown here) appears in the chosen environment (Office). The HUD is at the top, the heat gauge spans the bottom of the character viewport, and the Listen / End Session buttons appear below. The Chat History button is visible on the right.</div>
+  </div>
+
+  <div id="hud">
+    <h3>HUD (Heads-Up Display)</h3>
+    <p>At the top of the screen you will find two persistent indicators:</p>
+    <ul>
+      <li><strong>Time Remaining</strong> &mdash; A countdown timer showing how much practice time is left. Sessions can run up to approximately 1 hour and 40 minutes.</li>
+      <li><strong>Feedback Count</strong> &mdash; Tracks how many pieces of real-time feedback you have received from the AI Coach during the session.</li>
+    </ul>
+    <div class="ss ss-strip">
+      <span class="ss-label">Detail &mdash; HUD: Time Remaining &amp; Feedback Count</span><br>
+      <img src="images/tvxr-hud-display.png" alt="HUD showing Time Remaining and Feedback Count">
+      <div class="cap">The HUD bar at the top of the game panel. Time Remaining (left) counts down from 1:39:52. Feedback Count (right) increments each time the AI delivers coaching feedback.</div>
+    </div>
+    <p>In the center of the screen, the AI character is displayed in the 3D environment matching your chosen setting. The character animates and speaks in real time. A small picture-in-picture webcam feed (your camera) appears in the lower corner of the character viewport.</p>
+  </div>
+
+  <div id="heat-gauge">
+    <h3>The Heat Gauge</h3>
+    <p>The heat gauge is a color-coded bar running along the bottom of the AI character&rsquo;s viewport. It represents the emotional temperature of the conversation in real time:</p>
+    <div class="gauge-demo"><span class="gauge-bar" style="background:linear-gradient(90deg,#16a34a,#4ade80)"></span><span><strong>Green zone</strong> &mdash; Conversation is calm and productive</span></div>
+    <div class="gauge-demo"><span class="gauge-bar" style="background:linear-gradient(90deg,#d97706,#fbbf24)"></span><span><strong>Yellow / Orange zone</strong> &mdash; Conversation is becoming tense</span></div>
+    <div class="gauge-demo"><span class="gauge-bar" style="background:linear-gradient(90deg,#dc2626,#f87171)"></span><span><strong>Red zone</strong> &mdash; Conversation is at high emotional intensity</span></div>
+    <div class="warn"><strong>Your goal:</strong> Keep the gauge in the green for at least 5 minutes. Empathetic, curious, and de-escalating responses move it toward green. Dismissive or confrontational responses may push it toward red.</div>
+    <div class="ss ss-strip">
+      <span class="ss-label">Detail &mdash; Heat Gauge (Yellow / Orange Zone)</span><br>
+      <img src="images/tvxr-heat-gauge.png" alt="Heat gauge showing yellow orange level">
+      <div class="cap">The heat gauge spans the bottom of the character viewport. Yellow/orange indicates the conversation is becoming emotionally tense. Your spoken responses influence the gauge in real time.</div>
+    </div>
+  </div>
+
+  <div id="listen-speak">
+    <h3>How to Interact: The Listen / Speak Toggle</h3>
+    <p>The game is entirely voice-based. Interaction works through a two-state button at the bottom of the screen:</p>
+    <ul>
+      <li><strong>Listen mode (default when the AI is speaking)</strong> &mdash; The button shows a microphone icon labeled &ldquo;Listen.&rdquo; The AI character is speaking. Wait and listen attentively before responding.</li>
+      <li><strong>Speak mode</strong> &mdash; Click the button to activate your microphone. Speak out loud as if you are genuinely in the conversation. When finished, click the button again to send your response.</li>
+      <li><strong>Loading response</strong> &mdash; After submitting your response, a &ldquo;Loading response&rdquo; indicator appears while the AI generates its next reply. Response time depends on your internet connection speed.</li>
+    </ul>
+    <div class="ss-row">
+      <div class="ss ss-strip">
+        <span class="ss-label">Listen Mode</span><br>
+        <img src="images/tvxr-listen-button.png" alt="Listen button and End Session button in listen mode">
+        <div class="cap">Listen mode: the AI character is speaking. Wait until it finishes before responding. The End Session button (right) is always available.</div>
+      </div>
+      <div class="ss ss-strip">
+        <span class="ss-label">Speak Mode</span><br>
+        <img src="images/tvxr-speak-button.png" alt="Speak button and End Session button in speak mode">
+        <div class="cap">Speak mode: click to activate your microphone and speak your response naturally, then click again to submit it to the AI.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="chat-history">
+    <h3>Chat History</h3>
+    <p>The <strong>Chat History</strong> button on the right side of the screen opens a scrollable panel showing a timestamped transcript of everything the AI character has said. This is useful if you missed something or want to reflect between turns. Click <strong>Hide Chat</strong> to close the panel.</p>
+    <div class="ss-row">
+      <div class="ss ss-btn">
+        <span class="ss-label">Screenshot &mdash; Chat History Button</span><br>
+        <img src="images/tvxr-chat-history-button.png" alt="Chat History button on the right side of the screen">
+        <div class="cap">The Chat History button appears on the right side of the game screen. Click it to open the conversation transcript panel.</div>
+      </div>
+      <div class="ss ss-portrait">
+        <span class="ss-label">Detail &mdash; Chat History Panel</span><br>
+        <img src="images/tvxr-chat-history-detail.png" alt="Chat History panel showing timestamped messages">
+        <div class="cap">Each entry in the Chat History shows the character&rsquo;s name, a timestamp, and their full spoken message. Use this to review or reflect on the conversation. Click &ldquo;Hide Chat&rdquo; to close.</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ENDING -->
+<section class="section" id="ending">
+  <h2>Ending a Session</h2>
+  <p>Click the <strong>End Session</strong> button (phone icon) at any time to conclude your practice. The <strong>Scenario Ended</strong> screen will appear, showing:</p>
+  <ul>
+    <li><strong>Active participation time</strong> &mdash; The number of minutes and seconds you were actively engaged.</li>
+    <li><strong>CEU credit note</strong> &mdash; A reminder that your participation time counts toward Continuing Education Unit credits.</li>
+    <li><strong>Navigation buttons</strong> &mdash; Jump back to any setup step to start a new session: Conversation Partner, Personality, Setting, Scenario, or Skill Set.</li>
+  </ul>
+  <div class="ss">
+    <span class="ss-label">Screenshot &mdash; Scenario Ended Screen</span><br>
+    <img src="images/tvxr-scenario-ended.png" alt="Scenario Ended screen with participation time and navigation buttons">
+    <div class="cap">The Scenario Ended screen displays your active participation time and confirms CEU credit. Use the navigation buttons to quickly launch a new session with modified choices.</div>
+  </div>
+</section>
+
+<!-- TIPS -->
+<section class="section" id="tips">
+  <h2>Tips for Success</h2>
+  <ul>
+    <li><strong>Speak naturally and out loud</strong> &mdash; the AI Coach responds to what you actually say, so treat it like a real conversation.</li>
+    <li><strong>Don&rsquo;t try to &ldquo;win&rdquo;</strong> &mdash; the goal is genuine listening and empathy, not performing a script or giving textbook answers.</li>
+    <li><strong>Watch the heat gauge</strong> &mdash; it gives you real-time cues about the emotional temperature of the conversation.</li>
+    <li><strong>Use Chat History</strong> to review what the character has said if you missed something or want to reflect between turns.</li>
+    <li><strong>Try different combinations</strong> &mdash; each personality + scenario combination creates a unique challenge. A firm-toned character (Personality 1) in a clinic will feel very different from a hesitant character (Personality 4) in a living room.</li>
+    <li><strong>Aim for 5 minutes in the green</strong> &mdash; this is the core performance goal stated before each session begins.</li>
+    <li><strong>Restart from any step</strong> &mdash; after a session ends, use the navigation buttons to swap just one variable (e.g., same scenario, different personality) for targeted, focused practice.</li>
+  </ul>
+</section>
+
+<!-- TECHNICAL -->
+<section class="section" id="technical">
+  <h2>Technical Notes</h2>
+  <ul>
+    <li>The game requires an <strong>active internet connection</strong> to generate AI responses in real time.</li>
+    <li>If your connection is slow, you may see a &ldquo;Loading response&rdquo; message noting your ping and download speeds. AI Coach responses may take longer under these conditions.</li>
+    <li>The game is <strong>version 1.12.8</strong> and is powered by Transform&rsquo;s <strong>Relational Intelligence Framework</strong>.</li>
+    <li>The platform records your active session time for <strong>CEU credit tracking</strong> purposes.</li>
+  </ul>
+</section>
+
+<div class="doc-footer">Transform VXR &mdash; Instruction Manual &nbsp;&bull;&nbsp; Version 1.12.8 &nbsp;&bull;&nbsp; &copy; Transform 2025</div>
+
+</main>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay">
+  <div id="search-modal">
+    <div id="search-modal-header">
+      <span id="search-modal-label">Results</span>
+      <button id="search-modal-close" onclick="closeSearch()" title="Close (Esc)">&times;</button>
+    </div>
+    <div id="search-results-list"></div>
+  </div>
+</div>
+
+<script>
+// ── Search index ────────────────────────────────────────────────────────────
+var searchData = [
+  { title: 'Overview', section: 'Getting Started', id: 'overview',
+    text: 'Transform VXR AI-powered conversational simulation game practice crucial communication skills emotionally charged real-world scenarios speak listen with intention CEU continuing education credits relational intelligence framework' },
+  { title: 'What You\'ll Need', section: 'Getting Started', id: 'requirements',
+    text: 'requirements webcam microphone internet connection web browser app.transformvxr.com stable slow lag setup computer' },
+  { title: 'Setup: Step-by-Step', section: 'Setup', id: 'setup',
+    text: 'setup steps getting started step by step guide begin first time launch' },
+  { title: 'Step 1 — Welcome Screen', section: 'Setup', id: 'step1',
+    text: 'welcome screen introduction talk lifelike AI coach understand listen with intention real-time feedback next button' },
+  { title: 'Step 2 — Disclaimer', section: 'Setup', id: 'step2',
+    text: 'disclaimer heads up before you start relational intelligence framework learning science cannot guarantee AI coach statement next' },
+  { title: 'Step 3 — Webcam / Microphone Setup', section: 'Setup', id: 'step3',
+    text: 'webcam microphone setup camera feed request permissions grant browser access mic detected ready green button next' },
+  { title: 'Customization: Building Your Scenario', section: 'Customization', id: 'customization',
+    text: 'customization choices scenario partner personality setting skill build configure session five choices' },
+  { title: 'Choice 1 — Conversation Partner', section: 'Customization', id: 'choice1',
+    text: 'conversation partner character Imani Cynthia River Luis avatar pick choose portrait professional woman short hair young man dark hair' },
+  { title: 'Choice 2 — Personality', section: 'Customization', id: 'choice2',
+    text: 'personality 1 firm tone direct 2 low energy disengaged 3 urgency reassurance connect 4 hesitation questions tentative behavior style communication' },
+  { title: 'Choice 3 — Setting', section: 'Customization', id: 'choice3',
+    text: 'setting office clinic coffee shop living room environment backdrop 3D realistic context professional medical casual home' },
+  { title: 'Choice 4 — Scenario', section: 'Customization', id: 'choice4',
+    text: 'scenario parent child autism frustration services supervisor unfair quarterly review direct report late family stress situation practice situation context' },
+  { title: 'Choice 5 — Skill Set', section: 'Customization', id: 'choice5',
+    text: 'skill set taking perspective recognizing regulating emotions listening curiosity showing empathy practice all skills five minutes green heat gauge feedback' },
+  { title: 'Game Interface', section: 'Game Interface', id: 'interface',
+    text: 'game interface main screen 3D environment AI character HUD time remaining feedback count heat gauge listen speak end session chat history' },
+  { title: 'HUD — Time Remaining & Feedback Count', section: 'Game Interface', id: 'hud',
+    text: 'HUD heads up display time remaining countdown 1 hour 40 minutes feedback count real-time coaching indicator top of screen' },
+  { title: 'The Heat Gauge', section: 'Game Interface', id: 'heat-gauge',
+    text: 'heat gauge color green yellow orange red emotional temperature conversation calm productive tense intense 5 minutes goal empathy de-escalate dismissive confrontational' },
+  { title: 'Listen / Speak Toggle', section: 'Game Interface', id: 'listen-speak',
+    text: 'listen speak toggle microphone voice button click activate loading response AI reply turn-taking voice-based interaction end session phone icon' },
+  { title: 'Chat History', section: 'Game Interface', id: 'chat-history',
+    text: 'chat history button panel scrollable timestamped transcript dialogue missed hide chat review reflect conversation log messages' },
+  { title: 'Ending a Session', section: 'Ending', id: 'ending',
+    text: 'end session scenario ended screen active participation time CEU credit continuing education navigation buttons restart conversation partner personality setting scenario skill set new session' },
+  { title: 'Tips for Success', section: 'Reference', id: 'tips',
+    text: 'tips success speak naturally out loud win empathy watch heat gauge chat history combinations personality scenario targeted practice five minutes green restart' },
+  { title: 'Technical Notes', section: 'Reference', id: 'technical',
+    text: 'technical internet connection loading response slow ping download speed version 1.12.8 relational intelligence framework CEU credit tracking session time 1 hour 40 minutes browser' },
+];
+
+// ── Search logic ─────────────────────────────────────────────────────────────
+function handleSearch(query) {
+  query = query.trim();
+  if (!query || query.length < 2) { closeSearch(); return; }
+  var q = query.toLowerCase();
+  var words = q.split(/\s+/);
+
+  var results = searchData.filter(function(d) {
+    var hay = (d.title + ' ' + d.text).toLowerCase();
+    return words.every(function(w) { return hay.includes(w); });
+  });
+
+  var overlay = document.getElementById('search-overlay');
+  var list = document.getElementById('search-results-list');
+  var label = document.getElementById('search-modal-label');
+  overlay.style.display = 'flex';
+
+  if (results.length === 0) {
+    label.textContent = 'No results';
+    list.innerHTML = '<div class="sr-empty">No results for "<strong>' + escHtml(query) + '</strong>"</div>';
+    return;
+  }
+
+  label.textContent = results.length + ' result' + (results.length > 1 ? 's' : '') + ' for "' + escHtml(query) + '"';
+  list.innerHTML = results.map(function(r) {
+    var rawExcerpt = r.text.split(' ').slice(0, 18).join(' ') + '…';
+    return '<div class="sr-item" onclick="goToSection(\'' + r.id + '\')">' +
+      '<div class="sr-title">' + highlight(r.title, words) + '</div>' +
+      '<div class="sr-excerpt">' + highlight(rawExcerpt, words) + '</div>' +
+      '<div class="sr-section">' + r.section + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function goToSection(id) {
+  closeSearch();
+  document.getElementById('search-input').value = '';
+  var el = document.getElementById(id);
+  if (el) { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').style.display = 'none';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function highlight(text, words) {
+  var safe = escHtml(text);
+  words.forEach(function(w) {
+    if (!w) return;
+    var re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+    safe = safe.replace(re, '<mark>$1</mark>');
+  });
+  return safe;
+}
+
+// ── Close on backdrop click ──────────────────────────────────────────────────
+document.getElementById('search-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeSearch();
+});
+
+// ── Keyboard shortcuts ───────────────────────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+  var input = document.getElementById('search-input');
+  if (e.key === '/' && document.activeElement !== input) {
+    e.preventDefault();
+    input.focus();
+    input.select();
+  }
+  if (e.key === 'Escape') {
+    closeSearch();
+    document.getElementById('search-input').blur();
+  }
+});
+
+// ── Active nav highlight on scroll ──────────────────────────────────────────
+var allSections = document.querySelectorAll('section.section, div.step, div[id]');
+var sidebarLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+
+window.addEventListener('scroll', function() {
+  var scrollY = window.scrollY + 120;
+  var current = null;
+  allSections.forEach(function(sec) {
+    if (sec.offsetTop <= scrollY) current = sec.id;
+  });
+  sidebarLinks.forEach(function(link) {
+    var href = link.getAttribute('href');
+    if (href === '#' + current) {
+      link.classList.add('active');
+    } else {
+      link.classList.remove('active');
+    }
+  });
+}, { passive: true });
+</script>
+</body>
+</html>
