@@ -54,12 +54,12 @@
     .section-sub { color: var(--muted); font-size: 1rem; font-weight: 300; max-width: 580px; line-height: 1.75; }
 
     /* WHAT WE ASSESS */
-    .assess-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
-    .assess-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; transition: border-color 0.2s, transform 0.2s; }
+    .assess-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 3rem; }
+    .assess-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: border-color 0.2s, transform 0.2s; }
     .assess-card:hover { border-color: rgba(46,196,182,0.35); transform: translateY(-3px); }
-    .assess-icon { font-size: 1.5rem; margin-bottom: 1rem; }
+    .assess-icon { font-size: 1.5rem; margin-bottom: 12px; }
     .assess-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; }
-    .assess-card p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+    .assess-card p { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.65; }
 
     /* HOW IT WORKS STRIP */
     .how-strip { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
@@ -78,6 +78,8 @@
     .domain-skills { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
     .domain-skills li { font-size: 0.85rem; color: var(--muted); font-weight: 300; display: flex; align-items: flex-start; gap: 0.6rem; }
     .domain-skills li::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--teal); flex-shrink: 0; margin-top: 0.55em; }
+    .domains-img-wrap { overflow-x: auto; margin-top: 3rem; }
+    .domains-img { display: block; width: 100%; min-width: 600px; height: auto; border: none; outline: none; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 6%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 12%, black 94%, transparent 100%); -webkit-mask-composite: intersect; mask-image: linear-gradient(to bottom, transparent 0%, black 6%, black 92%, transparent 100%), linear-gradient(to right, transparent 0%, black 12%, black 94%, transparent 100%); mask-composite: intersect; }
 
     /* OUTCOMES */
     .outcomes-section { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
@@ -168,6 +170,18 @@
     .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
     .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55% 1fr; gap: 3rem; align-items: center; text-align: left; }
+    .hero-inner h1 { max-width: none; margin: 0 0 1.5rem; }
+    .hero-inner .hero-sub { margin: 0 0 2rem; max-width: none; }
+    .hero-inner .hero-ctas { justify-content: flex-start; }
+    .hero-col-image img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; object-position: center; border-radius: 12px; display: block; }
+    .heatmap-img-wrap { margin-top: 1.25rem; border-radius: 6px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.3); overflow: hidden; background: var(--navy); padding: 0.75rem; }
+    .heatmap-img-wrap img { width: 100%; display: block; }
+    .assess-cta { background-image: url('images/tb-about2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .assess-cta::before { background: rgba(13,27,42,0.58) !important; z-index: 1; }
+    .assess-cta .cta-content { position: relative; z-index: 2; }
+    .assess-cta .btn-primary { position: relative; z-index: 2; background-color: #FF4DD0; color: #ffffff; border: none; opacity: 1 !important; }
+
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
@@ -177,11 +191,19 @@
       .section-title { font-size: 1.6rem; }
       .hero { padding: 3.5rem 1.25rem 3rem; }
       .hero h1 { font-size: 2.1rem; }
-      .assess-grid { grid-template-columns: 1fr; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-inner h1 { margin: 0 auto 1.5rem; }
+      .hero-inner .hero-ctas { justify-content: center; }
+      .hero-col-image img { min-height: 260px; }
+      .assess-grid { grid-template-columns: repeat(2, 1fr); }
       .outcomes-inner { grid-template-columns: 1fr; gap: 2rem; }
       .domain-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
       .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+
+    @media (max-width: 540px) {
+      .assess-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 480px) {
@@ -237,12 +259,19 @@
 
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-eyebrow">Assessment</div>
-    <h1>Growth starts with <span>knowing where you stand</span></h1>
-    <p class="hero-sub">Our diagnostics measure relational intelligence at the individual, team, or organizational level, so you understand the real picture before investing in change.</p>
-    <div class="hero-ctas">
-      <a href="contact.html" class="btn-primary">Learn About the Assessments</a>
-      <a href="riq-foundation.html" class="btn-outline">What Is RIQ?</a>
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <div class="hero-eyebrow">Assessment</div>
+        <h1>Growth starts with <span>knowing where you stand</span></h1>
+        <p class="hero-sub">Our diagnostics measure relational intelligence at the individual, team, or organizational level, so you understand the real picture before investing in change.</p>
+        <div class="hero-ctas">
+          <a href="contact.html" class="btn-primary">Learn About the Assessments</a>
+          <a href="riq-foundation.html" class="btn-outline">What Is RIQ?</a>
+        </div>
+      </div>
+      <div class="hero-col-image">
+        <img src="images/tv-p11.jpg" alt="Clinical supervisor and colleague reviewing team relational data" />
+      </div>
     </div>
   </section>
 
@@ -303,62 +332,8 @@
     <div class="section-label">The RIQ Framework</div>
     <h2 class="section-title">What relational intelligence actually measures</h2>
     <p class="section-sub">The assessment is built on five domains of Relationship Intelligence, each covering the observable behaviors that determine how people relate under pressure.</p>
-    <div class="domain-grid">
-      <div class="domain-card">
-        <h3>Awareness and Recognition</h3>
-        <ul class="domain-skills">
-          <li>Reflective self-insight</li>
-          <li>Perspective-taking</li>
-          <li>Sociocultural awareness and adaptation</li>
-          <li>Emotional recognition</li>
-          <li>Balanced disclosure</li>
-          <li>Solution awareness</li>
-        </ul>
-      </div>
-      <div class="domain-card">
-        <h3>Communication and Listening</h3>
-        <ul class="domain-skills">
-          <li>Respectful listening</li>
-          <li>Solution-oriented thinking</li>
-          <li>Neutral and nonjudgmental language</li>
-          <li>Clarity and conciseness</li>
-          <li>Curiosity</li>
-          <li>Present and attentive</li>
-        </ul>
-      </div>
-      <div class="domain-card">
-        <h3>Relational Integrity and Trust</h3>
-        <ul class="domain-skills">
-          <li>Establishing a relationship</li>
-          <li>Accountability</li>
-          <li>Consistency and dependability</li>
-          <li>Respecting boundaries</li>
-          <li>Psychological safety</li>
-          <li>Thoughtful deliberation</li>
-        </ul>
-      </div>
-      <div class="domain-card">
-        <h3>Emotional Regulation and Responsiveness</h3>
-        <ul class="domain-skills">
-          <li>Self-regulation of emotions</li>
-          <li>Empathy</li>
-          <li>Flexibility</li>
-          <li>De-escalation skills</li>
-          <li>Vulnerability</li>
-          <li>Hopeful outlook</li>
-        </ul>
-      </div>
-      <div class="domain-card">
-        <h3>Relational Impact and Guidance</h3>
-        <ul class="domain-skills">
-          <li>Mediation and negotiation skill</li>
-          <li>Collaboration and teaming</li>
-          <li>Moral and fair reasoning</li>
-          <li>Strategic thinking and problem solving</li>
-          <li>Risk assessment and mitigation</li>
-          <li>Empowering influence</li>
-        </ul>
-      </div>
+    <div class="domains-img-wrap">
+      <img class="domains-img" src="images/5domain-foundation-fs8.png" alt="The five domains of the RIQ framework — Awareness and Recognition, Communication and Listening, Emotional Regulation and Responsiveness, Relational Integrity and Trust, and Relational Impact and Guidance — connected through Transform VXR at center" />
     </div>
   </section>
 
@@ -392,10 +367,12 @@
     </div>
   </div>
 
-  <section class="cta-band">
-    <h2>Understand your team<br>before you try to change it.</h2>
-    <p>Talk to us about running an assessment for your organization or practice.</p>
-    <a href="contact.html" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Get in Touch</a>
+  <section class="cta-band assess-cta">
+    <div class="cta-content">
+      <h2>Understand your team<br>before you try to change it.</h2>
+      <p>Talk to us about running an assessment for your organization or practice.</p>
+      <a href="contact.html" class="btn-primary" style="background-color:#FF4DD0;color:#ffffff;border:none;padding:14px 28px;border-radius:6px;font-weight:600;font-size:15px;letter-spacing:0.3px;cursor:pointer;">Get in Touch</a>
+    </div>
   </section>
 
   <footer>

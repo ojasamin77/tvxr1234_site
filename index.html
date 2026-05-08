@@ -1215,6 +1215,72 @@
     border-top: 1px solid var(--border);
   }
 
+  /* ── PROBLEM SECTION IMAGE ── */
+  .problem-intro {
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+  .problem-hero-img {
+    float: right;
+    width: 42%;
+    margin: 0 0 1.5rem 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+  }
+  .problem-hero-img img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* ── HOW IT WORKS TWO-COLUMN LAYOUT ── */
+  .how-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 56px;
+  }
+  .how-layout .how-grid {
+    margin-top: 0;
+    grid-template-columns: 1fr;
+  }
+  .how-img-col {
+    position: sticky;
+    top: 80px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+  }
+  .how-img-col img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* ── CORPORATE IMAGE COLUMN ── */
+  .corporate-img-col {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    align-self: stretch;
+  }
+  .corporate-img-col img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  .corporate-right-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -1237,6 +1303,12 @@
     .proof-items { flex-wrap: wrap; gap: 8px; }
     .section { padding: 48px 24px; }
     .problem-layout { grid-template-columns: 1fr; gap: 32px; }
+    .problem-hero-img { float: none; width: 100%; margin: 1.5rem 0; }
+    .how-layout { grid-template-columns: 1fr; }
+    .how-img-col { position: static; }
+    .how-layout .how-grid { grid-template-columns: 1fr; }
+    .corporate-inner { grid-template-columns: 1fr; }
+    .corporate-img-col { max-height: 280px; }
     .how-grid { grid-template-columns: 1fr; }
     .scenarios-section { padding: 48px 24px; }
     .scenarios-grid { grid-template-columns: 1fr; }
@@ -1462,13 +1534,18 @@
 <section class="section">
   <div class="section-inner">
     <div class="section-tag">The Problem</div>
-    <h2>Clinically excellent.<br><em>Relationally underprepared.</em></h2>
-    <p class="section-body">
-      BCBAs are trained to analyze behavior, write plans, supervise implementation, and make clinical decisions. But many are never given a safe place to practice the conversations that determine whether that work succeeds: parent pushback, RBT accountability, ethical pressure, and difficult feedback.
-          </p>
-          <p class="section-body" style="margin-top:1rem;">
-          The result is a gap between knowing what should happen clinically and knowing how to say it when the relationship is at stake.
-    </p>
+    <div class="problem-intro">
+      <div class="problem-hero-img">
+        <img src="images/tv-h4rep.jpg" alt="A difficult workplace conversation playing out in real time." />
+      </div>
+      <h2>Clinically excellent.<br><em>Relationally underprepared.</em></h2>
+      <p class="section-body">
+        BCBAs are trained to analyze behavior, write plans, supervise implementation, and make clinical decisions. But many are never given a safe place to practice the conversations that determine whether that work succeeds: parent pushback, RBT accountability, ethical pressure, and difficult feedback.
+      </p>
+      <p class="section-body" style="margin-top:1rem;">
+        The result is a gap between knowing what should happen clinically and knowing how to say it when the relationship is at stake.
+      </p>
+    </div>
 
     <div class="problem-layout">
       <div class="problem-list">
@@ -1530,27 +1607,32 @@
       Behavioral skill acquisition requires practice under realistic conditions with immediate, specific feedback. TransformVXR gives BCBAs a safe way to rehearse the conversations that usually happen with no rehearsal at all.
     </p>
 
-    <div class="how-grid">
-      <div class="how-card" data-num="01">
-        <div class="how-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    <div class="how-layout">
+      <div class="how-grid">
+        <div class="how-card" data-num="01">
+          <div class="how-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <h3>Enter the scenario</h3>
+          <p>A responsive avatar presents a realistic ABA situation. The context feels familiar, but the stakes are safe.</p>
         </div>
-        <h3>Enter the scenario</h3>
-        <p>A responsive avatar presents a realistic ABA situation. The context feels familiar, but the stakes are safe.</p>
+        <div class="how-card" data-num="02">
+          <div class="how-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Have the conversation</h3>
+          <p>You respond in real time, in your own words. No scripts. No multiple choice. The avatar responds to what you actually say.</p>
+        </div>
+        <div class="how-card" data-num="03">
+          <div class="how-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3>See what your communication did</h3>
+          <p>Feedback is based on what you actually said, not what you clicked. Receive feedback on observable behaviors such as open questions, reflective statements, interruptions, pacing, and missed opportunities to repair or reframe.</p>
+        </div>
       </div>
-      <div class="how-card" data-num="02">
-        <div class="how-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <h3>Have the conversation</h3>
-        <p>You respond in real time, in your own words. No scripts. No multiple choice. The avatar responds to what you actually say.</p>
-      </div>
-      <div class="how-card" data-num="03">
-        <div class="how-icon">
-          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        </div>
-        <h3>See what your communication did</h3>
-        <p>Feedback is based on what you actually said, not what you clicked. Receive feedback on observable behaviors such as open questions, reflective statements, interruptions, pacing, and missed opportunities to repair or reframe.</p>
+      <div class="how-img-col">
+        <img src="images/image-112.png" alt="A BCBA practicing a clinical conversation with the TransformVXR AI avatar." />
       </div>
     </div>
   </div>
@@ -1625,21 +1707,26 @@
 <!-- CORPORATE CAPTURE -->
 <section class="corporate-section" style="opacity:0.85;border-top:1px solid var(--border);">
   <div class="corporate-inner">
-    <div class="corporate-left">
-      <div class="section-tag">For ABA Organizations</div>
-      <h2>Want to see how relational practice<br>changes team performance?</h2>
-      <p>
-        TransformVXR is expanding from individual CEU practice into organizational dashboards that help clinical leaders understand how communication patterns connect to retention, supervision quality, escalation risk, session adherence, and client experience.
-      </p>
+    <div class="corporate-img-col">
+      <img src="images/image-113.png" alt="A clinician accessing TransformVXR on a tablet." />
     </div>
-    <div class="capture-form">
-      <div class="capture-label">Early Access</div>
-      <p>Join the early access list for ABA organizations interested in piloting TransformVXR with supervisors, BCBAs, and clinical teams.</p>
-      <div class="input-row">
-        <input type="email" class="capture-input" placeholder="Work email address">
-        <button class="btn-capture">Join Organization Early Access</button>
+    <div class="corporate-right-stack">
+      <div class="corporate-left">
+        <div class="section-tag">For ABA Organizations</div>
+        <h2>Want to see how relational practice<br>changes team performance?</h2>
+        <p>
+          TransformVXR is expanding from individual CEU practice into organizational dashboards that help clinical leaders understand how communication patterns connect to retention, supervision quality, escalation risk, session adherence, and client experience.
+        </p>
       </div>
-      <p class="capture-note">No commitment. We'll reach out when organization pilots open.</p>
+      <div class="capture-form">
+        <div class="capture-label">Early Access</div>
+        <p>Join the early access list for ABA organizations interested in piloting TransformVXR with supervisors, BCBAs, and clinical teams.</p>
+        <div class="input-row">
+          <input type="email" class="capture-input" placeholder="Work email address">
+          <button class="btn-capture">Join Organization Early Access</button>
+        </div>
+        <p class="capture-note">No commitment. We'll reach out when organization pilots open.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1671,11 +1758,15 @@
         <span style="font-size:0.9rem;color:var(--muted);font-weight:300;line-height:1.6;">A clearer sense of what to say differently next time</span>
       </div>
     </div>
-    <div style="text-align:center;padding:2rem;background:var(--navy-card);border:1px solid var(--border);border-radius:12px;">
-      <div style="font-family:'Nunito Sans',sans-serif;font-weight:900;font-size:3rem;color:var(--white);letter-spacing:-0.03em;line-height:1;">$250</div>
-      <div style="font-size:0.85rem;color:var(--muted);margin-top:0.35rem;margin-bottom:1.5rem;">per scenario, including CEU credit</div>
-      <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Real Clinical Scenario</a>
-      <p style="font-size:0.78rem;color:var(--muted);margin-top:1rem;font-weight:300;">Free 10-minute session first. No account required.</p>
+    <div style="text-align:center;padding:2rem;background:var(--navy-card);border:1px solid rgba(46,196,182,0.2);border-radius:12px;">
+      <div style="font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-bottom:0.75rem;">CEU Certification Pending</div>
+      <p style="font-size:1rem;color:var(--white);font-weight:400;line-height:1.6;margin-bottom:0.5rem;">CEU pricing available once ACE certification is confirmed.</p>
+      <p style="font-size:0.875rem;color:var(--muted);font-weight:300;line-height:1.6;margin-bottom:1.5rem;">Join the list and we will notify you the moment CEU scenarios go live — including early access pricing.</p>
+      <div style="display:flex;gap:0.75rem;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center;">
+        <input type="email" placeholder="your@email.com" style="flex:1;min-width:200px;background:var(--navy-mid);border:1px solid var(--border);border-radius:6px;padding:0.65rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.875rem;color:var(--white);outline:none;" />
+        <button style="background:var(--magenta);color:var(--navy);font-family:'DM Sans',sans-serif;font-weight:600;font-size:0.875rem;padding:0.65rem 1.25rem;border:none;border-radius:6px;cursor:pointer;white-space:nowrap;">Notify Me</button>
+      </div>
+      <p style="font-size:0.75rem;color:var(--muted);margin-top:0.85rem;font-weight:300;opacity:0.7;">No commitment. No spam. Just one email when it is ready.</p>
     </div>
   </div>
 </section>

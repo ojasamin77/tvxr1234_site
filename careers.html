@@ -84,7 +84,7 @@
 
     /* INCLUSION */
     .inclusion-band { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem 2rem; text-align: center; }
-    .inclusion-inner { max-width: 640px; margin: 0 auto; }
+    .inclusion-inner { max-width: 1100px; margin: 0 auto; text-align: left; }
     .inclusion-inner h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.75rem; letter-spacing: -0.025em; margin-bottom: 1rem; }
     .inclusion-inner p { color: var(--muted); font-weight: 300; line-height: 1.75; font-size: 0.95rem; margin-bottom: 1.5rem; }
     .btn-outline { display: inline-block; border: 1px solid var(--border); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.6rem 1.5rem; border-radius: 6px; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
@@ -161,6 +161,13 @@
     .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
     .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55% 1fr; gap: 3rem; align-items: center; text-align: left; }
+    .hero-inner h1 { max-width: none; margin: 0 0 1.5rem; }
+    .hero-inner .hero-sub { margin: 0; max-width: none; }
+    .hero-col-image img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; object-position: center; border-radius: 12px; display: block; }
+    .inclusion-two-col { display: grid; grid-template-columns: 1fr 45%; gap: 3rem; align-items: center; text-align: left; }
+    .inclusion-img img { width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 4/3; display: block; }
+
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
@@ -170,6 +177,9 @@
       .section-title { font-size: 1.6rem; }
       .hero { padding: 3.5rem 1.25rem 3rem; }
       .hero h1 { font-size: 2.1rem; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-col-image img { min-height: 260px; }
+      .inclusion-two-col { grid-template-columns: 1fr; }
       .values-inner { grid-template-columns: 1fr; }
       .job-header { flex-direction: column; align-items: flex-start; }
       .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
@@ -229,9 +239,16 @@
 
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-eyebrow">Careers</div>
-    <h1>Join our mission to <span>transform workplace relationships</span></h1>
-    <p class="hero-sub">We believe the essential human skills like navigating conflict, building trust, staying grounded under pressure: these can be learned, practiced, and mastered. Come help us build the tools that make that possible.</p>
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <div class="hero-eyebrow">Careers</div>
+        <h1>Join our mission to <span>transform workplace relationships</span></h1>
+        <p class="hero-sub">We believe the essential human skills like navigating conflict, building trust, staying grounded under pressure: these can be learned, practiced, and mastered. Come help us build the tools that make that possible.</p>
+      </div>
+      <div class="hero-col-image">
+        <img src="images/tv-ai1.jpg" alt="Two colleagues working closely together, representing Transform's collaborative culture" />
+      </div>
+    </div>
   </section>
 
   <div class="values-strip">
@@ -411,9 +428,16 @@
 
   <div class="inclusion-band">
     <div class="inclusion-inner">
-      <h2>Inclusion at Transform</h2>
-      <p>We believe better workplaces start with more inclusive hiring. We welcome applicants from all backgrounds and encourage individuals from historically marginalized communities to apply, even if you don't meet every qualification listed.</p>
-      <a href="mailto:careers@transformvxr.com" class="btn-outline">careers@transformvxr.com</a>
+      <div class="inclusion-two-col">
+        <div>
+          <h2>Inclusion at Transform</h2>
+          <p>We believe better workplaces start with more inclusive hiring. We welcome applicants from all backgrounds and encourage individuals from historically marginalized communities to apply, even if you don't meet every qualification listed.</p>
+          <a href="mailto:careers@transformvxr.com" class="btn-outline">careers@transformvxr.com</a>
+        </div>
+        <div class="inclusion-img">
+          <img src="images/si.jpg" alt="Two people sharing a warm moment of connection, representing Transform's commitment to inclusive and human-centered work" />
+        </div>
+      </div>
     </div>
   </div>
 

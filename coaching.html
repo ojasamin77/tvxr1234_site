@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Coaching — TransformVXR</title>
+  <title>AI Practice, TransformVXR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -47,13 +47,19 @@
     .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
 
     /* ── HERO ── */
-    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; text-align: center; }
+    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; }
     .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,77,208,0.12) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 60%, rgba(46,196,182,0.07) 0%, transparent 60%); pointer-events: none; }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55fr 45fr; gap: 3.5rem; align-items: center; position: relative; }
+    .hero-text { text-align: left; }
     .hero-eyebrow { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
-    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 780px; margin: 0 auto 1.5rem; }
+    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
     .hero h1 span { color: var(--magenta); }
-    .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
-    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .hero-tagline { color: var(--white); font-size: 1.05rem; font-weight: 300; line-height: 1.6; margin-bottom: 1.5rem; }
+    .hero-sub { color: var(--muted); font-size: 0.95rem; font-weight: 300; line-height: 1.7; margin-bottom: 0.75rem; }
+    .hero-outcome { color: var(--teal); font-size: 0.95rem; font-weight: 400; line-height: 1.6; margin-bottom: 2.5rem; }
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-note { margin-top: 1.5rem; color: var(--muted); font-size: 0.85rem; font-weight: 300; }
+    .hero-img-col img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block; min-height: 420px; }
 
     /* ── SECTIONS ── */
     .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
@@ -87,6 +93,8 @@
     .chat-bubble { background: rgba(46,196,182,0.08); border: 1px solid rgba(46,196,182,0.18); border-radius: 10px; padding: 0.85rem 1.1rem; font-size: 0.85rem; color: var(--white); max-width: 85%; line-height: 1.5; }
     .chat-bubble.user { align-self: flex-end; background: rgba(255,77,208,0.08); border-color: rgba(255,77,208,0.2); }
     .chat-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.2rem; }
+    .scenario-header { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); }
+    .scenario-note { font-size: 0.8rem; color: var(--muted); font-weight: 300; margin-top: -0.5rem; }
 
     /* ── FEATURES ── */
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
@@ -96,9 +104,30 @@
     .feature-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; }
     .feature-card p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
 
+    /* ── IMPROVEMENT SECTION ── */
+    .improvement-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; margin-top: 2rem; max-width: 560px; }
+    .improvement-list li { font-size: 1rem; color: var(--white); font-weight: 300; display: flex; align-items: flex-start; gap: 0.75rem; line-height: 1.5; }
+    .improvement-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--magenta); flex-shrink: 0; margin-top: 0.55em; }
+
     /* ── PILOT BAND ── */
     .pilot-band { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 4rem 2rem; }
-    .pilot-inner { max-width: 680px; margin: 0 auto; text-align: center; }
+    .pilot-inner { max-width: 960px; margin: 0 auto; }
+    .pilot-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .pilot-cols img { width: 100%; border-radius: 12px; display: block; }
+    .pilot-text { text-align: left; }
+    .pilot-text .pilot-tag { display: inline-block; background: rgba(46,196,182,0.1); border: 1px solid rgba(46,196,182,0.25); color: var(--teal); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 99px; margin-bottom: 1.5rem; }
+    .pilot-text h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.025em; margin-bottom: 1rem; }
+    .pilot-text p { color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 1.75rem; font-size: 0.95rem; }
+
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-img-col img { min-height: unset; max-height: 400px; }
+      .use-cases-header { flex-direction: column; }
+      .use-cases-header-img { width: 100%; }
+      .pilot-cols { grid-template-columns: 1fr; }
+      .pilot-cols img { order: 2; }
+      .pilot-text { order: 1; text-align: center; }
+    }
     .pilot-tag { display: inline-block; background: rgba(46,196,182,0.1); border: 1px solid rgba(46,196,182,0.25); color: var(--teal); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 99px; margin-bottom: 1.5rem; }
     .pilot-inner h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -0.025em; margin-bottom: 1rem; }
     .pilot-inner p { color: var(--muted); font-weight: 300; line-height: 1.75; margin-bottom: 1.75rem; font-size: 0.95rem; }
@@ -108,6 +137,7 @@
     .cta-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,77,208,0.1) 0%, transparent 70%); pointer-events: none; }
     .cta-band h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin-bottom: 1rem; }
     .cta-band p { color: var(--muted); font-weight: 300; max-width: 480px; margin: 0 auto 2rem; line-height: 1.7; }
+    .cta-note { margin-top: 1.25rem; color: var(--muted); font-size: 0.875rem; font-weight: 300; }
 
     /* ── FOOTER ── */
     footer { background: var(--navy-mid); border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; }
@@ -174,8 +204,8 @@
   <nav>
     <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
     <ul class="nav-links">
-      <li><a href="coaching.html" class="active">AI Coaching</a></li>
-      <li><a href="certification.html">Certification</a></li>
+      <li><a href="coaching.html" class="active">AI Practice</a></li>
+      <li><a href="certification.html">CEUs</a></li>
       <li><a href="how-it-works.html">How It Works</a></li>
       <li><a href="about.html">About</a></li>
       <li><a href="blog.html">Blog</a></li>
@@ -183,7 +213,7 @@
     </ul>
     <div class="nav-utils">
       <a href="https://app.transformvxr.com/login" class="nav-login">Login</a>
-      <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
+      <a href="contact.html#demo" class="btn-primary">Try a Free 10-Min Demo</a>
     </div>
     <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
@@ -191,51 +221,61 @@
   </nav>
 
   <div class="nav-mobile-menu" id="navMobileMenu">
-    <a href="coaching.html" class="active">AI Coaching</a>
-    <a href="certification.html">Certification</a>
+    <a href="coaching.html" class="active">AI Practice</a>
+    <a href="certification.html">CEUs</a>
     <a href="how-it-works.html">How It Works</a>
     <a href="about.html">About</a>
     <a href="blog.html">Blog</a>
     <a href="contact.html">Contact</a>
     <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
-    <a href="contact.html#demo" class="nav-mobile-cta">Try a Real Clinical Scenario</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
   </div>
 
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-eyebrow">AI Coaching</div>
-    <h1>Practice that <span>actually prepares you</span> for what's hard</h1>
-    <p class="hero-sub">Real-time AI roleplay for BCBAs. Sharpen your responses to the exact conversations that derail your practice: difficult families, staff feedback, and organizational pressure.</p>
-    <div class="hero-ctas">
-      <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
-      <a href="how-it-works.html" class="btn-outline">See How It Works</a>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <div class="hero-eyebrow">AI Practice</div>
+        <h1>Practice the conversations that <span>determine whether your work succeeds</span></h1>
+        <p class="hero-tagline">You know the clinical answer. This is where you practice how to say it.</p>
+        <p class="hero-sub">AI role-play for BCBAs to practice high-stakes conversations, parent pushback, staff accountability, and clinical pressure, with real-time behavioral feedback.</p>
+        <p class="hero-outcome">Build confidence, clarity, and consistency before the real conversation happens.</p>
+        <div class="hero-ctas">
+          <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
+          <a href="how-it-works.html" class="btn-outline">See a Practice Session</a>
+        </div>
+        <p class="hero-note">Built specifically for BCBAs, not adapted from generic leadership or communication training.</p>
+      </div>
+      <div class="hero-img-col">
+        <img src="images/image-preparation.png" alt="A BCBA quietly preparing for a difficult conversation." />
+      </div>
     </div>
   </section>
 
   <section class="section">
     <div class="section-label">The Process</div>
-    <h2 class="section-title">Three steps. Real results.</h2>
-    <p class="section-sub">Each session is structured to build skill, not just surface awareness.</p>
+    <h2 class="section-title">How practice turns into performance</h2>
+    <p class="section-sub">Not awareness. Not theory. Observable behavioral change.</p>
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-num">01</div>
-        <h3>Choose your scenario</h3>
-        <p>Select from a library of high-stakes BCBA situations or describe your own. The AI builds the conversation around it.</p>
+        <h3>Select the conversation</h3>
+        <p>Choose from high-stakes BCBA scenarios or input your own. The AI builds a realistic interaction around it.</p>
       </div>
       <div class="step-card">
         <div class="step-num">02</div>
-        <h3>Roleplay with the AI</h3>
-        <p>The AI takes on the role of the other person and responds the way real conversations unfold, including the parts that are uncomfortable.</p>
+        <h3>Have the conversation</h3>
+        <p>Respond in real time, in your own words. No scripts. No prompts. The AI reacts the way real conversations do, including resistance and tension.</p>
       </div>
       <div class="step-card">
         <div class="step-num">03</div>
-        <h3>Get precise feedback</h3>
-        <p>After each exchange, the AI surfaces what worked, what missed, and what to try next. Behavior-analytic framing throughout.</p>
+        <h3>See what your communication did</h3>
+        <p>Receive feedback on observable behaviors, what moved the conversation forward, what escalated it, and what to try next.</p>
       </div>
       <div class="step-card">
         <div class="step-num">04</div>
-        <h3>Repeat until ready</h3>
-        <p>Run the same scenario multiple times. Vary the difficulty. Build fluency so the real conversation feels familiar, not foreign.</p>
+        <h3>Build fluency through repetition</h3>
+        <p>Run the same conversation multiple times. Adjust your approach. Build consistency so the real conversation feels familiar, not reactive.</p>
       </div>
     </div>
   </section>
@@ -243,11 +283,13 @@
   <div class="use-cases">
     <div class="use-cases-inner">
       <div class="section-label">Who It's For</div>
-      <h2 class="section-title">Built for the conversations BCBAs actually dread</h2>
+      <h2 class="section-title">Built for the moments that define BCBA performance</h2>
+      <p class="section-sub" style="margin-bottom:0">These are not rare situations. They happen every week.</p>
       <div class="tab-row">
-        <button class="tab-btn active" onclick="switchTab(event, 'parents')">Difficult Conversations</button>
-        <button class="tab-btn" onclick="switchTab(event, 'staff')">Giving Feedback That Lands</button>
-        <button class="tab-btn" onclick="switchTab(event, 'leadership')">When the Org Pulls Against Judgment</button>
+        <button class="tab-btn active" onclick="switchTab(event, 'parents')">Parent trust is breaking down</button>
+        <button class="tab-btn" onclick="switchTab(event, 'staff')">An RBT is not following the plan</button>
+        <button class="tab-btn" onclick="switchTab(event, 'leadership')">Clinical judgment is under pressure</button>
+        <button class="tab-btn" onclick="switchTab(event, 'feedback')">Feedback needs to create change, not tension</button>
       </div>
 
       <div class="tab-content active" id="tab-parents">
@@ -261,16 +303,18 @@
           </ul>
         </div>
         <div class="tab-visual">
+          <p class="scenario-header">What this looks like in practice</p>
+          <p class="scenario-note">A real moment. Practiced before it actually happens.</p>
           <div><div class="chat-label">Parent</div><div class="chat-bubble">I feel like you're not even listening. She's been in this program for 8 months and I see no progress.</div></div>
-          <div><div class="chat-label">You</div><div class="chat-bubble user">I hear that this is really hard. Let me show you the data from the last three months and let's look at it together.</div></div>
+          <div><div class="chat-label">You</div><div class="chat-bubble user">I hear how frustrating this feels. Let's look at what's been happening together so we can figure out what's getting in the way.</div></div>
           <div><div class="chat-label">Parent</div><div class="chat-bubble">The data doesn't tell me what I see at home.</div></div>
         </div>
       </div>
 
       <div class="tab-content" id="tab-staff">
         <div class="tab-text">
-          <h3>Giving feedback that actually changes behavior</h3>
-          <p>Corrective conversations with staff are among the most avoided in the field. AI Coaching makes it safe to practice until the language comes naturally.</p>
+          <h3>When an RBT is not following the plan</h3>
+          <p>Corrective conversations with staff are among the most avoided in the field. Practice sessions make it safe to rehearse until the language comes naturally.</p>
           <ul class="tab-bullets">
             <li>Practice performance conversations that are direct without being punitive</li>
             <li>Build language for addressing data integrity concerns</li>
@@ -286,7 +330,7 @@
 
       <div class="tab-content" id="tab-leadership">
         <div class="tab-text">
-          <h3>Advocating for what's right when the org pushes back</h3>
+          <h3>When clinical judgment is under pressure</h3>
           <p>When clinical judgment and organizational pressure pull in different directions, the language you use determines the outcome.</p>
           <ul class="tab-bullets">
             <li>Make data-driven cases that non-clinical leaders actually respond to</li>
@@ -300,56 +344,87 @@
           <div><div class="chat-label">Director</div><div class="chat-bubble">We've already kind of committed to the family.</div></div>
         </div>
       </div>
+
+      <div class="tab-content" id="tab-feedback">
+        <div class="tab-text">
+          <h3>When feedback needs to create change, not tension</h3>
+          <p>Giving feedback that shifts behavior without damaging trust is one of the hardest skills in supervision. Practice builds the precision that turns feedback into progress.</p>
+          <ul class="tab-bullets">
+            <li>Deliver corrective feedback that is specific and actionable</li>
+            <li>Build consistency in how expectations are communicated</li>
+            <li>Practice reframing defensiveness without backing down</li>
+          </ul>
+        </div>
+        <div class="tab-visual">
+          <div><div class="chat-label">You</div><div class="chat-bubble user">I want to talk about the session notes. They've been late three times this week.</div></div>
+          <div><div class="chat-label">RBT</div><div class="chat-bubble">I didn't think it was that big of a deal. I always get them done eventually.</div></div>
+          <div><div class="chat-label">You</div><div class="chat-bubble user">I understand. Let me show you why the timing matters and what we need to change about it.</div></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <section class="section">
     <div class="section-label">What Makes It Different</div>
-    <h2 class="section-title">Not another training module</h2>
-    <p class="section-sub">Built on the same behavioral principles BCBAs use with clients. Applied to the BCBA themselves.</p>
+    <h2 class="section-title">Most training tells you what to do. This helps you practice doing it.</h2>
+    <p class="section-sub">The difference is not content. It's behavioral rehearsal.</p>
     <div class="features-grid">
-      <div class="feature-card"><div class="feature-icon">🎯</div><h3>Scenario-specific fluency</h3><p>Practice the exact situations that feel hardest, not a generic library of corporate communication scenarios.</p></div>
-      <div class="feature-card"><div class="feature-icon">🔄</div><h3>Repetition without consequence</h3><p>Run the same conversation dozens of times. Change variables. Build the muscle memory that only comes from repeated exposure.</p></div>
-      <div class="feature-card"><div class="feature-icon">📊</div><h3>Behavior-analytic feedback</h3><p>Not "be more confident." Specific, functional, actionable feedback in the language you already use.</p></div>
-      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Available when you need it</h3><p>Hard conversation tomorrow? Practice tonight. No scheduling, no waitlists, no judgment.</p></div>
-      <div class="feature-card"><div class="feature-icon">📈</div><h3>Progress tracking</h3><p>See how your responses evolve across sessions. Know exactly where you've grown and where to focus next.</p></div>
-      <div class="feature-card"><div class="feature-icon">🔐</div><h3>Private and safe</h3><p>Your scenarios, your growth. A space to build fluency before the real conversation.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#9679;</div><h3>Practice what actually happens</h3><p>Not generic communication exercises. Real ABA situations that affect outcomes.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#9679;</div><h3>Repetition without risk</h3><p>Run the same conversation dozens of times. Change variables. Build the muscle memory that only comes from repeated exposure.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#9679;</div><h3>Behavioral feedback you can act on</h3><p>Feedback is based on what you actually said, not what you selected. Specific, functional, and in the language you already use.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#9679;</div><h3>Practice on demand</h3><p>Hard conversation tomorrow? Practice tonight. No scheduling, no waitlists, no judgment.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#9679;</div><h3>See your communication evolve</h3><p>See how your responses evolve across sessions. Know exactly where you've grown and where to focus next.</p></div>
+      <div class="feature-card"><div class="feature-icon">&#9679;</div><h3>Practice without being observed</h3><p>Your scenarios, your growth. A space to build fluency before the real conversation.</p></div>
     </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="section-label">What You're Actually Improving</div>
+    <h2 class="section-title">How you handle these conversations directly impacts retention, supervision quality, and client outcomes.</h2>
+    <ul class="improvement-list">
+      <li>How you respond under pressure</li>
+      <li>How you handle resistance</li>
+      <li>How clearly you communicate expectations</li>
+      <li>How effectively you repair or reframe conversations</li>
+    </ul>
   </section>
 
   <div class="pilot-band">
     <div class="pilot-inner">
-      <div class="pilot-tag">Currently in Pilot</div>
-      <h2>We're working with our first cohort of BCBA organizations</h2>
-      <p>TransformVXR is currently accepting a limited number of pilot partners. If you lead a BCBA practice or ABA organization and want early access, reach out directly.</p>
-      <a href="contact.html" class="btn-primary">Get in Touch</a>
+      <div class="pilot-cols">
+        <div class="pilot-text">
+          <div class="pilot-tag">For ABA Organizations</div>
+          <h2>We're working with our first cohort of BCBA organizations</h2>
+          <p>TransformVXR is working with early ABA partners to understand how improved communication impacts retention, supervision quality, and client outcomes.</p>
+          <a href="contact.html" class="btn-primary">Join Early Access</a>
+        </div>
+        <img src="images/tv-p11.jpg" alt="A clinical supervisor reviewing work with a team member." />
+      </div>
     </div>
   </div>
 
   <section class="cta-band">
-    <h2>The conversation is coming.<br>Be ready for it.</h2>
-    <p>Ten minutes is enough to know if this changes how your team prepares.</p>
+    <h2>Practice before the conversation happens</h2>
+    <p>In 10 minutes, you'll experience how your communication actually shows up, and what to change.</p>
     <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Real Clinical Scenario</a>
+    <p class="cta-note">You don't need to be perfect. That's the point of practice.</p>
   </section>
 
   <footer>
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
-        <p>AI-powered coaching and certification for BCBAs navigating the hardest parts of the job.</p>
+        <p>AI-powered practice for BCBAs. Rehearse high-stakes conversations, receive behavioral feedback, and build consistency where it matters most.</p>
       </div>
       <div class="footer-col">
         <h4>Product</h4>
-        <a href="coaching.html">AI Coaching</a>
-        <a href="certification.html">Certification</a>
-        <a href="assessment.html">Assessment</a>
-        <a href="family-development.html">Family Development</a>
+        <a href="coaching.html">AI Practice</a>
+        <a href="certification.html">CEUs</a>
       </div>
       <div class="footer-col">
         <h4>Company</h4>
         <a href="about.html">About</a>
         <a href="how-it-works.html">How It Works</a>
-        <a href="riq-foundation.html">RIQ Foundation</a>
         <a href="careers.html">Careers</a>
         <a href="contact.html">Contact</a>
       </div>
@@ -357,7 +432,6 @@
         <h4>Resources</h4>
         <a href="blog.html">Blog</a>
         <a href="solutions.html">Solutions</a>
-        <a href="bcba-landing-parent-v2.html">Parent Conversations</a>
         <a href="bcba-landing-managing-up.html">Managing Up</a>
         <a href="bcba-landing-performance.html">Performance Reviews</a>
       </div>
@@ -373,7 +447,6 @@
   </footer>
 
   <script>
-    // Tab switcher
     function switchTab(e, id) {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -381,7 +454,6 @@
       document.getElementById('tab-' + id).classList.add('active');
     }
 
-    // Mobile nav
     const hamburger = document.getElementById('navHamburger');
     const mobileMenu = document.getElementById('navMobileMenu');
     hamburger.addEventListener('click', () => {

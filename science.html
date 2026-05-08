@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Science — TransformVXR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0D1B2A; --navy-mid: #111F30; --navy-card: #162840;
+      --teal: #2EC4B6; --magenta: #FF4DD0; --magenta-dim: #D93CB0;
+      --coral: #E05C4B; --white: #F2F4F3; --muted: #7A96AB;
+      --border: rgba(46, 196, 182, 0.13);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; font-weight: 400; background: var(--navy); color: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    /* NAV, exact from about.html */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 8px; font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--white); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-logo img { width: 32px; height: 32px; object-fit: contain; mix-blend-mode: screen; flex-shrink: 0; }
+    .nav-logo span { color: var(--magenta); }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.9rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--white); }
+    .nav-utils { display: flex; align-items: center; gap: 1rem; }
+    .nav-login { font-size: 0.875rem; font-weight: 600; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    .nav-login:hover { color: var(--white); }
+    .btn-primary { display: inline-block; background: var(--magenta); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+    .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
+    .btn-outline { display: inline-block; border: 1px solid var(--border); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: border-color 0.2s, color 0.2s; }
+    .btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* HAMBURGER */
+    nav .nav-hamburger { display: none !important; }
+    .nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 201; flex-shrink: 0; }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: transform 0.25s, opacity 0.25s; transform-origin: center; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBILE DRAWER */
+    .nav-mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: rgba(13,27,42,0.99); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem 2rem; z-index: 199; flex-direction: column; gap: 0; transform: translateY(-8px); opacity: 0; transition: transform 0.25s ease, opacity 0.25s ease; }
+    .nav-mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+    .nav-mobile-menu a { display: block; font-size: 1.1rem; font-weight: 600; color: var(--muted); text-decoration: none; padding: 0.9rem 0; border-bottom: 1px solid var(--border); transition: color 0.2s; }
+    .nav-mobile-menu a:hover, .nav-mobile-menu a.active { color: var(--white); }
+    .nav-mobile-cta { margin-top: 1.25rem; display: block; text-align: center; background: var(--magenta); color: var(--navy) !important; font-weight: 700 !important; border-radius: 8px; padding: 0.85rem !important; border-bottom: none !important; }
+    .nav-mobile-login { text-align: center; font-size: 0.875rem !important; color: var(--muted) !important; margin-top: 0.5rem; border-bottom: none !important; }
+
+    /* SHARED LAYOUT */
+    .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
+    .section-title { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); font-size: 1rem; font-weight: 300; line-height: 1.75; }
+
+    /* HERO */
+    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 60%, rgba(46,196,182,0.06) 0%, transparent 60%); pointer-events: none; }
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .hero-eyebrow { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
+    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 1.5rem; }
+    .hero h1 span { color: var(--magenta); }
+    .hero-sub { margin: 0 0 2rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
+    .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .hero-img { width: 100%; border-radius: 12px; display: block; object-fit: cover; max-height: 480px; }
+
+    /* THESIS BAND */
+    .thesis-band { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 3rem 2rem; }
+    .thesis-inner { max-width: 1100px; margin: 0 auto; text-align: center; }
+    .thesis-inner p { font-size: 1.1rem; color: var(--muted); font-weight: 300; line-height: 1.8; margin: 0 auto; }
+    .thesis-inner p strong { color: var(--white); font-weight: 600; }
+
+    /* IMMERSIVE BLOCK */
+    .immersive-section { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+    .immersive-inner { max-width: 1100px; margin: 0 auto; }
+    .immersive-block { background: var(--navy-card); border: 1px solid var(--border); border-radius: 14px; padding: 3rem; position: relative; overflow: hidden; }
+    .immersive-block::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--magenta), var(--teal)); }
+    .immersive-block h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(1.5rem, 3vw, 2.25rem); letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 1.25rem; }
+    .immersive-block h3 em { font-style: normal; color: var(--magenta); }
+    .immersive-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; margin-bottom: 2rem; }
+    .immersive-two-col p { color: var(--muted); font-weight: 300; font-size: 0.975rem; line-height: 1.8; }
+    .immersive-two-col p strong { color: var(--white); font-weight: 600; }
+    .immersive-screenshot { width: 100%; border-radius: 10px; display: block; border: 1px solid var(--border); }
+    .imm-three { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .imm-item { background: rgba(242,244,243,0.03); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+    .imm-marker { width: 20px; height: 2px; border-radius: 2px; margin-bottom: 0.75rem; }
+    .imm-item h4 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.875rem; color: var(--white); margin-bottom: 0.4rem; }
+    .imm-item p { font-size: 0.8125rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+
+    /* GENERIC CARDS */
+    .card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; }
+    .card:hover { border-color: rgba(46,196,182,0.3); }
+    .card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); margin-bottom: 0.6rem; }
+    .card p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+    .card p strong { color: var(--white); font-weight: 600; }
+
+    .cards-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .cards-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2rem; }
+    .cards-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; margin-top: 2rem; }
+
+    /* ALTERNATING BG SECTIONS */
+    .alt-section { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+    .alt-inner { max-width: 1100px; margin: 0 auto; }
+
+    /* RIQ DOMAINS */
+    .riq-domains { display: grid; grid-template-columns: repeat(5,1fr); gap: 0.75rem; margin-top: 1.75rem; }
+    .riq-domain { background: var(--navy-card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+    .riq-domain .rd-marker { width: 18px; height: 2px; border-radius: 2px; margin-bottom: 0.6rem; }
+    .riq-domain .rd-name { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8rem; color: var(--white); line-height: 1.3; }
+    .specificity-note { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.75rem; margin-top: 1rem; }
+    .specificity-note p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.7; }
+    .specificity-note p strong { color: var(--white); font-weight: 600; }
+
+    /* FEEDBACK STEPS */
+    .feedback-steps { display: flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-top: 1.5rem; }
+    .fs { flex: 1; padding: 1.25rem 1.5rem; }
+    .fs:not(:last-child) { border-right: 1px solid var(--border); }
+    .fs-marker { width: 18px; height: 2px; border-radius: 2px; margin-bottom: 0.6rem; }
+    .fs-title { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8125rem; color: var(--white); margin-bottom: 0.35rem; }
+    .fs-desc { font-size: 0.775rem; color: var(--muted); line-height: 1.55; font-weight: 300; }
+
+    /* MINI BULLET LIST */
+    .mini-list { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+    .mini-item { display: flex; gap: 0.75rem; align-items: flex-start; }
+    .mini-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 0.55em; }
+    .dot-teal    { background: var(--teal); }
+    .dot-magenta { background: var(--magenta); }
+    .dot-coral   { background: var(--coral); }
+    .mini-item p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+    .mini-item p strong { color: var(--white); font-weight: 600; }
+
+    /* HEALTHCARE STATEMENTS */
+    .hc-list { display: flex; flex-direction: column; gap: 2px; margin-bottom: 2rem; }
+    .hc-item { padding: 1.75rem 2rem; border-left: 2px solid transparent; transition: background 0.2s; }
+    .hc-item:nth-child(1) { border-color: var(--magenta); }
+    .hc-item:nth-child(2) { border-color: #7744bb; }
+    .hc-item:nth-child(3) { border-color: var(--teal); }
+    .hc-item:nth-child(4) { border-color: #2dd4f5; }
+    .hc-item:hover { background: rgba(242,244,243,0.02); }
+    .hc-item p { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: clamp(1rem, 2vw, 1.3rem); color: var(--muted); line-height: 1.4; }
+    .hc-item p em { font-style: normal; color: var(--white); }
+    .hc-sub { font-size: 0.875rem; font-weight: 300; color: var(--muted); margin-top: 0.4rem; line-height: 1.6; opacity: 0.8; }
+    .hc-bridge { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem 2rem; }
+    .hc-bridge p { font-size: 0.95rem; color: var(--muted); font-weight: 300; line-height: 1.75; }
+    .hc-bridge p strong { color: var(--white); font-weight: 600; }
+
+    /* OUTCOME STATS */
+    .result-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; text-align: center; }
+    .result-num { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 2.25rem; color: var(--teal); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.5rem; }
+    .result-label { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.5; }
+    .result-source { font-size: 0.75rem; color: var(--muted); opacity: 0.5; margin-top: 0.5rem; }
+
+    /* ETHICS */
+    .ethic-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; }
+    .ethic-num { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 2rem; color: rgba(255,77,208,0.15); line-height: 1; margin-bottom: 0.75rem; }
+    .ethic-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem; color: var(--white); margin-bottom: 0.5rem; }
+    .ethic-card p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+
+    /* RESEARCH CITATIONS */
+    .research-block { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2.25rem; margin-top: 3rem; }
+    .research-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .research-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .rpill { background: rgba(46,196,182,0.06); border: 1px solid rgba(46,196,182,0.15); color: var(--muted); font-size: 0.75rem; font-weight: 400; padding: 0.25rem 0.75rem; border-radius: 99px; white-space: nowrap; }
+    .rpill strong { color: var(--teal); font-weight: 600; }
+
+    /* CTA BAND */
+    .cta-band { padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+    .cta-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,77,208,0.09) 0%, transparent 70%); pointer-events: none; }
+    .cta-band h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .cta-band p { color: var(--muted); font-weight: 300; max-width: 480px; margin: 0 auto 2rem; line-height: 1.7; }
+
+    /* FOOTER, exact from about.html */
+    footer { background: var(--navy-mid); border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+    .footer-brand p { color: var(--muted); font-size: 0.875rem; font-weight: 300; line-height: 1.65; margin-top: 0.75rem; max-width: 260px; }
+    .footer-col h4 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 300; margin-bottom: 0.6rem; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      nav { padding: 0 1.25rem; }
+      .nav-links { display: none; }
+      .nav-utils { display: none; }
+      nav .nav-hamburger { display: flex !important; flex-direction: column; }
+      .section { padding: 3rem 1.25rem; }
+      .section-title { font-size: 1.6rem; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-col-image { order: 1; }
+      .hero-col-text { order: 0; }
+      .hero h1 { font-size: 2.1rem; }
+      .imm-three { grid-template-columns: 1fr; }
+      .immersive-two-col { grid-template-columns: 1fr; }
+      .cards-grid-2 { grid-template-columns: 1fr; }
+      .cards-grid-3 { grid-template-columns: 1fr; }
+      .cards-grid-4 { grid-template-columns: 1fr 1fr; }
+      .riq-domains { grid-template-columns: 1fr 1fr; }
+      .feedback-steps { flex-direction: column; }
+      .fs:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .immersive-section, .alt-section { padding: 3rem 1.25rem; }
+      .thesis-band { padding: 2.5rem 1.25rem; }
+    }
+    @media (max-width: 480px) {
+      nav { padding: 0 1rem; }
+      .footer-inner { grid-template-columns: 1fr; gap: 1.25rem; }
+      .hero h1 { font-size: 1.85rem; }
+      .section { padding: 2.5rem 1rem; }
+      .section-title { font-size: 1.4rem; }
+      .cards-grid-4 { grid-template-columns: 1fr; }
+      .riq-domains { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+    <ul class="nav-links">
+      <li><a href="coaching.html">AI Coaching</a></li>
+      <li><a href="certification.html">Certification</a></li>
+      <li><a href="how-it-works.html">How It Works</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-utils">
+      <a href="https://app.transformvxr.com/login" class="nav-login">Login</a>
+      <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
+    </div>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="nav-mobile-menu" id="navMobileMenu">
+    <a href="coaching.html">AI Coaching</a>
+    <a href="certification.html">Certification</a>
+    <a href="how-it-works.html">How It Works</a>
+    <a href="about.html">About</a>
+    <a href="blog.html">Blog</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Real Clinical Scenario</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <div class="hero-eyebrow">Evidence-Based Platform</div>
+        <h1>The Science Behind <span>Transform VXR</span></h1>
+        <p class="hero-sub">How decades of behavioral research become real-world skill change, from observable behavior to immersive practice to lasting outcomes.</p>
+        <div class="hero-ctas">
+          <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
+          <a href="riq-foundation.html" class="btn-outline">RIQ Framework</a>
+        </div>
+      </div>
+      <div class="hero-col-image">
+        <img src="images/image-science1-fs8.png" alt="A professional in a high-stakes conversation, practicing relational skills." class="hero-img" />
+      </div>
+    </div>
+  </section>
+
+  <!-- THESIS -->
+  <div class="thesis-band">
+    <div class="thesis-inner">
+      <p>Relational skills are not fixed traits. They are <strong>observable, coachable behaviors</strong> that change through guided practice. Transform VXR exists to make that practice possible, grounded in 30+ years of organizational and behavioral science.</p>
+    </div>
+  </div>
+
+  <!-- 1. IMMERSIVE EXPERIENCE -->
+  <div class="immersive-section">
+    <div class="immersive-inner">
+      <div class="section-label">The Core Experience</div>
+      <div class="immersive-block">
+        <h3>Reading About Hard Conversations Won't Prepare You for Them</h3>
+        <div class="immersive-two-col">
+          <p>The moment your voice tightens. The pause before you respond. The instinct to deflect instead of lean in. <strong>These are the moments that define relationships, and they only change through practice.</strong> Not workshops. Not handbooks. Not knowing the right answer in theory.<br><br>Transform places you inside realistic, emotionally charged conversations with characters who react, push back, and respond to every choice you make. The stakes feel real. The consequences don't.</p>
+          <img src="images/image_feedback.png" alt="TransformVXR session showing AI avatar and behavioral feedback panel" class="immersive-screenshot" />
+        </div>
+        <div class="imm-three">
+          <div class="imm-item">
+            <div class="imm-marker" style="background: linear-gradient(90deg, var(--magenta), #7744bb)"></div>
+            <h4>Emotional Activation</h4>
+            <p>The full pressure of a real conversation, without the real-world cost of getting it wrong.</p>
+          </div>
+          <div class="imm-item">
+            <div class="imm-marker" style="background: linear-gradient(90deg, #7744bb, var(--teal))"></div>
+            <h4>Infinite Repetition</h4>
+            <p>Try it again. Try it differently. Skills only form through repetition across varied conditions.</p>
+          </div>
+          <div class="imm-item">
+            <div class="imm-marker" style="background: linear-gradient(90deg, var(--teal), #2dd4f5)"></div>
+            <h4>Guided Correction</h4>
+            <p>Feedback arrives at the moment it matters, specific, actionable, and free of judgment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. RIQ -->
+  <section class="section">
+    <div class="section-label">Relationship Intelligence</div>
+    <h2 class="section-title">RIQ©: Five Measurable Domains</h2>
+    <p class="section-sub">The RIQ© framework organizes relational capability into 5 measurable domains, each defined by specific, observable behaviors rather than personality areas. Built from a multi-year review of leadership, healthcare, and organizational psychology research.</p>
+    <div class="riq-domains">
+      <div class="riq-domain">
+        <div class="rd-marker" style="background: linear-gradient(90deg, var(--magenta), #7744bb)"></div>
+        <div class="rd-name">Awareness &amp; Recognition</div>
+      </div>
+      <div class="riq-domain">
+        <div class="rd-marker" style="background: linear-gradient(90deg, #7744bb, var(--teal))"></div>
+        <div class="rd-name">Communication &amp; Listening</div>
+      </div>
+      <div class="riq-domain">
+        <div class="rd-marker" style="background: linear-gradient(90deg, var(--teal), #2dd4f5)"></div>
+        <div class="rd-name">Relational Integrity &amp; Trust</div>
+      </div>
+      <div class="riq-domain">
+        <div class="rd-marker" style="background: linear-gradient(90deg, #2dd4f5, #7744bb)"></div>
+        <div class="rd-name">Emotional Regulation &amp; Responsiveness</div>
+      </div>
+      <div class="riq-domain">
+        <div class="rd-marker" style="background: linear-gradient(90deg, #7744bb, var(--magenta))"></div>
+        <div class="rd-name">Relational Impact &amp; Guidance</div>
+      </div>
+    </div>
+    <div class="specificity-note">
+      <p>Instead of "be more empathetic," the system targets something you can actually practice: <strong>"Try pausing to acknowledge what the speaker is feeling before moving on. Even a simple phrase like 'I can see why that would be hard' would help the person feel understood and builds trust."</strong> Vague labels don't change behavior. Observable micro-skills do.</p>
+    </div>
+  </section>
+
+  <!-- 3. FEEDBACK -->
+  <div class="alt-section">
+    <div class="alt-inner">
+      <div class="section-label">Feedback Architecture</div>
+      <h2 class="section-title">Specific, timely, safe</h2>
+      <p class="section-sub">Generic feedback fails. Research shows performance improves most when feedback is specific, close in time to the behavior, and paired with a concrete alternative the learner can immediately try.</p>
+      <div class="feedback-steps">
+        <div class="fs">
+          <div class="fs-marker" style="background: linear-gradient(90deg, var(--magenta), #7744bb)"></div>
+          <div class="fs-title">What You Did</div>
+          <div class="fs-desc">A neutral, non-judgmental description of the specific behavior observed in the moment.</div>
+        </div>
+        <div class="fs">
+          <div class="fs-marker" style="background: linear-gradient(90deg, #7744bb, var(--teal))"></div>
+          <div class="fs-title">The Impact</div>
+          <div class="fs-desc">A brief statement on how that behavior landed, on the relationship, conversation, and outcome.</div>
+        </div>
+        <div class="fs">
+          <div class="fs-marker" style="background: linear-gradient(90deg, var(--teal), #2dd4f5)"></div>
+          <div class="fs-title">What to Try Instead</div>
+          <div class="fs-desc">One or more concrete behavioral alternatives, often with example language to use immediately.</div>
+        </div>
+      </div>
+      <div class="cards-grid-2" style="margin-top: 1.5rem;">
+        <div class="card">
+          <h3>On-Demand, Not Constant</h3>
+          <p>Feedback arrives after the moment, not as constant interruption, so learners stay in the flow of the conversation, then replay specific moments for targeted practice.</p>
+        </div>
+        <div class="card">
+          <h3>Rooted in Motivational Interviewing &amp; ABA</h3>
+          <p>Mirrors evidence-based MI principles: <strong>autonomy, specificity, and psychological safety</strong> over criticism. Informed by behavior-analytic supervision frameworks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. GENERALIZATION -->
+  <section class="section">
+    <div class="section-label">Real-World Transfer</div>
+    <h2 class="section-title">Built for generalization</h2>
+    <p class="section-sub">A common failure in training: people perform well during the session, then revert under real-world pressure. Behavioral science shows that skill transfer is more likely when practice happens across varied contexts, emotional intensities, and relationship types.</p>
+    <div class="mini-list">
+      <div class="mini-item">
+        <div class="mini-dot dot-magenta"></div>
+        <p><strong>Character variability</strong>, different personalities, backgrounds, and communication styles across scenarios.</p>
+      </div>
+      <div class="mini-item">
+        <div class="mini-dot dot-teal"></div>
+        <p><strong>Emotional variability</strong>, characters shift in mood, tone, and intensity across scenarios, reflecting the unpredictability of real interactions.</p>
+      </div>
+      <div class="mini-item">
+        <div class="mini-dot dot-coral"></div>
+        <p><strong>Growth-gated progression</strong>, micro-skills must be demonstrated consistently across variations, not just once.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. MOTIVATION -->
+  <div class="alt-section">
+    <div class="alt-inner">
+      <div class="section-label">Motivation Design</div>
+      <h2 class="section-title">Designed to sustain effortful practice</h2>
+      <div class="cards-grid-2">
+        <div class="card">
+          <h3>Growth-Based Progression</h3>
+          <p>Visible growth tracking, practice time, and clear growth thresholds. Progress is always transparent, users know <strong>what's being measured, how scores change, and what progression means.</strong></p>
+        </div>
+        <div class="card">
+          <h3>No Dark Patterns</h3>
+          <p>No hidden scoring or opaque rankings. Gamification is used as a <strong>behavioral design tool</strong> to support genuine practice, not to maximize time-on-platform at any cost.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. HEALTHCARE -->
+  <section class="section">
+    <div class="section-label">The Human Cost</div>
+    <h2 class="section-title">When communication breaks down</h2>
+    <div class="hc-list">
+      <div class="hc-item">
+        <p>When a patient doesn't feel heard, <em>they don't come back.</em></p>
+        <div class="hc-sub">Clinician communication quality is one of the strongest predictors of whether a patient follows through on their treatment plan.</div>
+      </div>
+      <div class="hc-item">
+        <p>Relational breakdowns don't just damage relationships, <em>they drive burnout.</em></p>
+        <div class="hc-sub">Avoidant conflict, unspoken concerns, and unclear feedback are among the most frequently cited contributors to turnover in high-reliability care settings.</div>
+      </div>
+      <div class="hc-item">
+        <p>Patients who feel genuinely understood are <em>significantly more likely</em> to engage in their own care.</p>
+        <div class="hc-sub">Empathic listening, clear explanation of options, and collaborative decision-making are directly linked to satisfaction, adherence, and therapeutic alliance.</div>
+      </div>
+      <div class="hc-item">
+        <p>The hardest conversations in healthcare <em>are also the most important ones.</em></p>
+        <div class="hc-sub">Explaining a diagnosis. Responding to a distressed family. Addressing a patient who won't follow through. These moments can't be scripted, but they can be practiced.</div>
+      </div>
+    </div>
+    <div class="hc-bridge">
+      <p>Transform gives patient-facing teams a place to rehearse these conversations <strong>before they matter most</strong>, with the emotional realism of the real thing, and none of the real-world consequences. Clearer information exchange. Stronger therapeutic alliance. Better patient follow-through.</p>
+    </div>
+  </section>
+
+  <!-- 7. OUTCOMES -->
+  <div class="alt-section">
+    <div class="alt-inner">
+      <div class="section-label">What the Research Shows</div>
+      <h2 class="section-title">Outcomes</h2>
+      <div class="cards-grid-4">
+        <div class="result-card">
+          <div class="result-num">2×</div>
+          <div class="result-label">more likely to adhere to treatment when their clinician communicates well</div>
+          <div class="result-source">Haskard Zolnierek &amp; DiMatteo, 2009, 106 studies</div>
+        </div>
+        <div class="result-card">
+          <div class="result-num">19%</div>
+          <div class="result-label">higher risk of non-adherence when physician communication is poor</div>
+          <div class="result-source">Haskard Zolnierek &amp; DiMatteo, 2009</div>
+        </div>
+        <div class="result-card">
+          <div class="result-num">9K+</div>
+          <div class="result-label">citations linking psychological safety to team performance &amp; learning</div>
+          <div class="result-source">Edmondson, 1999</div>
+        </div>
+        <div class="result-card">
+          <div class="result-num">↓</div>
+          <div class="result-label">burnout &amp; turnover consistently reduced in psychologically safe teams</div>
+          <div class="result-source">Newman, Donohue &amp; Eva, 2017</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top: 1.5rem;">
+        <p>These aren't soft signals. They are findings replicated across hundreds of studies and decades of research. The connection between how people communicate and how teams and patients perform is one of the most robust in organizational and health psychology.<br><br><strong>What we don't claim:</strong> Transform VXR alone will fix culture or guarantee specific outcomes. It provides structured deliberate practice in the specific conversations that build, or erode, psychological safety and patient trust.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. ETHICS -->
+  <section class="section">
+    <div class="section-label">Ethical AI</div>
+    <h2 class="section-title">Three non-negotiables</h2>
+    <div class="cards-grid-3">
+      <div class="ethic-card">
+        <div class="ethic-num">01</div>
+        <h3>Psychological Safety</h3>
+        <p>The system never humiliates, harasses, or escalates in ways that would be unacceptable from a human coach. Guardrails minimize the likelihood of harmful conversational patterns at every level.</p>
+      </div>
+      <div class="ethic-card">
+        <div class="ethic-num">02</div>
+        <h3>Bias Awareness</h3>
+        <p>Scenarios and AI behavior are regularly reviewed for bias and disparate impact across identities and patient populations. External review is actively invited, not optional.</p>
+      </div>
+      <div class="ethic-card">
+        <div class="ethic-num">03</div>
+        <h3>Transparent Limitations</h3>
+        <p>Specific guidelines and behavioral definitions are provided upfront, and interobserver agreement is established to ensure scoring consistency. AI augments human development, it does not replace the human judgment at the center of it.</p>
+      </div>
+    </div>
+
+    <!-- RESEARCH CITATIONS -->
+    <div class="research-block">
+      <div class="research-label">Research Foundation</div>
+      <div class="research-pills">
+        <span class="rpill"><strong>Edmondson</strong> 1999 — Psychological Safety</span>
+        <span class="rpill"><strong>Mayer et al.</strong> 2004 — Emotional Intelligence</span>
+        <span class="rpill"><strong>Ericsson</strong> 2006 — Deliberate Practice</span>
+        <span class="rpill"><strong>Kluger &amp; DeNisi</strong> 1996 — Feedback Interventions</span>
+        <span class="rpill"><strong>Haskard Zolnierek &amp; DiMatteo</strong> 2009 — Communication &amp; Adherence</span>
+        <span class="rpill"><strong>Miller &amp; Rollnick</strong> 2012 — Motivational Interviewing</span>
+        <span class="rpill"><strong>Stokes &amp; Baer</strong> 1977 — Generalization</span>
+        <span class="rpill"><strong>Deci &amp; Ryan</strong> 2000 — Self-Determination</span>
+        <span class="rpill"><strong>Newman et al.</strong> 2017 — Psychological Safety Review</span>
+        <span class="rpill"><strong>Chang et al.</strong> 2024 — VR Training Effectiveness</span>
+        <span class="rpill"><strong>Carmeli et al.</strong> 2014 — Inclusive Leadership</span>
+        <span class="rpill"><strong>Omachi et al.</strong> 2024 — Patient-Centered Communication</span>
+        <span class="rpill">+ 15 additional peer-reviewed sources</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <h2>See the science<br>in a real session.</h2>
+    <p>Ten minutes. One scenario. Feedback grounded in what you actually said.</p>
+    <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Real Clinical Scenario</a>
+  </section>
+
+  <!-- FOOTER, exact from about.html + science.html added to Company -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+        <p>AI-powered coaching and certification for BCBAs navigating the hardest parts of the job.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="coaching.html">AI Coaching</a>
+        <a href="certification.html">Certification</a>
+        <a href="assessment.html">Assessment</a>
+        <a href="family-development.html">Family Development</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="about.html">About</a>
+        <a href="how-it-works.html">How It Works</a>
+        <a href="riq-foundation.html">RIQ Foundation</a>
+        <a href="science.html">The Science</a>
+        <a href="careers.html">Careers</a>
+        <a href="contact.html">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="blog.html">Blog</a>
+        <a href="solutions.html">Solutions</a>
+        <a href="bcba-landing-parent-v2.html">Parent Conversations</a>
+        <a href="bcba-landing-managing-up.html">Managing Up</a>
+        <a href="bcba-landing-performance.html">Performance Reviews</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>2026 TransformVXR. All rights reserved.</p>
+      <div style="display:flex;gap:1.25rem">
+        <a href="https://www.linkedin.com/company/transformvxr/" style="font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">LinkedIn</a>
+        <a href="https://www.instagram.com/transform.vxr/" style="font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Instagram</a>
+        <a href="https://www.tiktok.com/@transformvxr" style="font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">TikTok</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById('navHamburger');
+    const mobileMenu = document.getElementById('navMobileMenu');
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+        document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+      });
+      mobileMenu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          hamburger.classList.remove('open');
+          mobileMenu.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+  </script>
+</body>
+</html>

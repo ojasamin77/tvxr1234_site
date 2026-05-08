@@ -187,6 +187,19 @@
     .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
     .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55% 1fr; gap: 3rem; align-items: center; text-align: left; }
+    .hero-inner h1 { max-width: none; margin: 0 0 1.5rem; }
+    .hero-inner .hero-sub { margin: 0 0 2rem; max-width: none; }
+    .hero-inner .hero-ctas { justify-content: flex-start; }
+    .hero-col-image img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; object-position: center; border-radius: 12px; display: block; }
+    .observable-band { position: relative; padding: 5rem 2rem; background-image: url('images/tb-about2.jpg'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .observable-band::before { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(13,27,42,0.7), rgba(13,27,42,0.85)); pointer-events: none; }
+    .observable-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+    .observable-inner .section-sub { margin-bottom: 2.5rem; }
+    .why-matters-band { position: relative; padding: 5rem 2rem; background-image: url('images/image-board-room-fs8.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .why-matters-band::before { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(11,24,41,0.72) 0%, rgba(11,24,41,0.82) 60%, rgba(11,24,41,0.95) 100%); pointer-events: none; }
+    .why-matters-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; }
+
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
@@ -196,6 +209,13 @@
       .section-title { font-size: 1.6rem; }
       .hero { padding: 3.5rem 1.25rem 3rem; }
       .hero h1 { font-size: 2.1rem; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-inner h1 { margin: 0 auto 1.5rem; }
+      .hero-inner .hero-ctas { justify-content: center; }
+      .hero-col-image img { min-height: 260px; }
+      .impact-two-col { grid-template-columns: 1fr; }
+      .observable-band::before { background: linear-gradient(rgba(13,27,42,0.8), rgba(13,27,42,0.9)); }
+      .why-matters-band::before { background: linear-gradient(rgba(11,24,41,0.88) 0%, rgba(11,24,41,0.88) 100%); }
       .why-inner { grid-template-columns: 1fr; gap: 2rem; }
       .piq-flow { grid-template-columns: 1fr; }
       .measures-grid { grid-template-columns: 1fr; }
@@ -257,12 +277,19 @@
 
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-eyebrow">RIQ Foundation</div>
-    <h1>How people relate determines <span>how organizations perform</span></h1>
-    <p class="hero-sub">The RIQ to PIQ framework is the intellectual foundation behind every Transform product. It explains why relational capability is not a soft skill, but a measurable driver of organizational outcomes.</p>
-    <div class="hero-ctas">
-      <a href="assessment.html" class="btn-primary">See the Assessment</a>
-      <a href="solutions.html" class="btn-outline">Explore Solutions</a>
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <div class="hero-eyebrow">RIQ Foundation</div>
+        <h1>How people relate determines <span>how organizations perform</span></h1>
+        <p class="hero-sub">The RIQ to PIQ framework is the intellectual foundation behind every Transform product. It explains why relational capability is not a soft skill, but a measurable driver of organizational outcomes.</p>
+        <div class="hero-ctas">
+          <a href="assessment.html" class="btn-primary">See the Assessment</a>
+          <a href="solutions.html" class="btn-outline">Explore Solutions</a>
+        </div>
+      </div>
+      <div class="hero-col-image">
+        <img src="images/tb-cer1.jpg" alt="A clinical leader navigating a high-stakes conversation where relational capability directly shapes the outcome" />
+      </div>
     </div>
   </section>
 
@@ -300,33 +327,35 @@
     </div>
   </div>
 
-  <section class="section">
-    <div class="section-label">What RIQ Measures</div>
-    <h2 class="section-title">Observable behaviors, not personality</h2>
-    <p class="section-sub">Through assessment and guided practice, RIQ focuses on the specific behaviors that make relational dynamics visible so they can be practiced and improved, not left to chance.</p>
-    <div class="measures-grid">
-      <div class="measure-card">
-        <h3>How people listen and respond</h3>
-        <p>Whether someone is truly present, curious, and attentive in a conversation, or managing the surface while disengaging underneath.</p>
-      </div>
-      <div class="measure-card">
-        <h3>How safety and trust are built or broken</h3>
-        <p>The specific behaviors that signal psychological safety to others and those that inadvertently undermine it, even with good intentions.</p>
-      </div>
-      <div class="measure-card">
-        <h3>How power and authority are exercised</h3>
-        <p>Whether authority is used to create alignment and accountability or to create compliance and avoidance.</p>
-      </div>
-      <div class="measure-card">
-        <h3>How emotions are acknowledged and regulated</h3>
-        <p>The difference between suppressing affect and genuinely regulating it in a way that keeps the conversation productive.</p>
-      </div>
-      <div class="measure-card">
-        <h3>How clarity is maintained under pressure</h3>
-        <p>Whether people can stay specific, grounded, and outcome-focused when a conversation becomes emotionally charged.</p>
+  <div class="observable-band" aria-label="A leader facilitating a group conversation demonstrating observable relational behaviors">
+    <div class="observable-inner">
+      <div class="section-label">What RIQ Measures</div>
+      <h2 class="section-title">Observable behaviors, not personality</h2>
+      <p class="section-sub">Through assessment and guided practice, RIQ focuses on the specific behaviors that make relational dynamics visible so they can be practiced and improved, not left to chance.</p>
+      <div class="measures-grid">
+        <div class="measure-card">
+          <h3>How people listen and respond</h3>
+          <p>Whether someone is truly present, curious, and attentive in a conversation, or managing the surface while disengaging underneath.</p>
+        </div>
+        <div class="measure-card">
+          <h3>How safety and trust are built or broken</h3>
+          <p>The specific behaviors that signal psychological safety to others and those that inadvertently undermine it, even with good intentions.</p>
+        </div>
+        <div class="measure-card">
+          <h3>How power and authority are exercised</h3>
+          <p>Whether authority is used to create alignment and accountability or to create compliance and avoidance.</p>
+        </div>
+        <div class="measure-card">
+          <h3>How emotions are acknowledged and regulated</h3>
+          <p>The difference between suppressing affect and genuinely regulating it in a way that keeps the conversation productive.</p>
+        </div>
+        <div class="measure-card">
+          <h3>How clarity is maintained under pressure</h3>
+          <p>Whether people can stay specific, grounded, and outcome-focused when a conversation becomes emotionally charged.</p>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <div class="piq-section">
     <div class="piq-inner">
@@ -385,18 +414,20 @@
     </div>
   </section>
 
-  <section class="section" style="padding-top:0">
-    <div class="section-label">Why It Matters</div>
-    <h2 class="section-title">When relational capability is treated as a performance driver</h2>
-    <div class="impact-grid">
-      <div class="impact-item"><p><strong>Clearer leadership</strong>Leaders communicate with greater clarity and confidence in high-stakes situations.</p></div>
-      <div class="impact-item"><p><strong>Higher trust</strong>Teams operate with greater psychological safety and stronger peer accountability.</p></div>
-      <div class="impact-item"><p><strong>Earlier conflict resolution</strong>Issues are surfaced and addressed before they become systemic problems.</p></div>
-      <div class="impact-item"><p><strong>Lower burnout</strong>Disengagement decreases when people feel heard, supported, and relationally connected to their work.</p></div>
-      <div class="impact-item"><p><strong>Better retention</strong>Workforce resilience improves when relational infrastructure supports people through difficult periods.</p></div>
-      <div class="impact-item"><p><strong>Consistent delivery</strong>Customer, client, and patient experiences become more human and more reliable.</p></div>
+  <div class="why-matters-band" aria-label="A diverse professional team in engaged discussion around a conference table, representing the relational dynamics that drive organizational performance">
+    <div class="why-matters-inner">
+      <div class="section-label">Why It Matters</div>
+      <h2 class="section-title">When relational capability is treated as a performance driver</h2>
+      <div class="impact-grid">
+        <div class="impact-item"><p><strong>Clearer leadership</strong>Leaders communicate with greater clarity and confidence in high-stakes situations.</p></div>
+        <div class="impact-item"><p><strong>Higher trust</strong>Teams operate with greater psychological safety and stronger peer accountability.</p></div>
+        <div class="impact-item"><p><strong>Earlier conflict resolution</strong>Issues are surfaced and addressed before they become systemic problems.</p></div>
+        <div class="impact-item"><p><strong>Lower burnout</strong>Disengagement decreases when people feel heard, supported, and relationally connected to their work.</p></div>
+        <div class="impact-item"><p><strong>Better retention</strong>Workforce resilience improves when relational infrastructure supports people through difficult periods.</p></div>
+        <div class="impact-item"><p><strong>Consistent delivery</strong>Customer, client, and patient experiences become more human and more reliable.</p></div>
+      </div>
     </div>
-  </section>
+  </div>
 
   <div class="quote-band">
     <blockquote>Most learning systems ask what people need to know. Transform asks <span>how people need to relate, especially when it is hard.</span></blockquote>

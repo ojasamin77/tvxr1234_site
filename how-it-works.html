@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How It Works — TransformVXR</title>
+  <title>How It Works, TransformVXR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -48,6 +48,13 @@
     .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
 
     /* HERO */
+    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 4rem; text-align: center; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 50% 60% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 30% 40% at 90% 80%, rgba(46,196,182,0.07) 0%, transparent 60%); pointer-events: none; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
+    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 720px; margin: 0 auto 1.5rem; }
+    .hero h1 span { color: var(--magenta); }
+    .hero-sub { max-width: 560px; margin: 0 auto; color: var(--muted); font-size: 1.05rem; font-weight: 300; line-height: 1.7; }
+
     .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
     .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
     .section-title { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 1rem; }
@@ -78,6 +85,12 @@
     .step-body p { color: var(--muted); font-weight: 300; line-height: 1.75; font-size: 0.925rem; }
     .step-visual { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; min-height: 160px; }
     .step-visual-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 0.75rem; }
+    .step-screenshot { border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; align-self: center; }
+    .step-screenshot img { width: 100%; display: block; aspect-ratio: 16/10; object-fit: cover; }
+    .step-screenshot--gauge { background: var(--navy-card); display: flex; align-items: center; justify-content: center; padding: 2.5rem 1.5rem; }
+    .step-screenshot--gauge img { aspect-ratio: unset; height: auto; object-fit: contain; }
+    .process-step.img-left .step-body { order: 3; }
+    .process-step.img-left .step-screenshot { order: 2; }
 
     /* SCENARIO SELECTOR MOCK */
     .scenario-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -263,8 +276,7 @@
     .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 300; margin-bottom: 0.6rem; transition: color 0.2s; }
     .footer-col a:hover { color: var(--white); }
     .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }      .section { padding: 2.5rem 1rem; }
-    }      .compare-header, .compare-row { grid-template-columns: 1.5fr 1fr 1fr; padding: 0.75rem 1rem; }    }
+    .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
 
     /* ── HAMBURGER ── */
     nav .nav-hamburger { display: none !important; }
@@ -317,15 +329,6 @@
     }
 
     /* ── RESPONSIVE ── */
-
-    .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; text-align: center; }
-    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 60%, rgba(46,196,182,0.07) 0%, transparent 60%); pointer-events: none; }
-    .hero-eyebrow { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
-    .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; letter-spacing: -0.03em; max-width: 780px; margin: 0 auto 1.5rem; }
-    .hero h1 span { color: var(--magenta); }
-    .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
-    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
@@ -337,6 +340,9 @@
       .hero h1 { font-size: 2.1rem; }
       .process-step { grid-template-columns: 52px 1fr; }
       .step-visual { display: none; }
+      .step-body { order: 2 !important; }
+      .step-screenshot { order: 10 !important; grid-column: 1 / -1; margin-top: 1.5rem; }
+      .step-screenshot img { max-height: 300px; width: 100%; object-fit: cover; }
       .personas-grid { grid-template-columns: 1fr; }
       .compare-header { font-size: 0.72rem; padding: 0.75rem 1rem; }
       .compare-row { font-size: 0.8rem; padding: 0.75rem 1rem; }
@@ -368,7 +374,7 @@
     </ul>
     <div class="nav-utils">
       <a href="https://app.transformvxr.com/login" class="nav-login">Login</a>
-      <a href="contact.html#demo" class="btn-primary">Try a Real Clinical Scenario</a>
+      <a href="contact.html#demo" class="btn-primary">Try a Free 10-Min Demo</a>
     </div>
     <button class="nav-hamburger" id="navHamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </nav>
@@ -381,7 +387,7 @@
     <a href="blog.html">Blog</a>
     <a href="contact.html">Contact</a>
     <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
-    <a href="contact.html#demo" class="nav-mobile-cta">Try a Real Clinical Scenario</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
   </div>
 
   <div class="nav-mobile-menu" id="navMobileMenu">
@@ -392,14 +398,14 @@
     <a href="blog.html">Blog</a>
     <a href="contact.html">Contact</a>
     <a href="https://app.transformvxr.com/login" class="nav-mobile-login">Login</a>
-    <a href="contact.html#demo" class="nav-mobile-cta">Try a Real Clinical Scenario</a>
+    <a href="contact.html#demo" class="nav-mobile-cta">Try a Free 10-Min Demo</a>
   </div>
 
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-eyebrow">How It Works</div>
-    <h1>Ten minutes in, you'll understand <span>why practice changes everything</span></h1>
-    <p class="hero-sub">Here is exactly what happens when you use TransformVXR, step by step, with no marketing in the way.</p>
+    <h1>In 10 minutes, you'll see how your <span>communication actually shows up</span></h1>
+    <p class="hero-sub">Here is exactly what happens when you practice a real conversation, step by step.</p>
   </section>
 
   <div class="process-section">
@@ -418,39 +424,22 @@
             <h3>Choose the scenario that fits your situation</h3>
             <p>You start by selecting the type of conversation you need to practice. The library covers the full range of high-stakes BCBA interactions: parent resistance, staff performance, caseload negotiation, clinical disagreements with leadership, and more. Or you can describe your own situation in plain language and the AI will build a scenario around it.</p>
           </div>
-          <div class="step-visual">
-            <div class="step-visual-label">Scenario selector</div>
-            <div class="scenario-chips">
-              <span class="s-chip sel">Parent pushback on recommendations</span>
-              <span class="s-chip">RBT corrective feedback</span>
-              <span class="s-chip">Caseload negotiation</span>
-              <span class="s-chip">Data integrity conversation</span>
-              <span class="s-chip">Managing staff burnout</span>
-              <span class="s-chip">Custom scenario</span>
-            </div>
+          <div class="step-screenshot">
+            <img src="images/tvxr-choose-scenario.png" alt="The TransformVXR scenario selection screen." />
           </div>
         </div>
 
-        <div class="process-step visible">
+        <div class="process-step visible img-left">
           <div class="step-indicator">
             <div class="step-circle">2</div>
             <div class="step-line"></div>
           </div>
           <div class="step-body">
-            <h3>The AI plays the other person. You respond.</h3>
-            <p>The AI takes on the role of the parent, staff member, or supervisor. It does not give you an easy version of the conversation. It pushes back, deflects, escalates, and redirects the way people actually do. Your job is to respond in real time, using whatever language comes naturally.</p>
+            <h3>You have the conversation. The AI responds.</h3>
+            <p>The AI takes on the role of the parent, staff member, or supervisor. It does not give you an easy version of the conversation. It pushes back, deflects, escalates, and redirects the way people actually do. Your job is to respond in real time, using whatever language comes naturally. There are no prompts or suggested answers, only what you actually say.</p>
           </div>
-          <div class="step-visual">
-            <div class="step-visual-label">Live session</div>
-            <div class="chat-mock">
-              <div class="chat-row">
-                <div class="chat-from">Parent</div>
-                <div class="chat-bubble ai">I've been doing this for three years and I've never seen any real progress. I don't think this program is working.</div>
-              </div>
-              <div class="chat-row" style="align-items:flex-end">
-                <div class="chat-bubble user">I understand how frustrating that is. Can we look at the data together so I can show you what's changed?</div>
-              </div>
-            </div>
+          <div class="step-screenshot">
+            <img src="images/tvxr-session.png" alt="A live TransformVXR session with an AI conversation partner." />
           </div>
         </div>
 
@@ -460,44 +449,11 @@
             <div class="step-line"></div>
           </div>
           <div class="step-body">
-            <h3>You receive precise feedback after every exchange</h3>
-            <p>After each response you give, the AI analyzes what worked, what missed, and why. Feedback is framed in behavioral terms, not generic coaching language. You will see exactly where your response de-escalated the situation, where it inadvertently reinforced the other person's resistance, and what to try differently.</p>
+            <h3>You see what your communication did</h3>
+            <p>After each response you give, the AI analyzes what worked, what missed, and why. Feedback is framed in behavioral terms, not generic coaching language. You will see exactly where your response de-escalated the situation, where it inadvertently reinforced the other person's resistance, and what to try differently. Feedback is based on what you said, not what you intended.</p>
           </div>
-          <div class="step-visual feedback-panel-card">
-            <div class="fp-topbar">
-              <div class="fp-dot green"></div>
-              <div class="fp-dot yellow"></div>
-              <div class="fp-dot red"></div>
-              <span class="fp-title">Feedback</span>
-            </div>
-            <div class="fp-body">
-              <div class="fp-row">
-                <div class="fp-tag strength">Strength</div>
-                <div class="fp-tag-label">Commitment</div>
-              </div>
-              <p class="fp-text">Your statement "I'll do whatever it takes" shows a strong willingness to improve and address the feedback provided.</p>
-
-              <div class="fp-divider"></div>
-
-              <div class="fp-row">
-                <div class="fp-tag growth">Growth</div>
-                <div class="fp-tag-label">Clarity</div>
-              </div>
-              <p class="fp-text">When you said "Let's see if you can do it," it was unclear and could be perceived as defensive.</p>
-
-              <div class="fp-divider"></div>
-
-              <div class="fp-row">
-                <div class="fp-tag opportunity">Opportunity</div>
-                <div class="fp-tag-label">Responsiveness</div>
-              </div>
-              <p class="fp-text">Enhancing your responsiveness to staff could positively impact your performance.</p>
-
-              <div class="fp-next">
-                <span class="fp-next-label">Try this next</span>
-                <span class="fp-next-text">Pause for Processing</span>
-              </div>
-            </div>
+          <div class="step-screenshot step-screenshot--gauge">
+            <img src="images/tvxr-heat-gauge.png" alt="Real-time heat gauge showing emotional temperature of the conversation." />
           </div>
         </div>
 
@@ -508,7 +464,7 @@
           </div>
           <div class="step-body">
             <h3>Repeat, vary, and build fluency</h3>
-            <p>Run the same scenario again. Change the severity. Try the other end of the emotional spectrum. Each repetition is tracked. Over time you will see clear data on where your responses have improved and where you still hesitate. This is behavioral rehearsal with the same logic you apply to your clients.</p>
+            <p>Run the same scenario again. Change the severity. Try the other end of the emotional spectrum. Each repetition is tracked. Over time you will see clear data on where your responses have improved and where you still hesitate. This is behavioral rehearsal with the same logic you apply to your clients. Over time, this becomes consistency, not guesswork, in real conversations.</p>
           </div>
           <div class="step-visual">
             <div class="step-visual-label">Session history</div>
@@ -529,25 +485,17 @@
           </div>
         </div>
 
-        <div class="process-step visible">
+        <div class="process-step visible img-left">
           <div class="step-indicator">
             <div class="step-circle">5</div>
             <div class="step-line"></div>
           </div>
           <div class="step-body">
             <h3>Earn certification by demonstrating skill</h3>
-            <p>When you are ready, you can take a certification assessment. It is a live roleplay evaluation scored across multiple dimensions. Pass, and you receive a credential with CEU credit that reflects what you can actually do. It is not awarded for completing modules. It is earned by performing well under pressure.</p>
+            <p>When you are ready, you can take a certification assessment. It is a live roleplay evaluation scored across multiple dimensions. Pass, and you receive a credential with CEU credit that reflects what you can actually do. It is not awarded for completion. It is earned by performing well under pressure.</p>
           </div>
-          <div class="step-visual">
-            <div class="step-visual-label">Certification earned</div>
-            <div class="cert-mock">
-              <div class="cert-badge-big">🏅</div>
-              <div class="cert-meta">
-                <div class="cert-title">Clinical Leadership Certificate</div>
-                <div class="cert-sub" style="color:var(--teal);margin-bottom:0.25rem">Performance verified</div>
-                <div class="cert-sub">6 CEU credits · Digital badge issued</div>
-              </div>
-            </div>
+          <div class="step-screenshot">
+            <img src="images/tvxr-scenario-ended.png" alt="The TransformVXR session ended screen showing participation time and CEU credit." />
           </div>
         </div>
 
@@ -561,6 +509,7 @@
     <h2 class="section-title">Traditional training is not practice</h2>
     <p class="section-sub">Most professional development tells you what to do. TransformVXR trains you to do it.</p>
 
+    <p class="section-sub" style="margin-bottom:2rem">Most training explains what to do. This lets you practice doing it.</p>
     <div class="compare-table">
       <div class="compare-header">
         <div class="compare-header-cell">Capability</div>
@@ -581,7 +530,7 @@
   <!-- WHO IT FITS -->
   <section class="section" style="padding-top:0">
     <div class="section-label">Who Uses TransformVXR</div>
-    <h2 class="section-title">Across the BCBA career arc</h2>
+    <h2 class="section-title">Used across the BCBA career lifecycle</h2>
 
     <div class="personas-grid">
       <div class="persona-card">
@@ -606,9 +555,9 @@
   </section>
 
   <section class="cta-band">
-    <h2>The only way to know<br>is to try it</h2>
-    <p>Ten minutes. One scenario. Real feedback. No card required.</p>
-    <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Real Clinical Scenario</a>
+    <h2>The fastest way to understand it<br>is to try it</h2>
+    <p>10 minutes. One real scenario. Behavioral feedback. No card required.</p>
+    <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Free 10-Min Demo</a>
   </section>
 
   <footer>

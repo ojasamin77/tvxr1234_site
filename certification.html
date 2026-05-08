@@ -180,6 +180,13 @@
     .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
     .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55% 1fr; gap: 3rem; align-items: center; text-align: left; }
+    .hero-inner h1 { max-width: none; margin: 0 0 1.5rem; }
+    .hero-inner .hero-sub { margin: 0 0 2.5rem; }
+    .hero-inner .hero-ctas { justify-content: flex-start; }
+    .hero-col-image img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; object-position: top center; border-radius: 10px; display: block; }
+    .track-card-img { display: block; width: calc(100% + 4rem); margin: -2rem -2rem 1.5rem; height: 180px; object-fit: cover; border-radius: 14px 14px 0 0; }
+
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
@@ -193,6 +200,9 @@
       .curriculum-inner { grid-template-columns: 1fr; gap: 2rem; }
       .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
       .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-inner .hero-ctas { justify-content: center; }
+      .hero-col-image img { min-height: unset; max-height: 380px; }
     }
 
     @media (max-width: 480px) {
@@ -248,12 +258,19 @@
 
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-eyebrow">Certification</div>
-    <h1>Credentials built on <span>demonstrated skill</span>, not seat time</h1>
-    <p class="hero-sub">TransformVXR certifications are earned through practice, assessment, and proof of performance. Not hours logged in a course catalog.</p>
-    <div class="hero-ctas">
-      <a href="#tracks" class="btn-primary">View Certification Tracks</a>
-      <a href="how-it-works.html" class="btn-outline">How It Works</a>
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <div class="hero-eyebrow">Certification</div>
+        <h1>Credentials built on <span>demonstrated skill</span>, not seat time</h1>
+        <p class="hero-sub">Demonstrate how you handle real conversations, not just what you know.</p>
+        <div class="hero-ctas">
+          <a href="#tracks" class="btn-primary">View Certification Tracks</a>
+          <a href="how-it-works.html" class="btn-outline">How It Works</a>
+        </div>
+      </div>
+      <div class="hero-col-image">
+        <img src="images/image-cert1-fs8.png" alt="A BCBA reflecting on her professional development." />
+      </div>
     </div>
   </section>
 
@@ -263,6 +280,7 @@
     <p class="section-sub">Each track is built around a specific domain of BCBA practice. Complete one or all three.</p>
     <div class="tracks-grid">
       <div class="track-card">
+        <img src="images/tv-p1-e1771993195699.jpg" alt="A BCBA practicing family communication skills." class="track-card-img" />
         <div class="track-badge">Family Communication</div>
         <div class="track-title">Family Communication Specialist</div>
         <p class="track-desc">Demonstrate fluency in high-stakes conversations with parents and caregivers across the full range of clinical situations.</p>
@@ -272,9 +290,10 @@
           <li>Setting limits on scope and goals</li>
           <li>Navigating cultural and family dynamics</li>
         </ul>
-        <a href="contact.html" class="btn-teal">Express Interest</a>
+        <a href="contact.html" class="btn-teal">Join Early Access</a>
       </div>
       <div class="track-card featured">
+        <img src="images/tv-p11.jpg" alt="A clinical supervisor working with a team member." class="track-card-img" />
         <div class="track-badge">Clinical Leadership</div>
         <div class="track-title">Clinical Leadership Certificate</div>
         <p class="track-desc">For BCBAs who supervise staff and need to lead through performance issues, burnout, and team dynamics with confidence.</p>
@@ -284,9 +303,10 @@
           <li>Managing staff burnout and disengagement</li>
           <li>Building accountability without punishment</li>
         </ul>
-        <a href="contact.html" class="btn-full-mag">Express Interest</a>
+        <a href="contact.html" class="btn-full-mag">Join Early Access</a>
       </div>
       <div class="track-card">
+        <img src="images/we.jpg" alt="A BCBA presenting a case to organizational leadership." class="track-card-img" />
         <div class="track-badge">Organizational Advocacy</div>
         <div class="track-title">Organizational Advocacy Certificate</div>
         <p class="track-desc">For BCBAs who need to influence leadership, protect clinical standards, and navigate organizational complexity.</p>
@@ -296,7 +316,7 @@
           <li>Responding to ethical pressures</li>
           <li>Navigating disagreements with supervisors</li>
         </ul>
-        <a href="contact.html" class="btn-teal">Express Interest</a>
+        <a href="contact.html" class="btn-teal">Join Early Access</a>
       </div>
     </div>
   </section>
@@ -305,8 +325,8 @@
     <div class="curriculum-inner">
       <div>
         <div class="section-label">Curriculum</div>
-        <h2 class="section-title">What you actually learn</h2>
-        <p class="section-sub">Each module combines behavioral theory, AI practice, and a performance assessment. No passive watching.</p>
+        <h2 class="section-title">What you practice and demonstrate</h2>
+        <p class="section-sub">Most certifications measure knowledge. This one measures performance.</p>
         <div class="module-list">
           <div class="module-item active" onclick="selectModule(this, 0)">
             <div class="module-num">Module 01</div>
@@ -348,7 +368,7 @@
     <div class="accred-grid">
       <div class="accred-card"><div class="accred-icon">📋</div><h3>CEU Credits</h3><p>Certifications are designed to align with BACB continuing education requirements. Contact us for current CEU details.</p></div>
       <div class="accred-card"><div class="accred-icon">🏅</div><h3>Digital Badge</h3><p>Earn a verifiable digital credential you can share on LinkedIn or professional profiles.</p></div>
-      <div class="accred-card"><div class="accred-icon">📄</div><h3>Certificate of Completion</h3><p>Downloadable PDF certificate for your professional portfolio or HR file.</p></div>
+      <div class="accred-card"><div class="accred-icon">📄</div><h3>Performance Certificate</h3><p>Downloadable PDF certificate for your professional portfolio or HR file.</p></div>
       <div class="accred-card"><div class="accred-icon">🔍</div><h3>Performance Verified</h3><p>Certification requires demonstrated skill in AI roleplay assessments. Not just watching videos.</p></div>
     </div>
   </section>
@@ -359,7 +379,7 @@
     <div class="faq-list">
       <div class="faq-item open">
         <button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">Are these certifications approved by the BACB?</span><span class="faq-icon">+</span></button>
-        <div class="faq-a">TransformVXR is designed to align with BACB continuing education principles. For current CEU approval status and details, please contact us directly.</div>
+        <div class="faq-a">TransformVXR certifications are designed to align with BACB CEU principles. For current CEU approval status and details, contact us directly.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="toggleFaq(this)"><span class="faq-q-text">How long does each certification take?</span><span class="faq-icon">+</span></button>
@@ -381,12 +401,12 @@
       <div class="pilot-tag">Currently in Pilot</div>
       <h2>Certification tracks are currently in development</h2>
       <p>We're building with our first cohort of BCBA organizations. If you want to be among the first to access certification, reach out and we'll keep you informed.</p>
-      <a href="contact.html" class="btn-primary">Stay in the Loop</a>
+      <a href="contact.html" class="btn-primary">Join Certification Early Access</a>
     </div>
   </div>
 
   <section class="cta-band">
-    <h2>Credentials that reflect<br>what you can actually do</h2>
+    <h2>See how certification is earned<br>through performance</h2>
     <p>Start with a free demo session to experience the format before committing to a track.</p>
     <a href="contact.html#demo" class="btn-primary" style="font-size:1rem;padding:0.75rem 2rem;">Try a Real Clinical Scenario</a>
   </section>

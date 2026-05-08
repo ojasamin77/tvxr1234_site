@@ -163,6 +163,24 @@
     .hero-sub { max-width: 580px; margin: 0 auto 2.5rem; color: var(--muted); font-size: 1.1rem; font-weight: 300; line-height: 1.7; }
     .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
+    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55% 1fr; gap: 3rem; align-items: center; text-align: left; }
+    .hero-inner h1 { max-width: none; margin: 0 0 1.5rem; }
+    .hero-inner .hero-sub { margin: 0 0 2rem; max-width: none; }
+    .hero-inner .hero-ctas { justify-content: flex-start; }
+    .hero-col-image img { width: 100%; height: 100%; min-height: 380px; object-fit: cover; object-position: center; border-radius: 12px; display: block; }
+
+    .org-solutions-band { position: relative; padding: 5rem 2rem; background-image: url('images/image-board-room-fs8.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .org-solutions-band::before { content: ''; position: absolute; inset: 0; background: rgba(11,24,41,0.72); z-index: 1; pointer-events: none; }
+    .org-solutions-inner { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; }
+    .org-solutions-inner h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.25rem; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    .org-solutions-inner p { color: var(--muted); font-size: 0.875rem; font-weight: 300; line-height: 1.7; }
+    .org-solutions-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 2rem; }
+
+    .solution-card.solution-card--img { display: block; padding: 0; }
+    .sol-top { display: grid; grid-template-columns: 55% 1fr; gap: 2.5rem; padding: 3rem 2.5rem 2rem; align-items: center; }
+    .sol-img img { width: 100%; border-radius: 8px; object-fit: cover; aspect-ratio: 4/3; display: block; }
+    .sol-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; padding: 0 2.5rem 3rem; }
+
     @media (max-width: 900px) {
       nav { padding: 0 1.25rem; }
       .nav-links { display: none; }
@@ -172,7 +190,13 @@
       .section-title { font-size: 1.6rem; }
       .hero { padding: 3.5rem 1.25rem 3rem; }
       .hero h1 { font-size: 2.1rem; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-inner .hero-ctas { justify-content: center; }
+      .hero-col-image img { min-height: 260px; }
       .solution-card { grid-template-columns: 1fr; gap: 1.5rem; }
+      .org-solutions-cols { grid-template-columns: 1fr; gap: 2rem; }
+      .sol-top { grid-template-columns: 1fr; padding: 2rem 1.5rem 1.5rem; }
+      .sol-bottom { grid-template-columns: 1fr; padding: 0 1.5rem 2rem; }
       .industries-grid { grid-template-columns: 1fr; }
       .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
       .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
@@ -231,12 +255,19 @@
 
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-eyebrow">Solutions</div>
-    <h1>Built for the <span>human challenges</span> that drive performance</h1>
-    <p class="hero-sub">Modern organizations do not struggle because people lack expertise. They struggle when communication breaks down, trust erodes, and relationships strain under pressure. Transform addresses that directly.</p>
-    <div class="hero-ctas">
-      <a href="contact.html" class="btn-primary">Talk With Our Team</a>
-      <a href="how-it-works.html" class="btn-outline">See How It Works</a>
+    <div class="hero-inner">
+      <div class="hero-col-text">
+        <div class="hero-eyebrow">Solutions</div>
+        <h1>Built for the <span>human challenges</span> that drive performance</h1>
+        <p class="hero-sub">Modern organizations do not struggle because people lack expertise. They struggle when communication breaks down, trust erodes, and relationships strain under pressure. Transform addresses that directly.</p>
+        <div class="hero-ctas">
+          <a href="contact.html" class="btn-primary">Talk With Our Team</a>
+          <a href="how-it-works.html" class="btn-outline">See How It Works</a>
+        </div>
+      </div>
+      <div class="hero-col-image">
+        <img src="images/tv-about.jpg" alt="A diverse professional team in an engaged discussion, representing the relational challenges Transform addresses" />
+      </div>
     </div>
   </section>
 
@@ -256,22 +287,21 @@
     </div>
   </div>
 
-  <section class="section">
+  <section class="section" style="padding-bottom: 2rem">
     <div class="section-label">Solution Tracks</div>
     <h2 class="section-title">Choose the solution that fits your organization</h2>
     <p class="section-sub">Transform supports multiple audiences because relational challenges show up differently at every level. Each solution targets specific roles, risks, and outcomes while running on the same underlying system.</p>
+  </section>
 
-    <div class="solutions-list">
-
-      <div class="solution-card">
-        <div>
-          <div class="solution-tag">Organizational</div>
-          <h2>Organizational Solutions</h2>
-          <div class="solution-for">For executives, HR leaders, operations, and enterprise teams</div>
-          <p>At scale, small relational breakdowns become systemic problems. Traditional training cannot diagnose or correct these patterns across an organization. Transform enables organizations to assess, identify, develop, and scale relational capability consistently.</p>
-          <br/>
-          <a href="contact.html" class="btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem">Explore this solution</a>
-        </div>
+  <div class="org-solutions-band" aria-label="An organizational leadership team in discussion, representing the relational dynamics Transform helps address at scale">
+    <div class="org-solutions-inner">
+      <div class="solution-tag">Organizational</div>
+      <h2>Organizational Solutions</h2>
+      <div class="solution-for">For executives, HR leaders, operations, and enterprise teams</div>
+      <p>At scale, small relational breakdowns become systemic problems. Traditional training cannot diagnose or correct these patterns across an organization. Transform enables organizations to assess, identify, develop, and scale relational capability consistently.</p>
+      <br/>
+      <a href="contact.html" class="btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem">Explore this solution</a>
+      <div class="org-solutions-cols">
         <div class="solution-col">
           <h4>The Challenge</h4>
           <ul class="solution-list">
@@ -293,64 +323,83 @@
           </ul>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="solution-card">
-        <div>
-          <div class="solution-tag">Leadership</div>
-          <h2>Leadership and Management Solutions</h2>
-          <div class="solution-for">For people managers, supervisors, directors, and emerging leaders</div>
-          <p>Most leaders are promoted for technical skill, not relational readiness, and are given little opportunity to practice before the stakes are real. Transform provides safe, realistic role-play experiences with feedback grounded in observable behavior.</p>
-          <br/>
-          <a href="contact.html" class="btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem">Explore this solution</a>
+  <section class="section" style="padding-top: 2rem">
+    <div class="solutions-list">
+
+      <div class="solution-card solution-card--img">
+        <div class="sol-top">
+          <div class="sol-text">
+            <div class="solution-tag">Leadership</div>
+            <h2>Leadership and Management Solutions</h2>
+            <div class="solution-for">For people managers, supervisors, directors, and emerging leaders</div>
+            <p>Most leaders are promoted for technical skill, not relational readiness, and are given little opportunity to practice before the stakes are real. Transform provides safe, realistic role-play experiences with feedback grounded in observable behavior.</p>
+            <br/>
+            <a href="contact.html" class="btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem">Explore this solution</a>
+          </div>
+          <div class="sol-img">
+            <img src="images/tb-about2.jpg" alt="A leader facilitating a team session, representing the high-stakes conversations Transform prepares managers to navigate" />
+          </div>
         </div>
-        <div class="solution-col">
-          <h4>The Challenge</h4>
-          <ul class="solution-list">
-            <li>Difficult feedback conversations</li>
-            <li>Performance concerns</li>
-            <li>Conflict and tension</li>
-            <li>Burnout and disengagement in teams</li>
-          </ul>
-        </div>
-        <div class="solution-col">
-          <h4>What Changes</h4>
-          <ul class="solution-list">
-            <li>Greater confidence in high-stakes conversations</li>
-            <li>Stronger trust and credibility with teams</li>
-            <li>Earlier issue resolution</li>
-            <li>Reduced emotional fatigue and burnout</li>
-            <li>More consistent leadership behavior</li>
-          </ul>
+        <div class="sol-bottom">
+          <div class="solution-col">
+            <h4>The Challenge</h4>
+            <ul class="solution-list">
+              <li>Difficult feedback conversations</li>
+              <li>Performance concerns</li>
+              <li>Conflict and tension</li>
+              <li>Burnout and disengagement in teams</li>
+            </ul>
+          </div>
+          <div class="solution-col">
+            <h4>What Changes</h4>
+            <ul class="solution-list">
+              <li>Greater confidence in high-stakes conversations</li>
+              <li>Stronger trust and credibility with teams</li>
+              <li>Earlier issue resolution</li>
+              <li>Reduced emotional fatigue and burnout</li>
+              <li>More consistent leadership behavior</li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <div class="solution-card">
-        <div>
-          <div class="solution-tag">Clinical</div>
-          <h2>Clinical and Care Team Solutions</h2>
-          <div class="solution-for">For clinical directors, BCBAs, care teams, and interdisciplinary staff</div>
-          <p>Care teams operate in emotionally complex, high-risk environments. Few settings allow safe practice without impacting trust, outcomes, or professional relationships. Transform supports care teams through psychologically safe practice with role-specific, ethics-aligned scenarios.</p>
-          <br/>
-          <a href="coaching.html" class="btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem">Explore this solution</a>
+      <div class="solution-card solution-card--img">
+        <div class="sol-top">
+          <div class="sol-text">
+            <div class="solution-tag">Clinical</div>
+            <h2>Clinical and Care Team Solutions</h2>
+            <div class="solution-for">For clinical directors, BCBAs, care teams, and interdisciplinary staff</div>
+            <p>Care teams operate in emotionally complex, high-risk environments. Few settings allow safe practice without impacting trust, outcomes, or professional relationships. Transform supports care teams through psychologically safe practice with role-specific, ethics-aligned scenarios.</p>
+            <br/>
+            <a href="coaching.html" class="btn-outline" style="font-size:0.8rem;padding:0.45rem 1rem">Explore this solution</a>
+          </div>
+          <div class="sol-img">
+            <img src="images/tb-cer1.jpg" alt="A clinical leader in a high-stakes care team conversation, representing the environments Transform supports" />
+          </div>
         </div>
-        <div class="solution-col">
-          <h4>The Challenge</h4>
-          <ul class="solution-list">
-            <li>Difficult family conversations</li>
-            <li>Ethical and supervisory challenges</li>
-            <li>Interdisciplinary tension</li>
-            <li>Emotional overload and burnout</li>
-          </ul>
-        </div>
-        <div class="solution-col">
-          <h4>What Changes</h4>
-          <ul class="solution-list">
-            <li>Stronger therapeutic and family relationships</li>
-            <li>Improved interdisciplinary collaboration</li>
-            <li>Reduced burnout and emotional strain</li>
-            <li>More confident, ethical communication</li>
-            <li>Higher consistency in quality of care</li>
-          </ul>
+        <div class="sol-bottom">
+          <div class="solution-col">
+            <h4>The Challenge</h4>
+            <ul class="solution-list">
+              <li>Difficult family conversations</li>
+              <li>Ethical and supervisory challenges</li>
+              <li>Interdisciplinary tension</li>
+              <li>Emotional overload and burnout</li>
+            </ul>
+          </div>
+          <div class="solution-col">
+            <h4>What Changes</h4>
+            <ul class="solution-list">
+              <li>Stronger therapeutic and family relationships</li>
+              <li>Improved interdisciplinary collaboration</li>
+              <li>Reduced burnout and emotional strain</li>
+              <li>More confident, ethical communication</li>
+              <li>Higher consistency in quality of care</li>
+            </ul>
+          </div>
         </div>
       </div>
 
