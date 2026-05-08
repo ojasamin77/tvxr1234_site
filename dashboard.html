@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — TransformVXR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@800;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0D1B2A; --navy-mid: #111F30; --navy-card: #162840;
+      --teal: #2EC4B6; --magenta: #FF4DD0; --magenta-dim: #D93CB0;
+      --coral: #E05C4B; --white: #F2F4F3; --muted: #7A96AB;
+      --border: rgba(46,196,182,0.13);
+      --sidebar-w: 240px;
+      --topbar-h: 64px;
+      --green: #2EC4A0;
+      --yellow: #F0B429;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 15% 15%, rgba(255,77,208,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 40% at 85% 80%, rgba(46,196,182,0.04) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* TOP BAR */
+    .top-bar {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100; height: var(--topbar-h);
+      background: rgba(13,27,42,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 900; font-size: 1.25rem;
+      color: var(--white); text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo img { width: 32px; height: 32px; object-fit: contain; mix-blend-mode: screen; flex-shrink: 0; }
+    .nav-logo span { color: var(--magenta); }
+    .top-bar-right { display: flex; align-items: center; gap: 1rem; }
+    .user-email { font-size: 0.8125rem; color: var(--muted); font-weight: 300; }
+    .btn-primary {
+      display: inline-block; background: var(--magenta); color: var(--navy);
+      font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem;
+      padding: 0.5rem 1.25rem; border-radius: 6px; text-decoration: none;
+      border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.15s; white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
+
+    /* LAYOUT */
+    .app-layout { display: flex; flex: 1; padding-top: var(--topbar-h); min-height: 100vh; position: relative; z-index: 1; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      background: var(--navy-mid); border-right: 1px solid var(--border);
+      padding: 2rem 0;
+      position: fixed; top: var(--topbar-h); bottom: 0; left: 0;
+      overflow-y: auto; display: flex; flex-direction: column;
+    }
+    .sidebar-section-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 0 1.5rem; margin-bottom: 0.4rem; opacity: 0.6;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.6rem 1.5rem; font-size: 0.875rem; font-weight: 400;
+      color: var(--muted); text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .sidebar-link:hover { color: var(--white); background: rgba(242,244,243,0.03); }
+    .sidebar-link.active { color: var(--white); border-left-color: var(--magenta); background: rgba(255,77,208,0.05); font-weight: 600; }
+    .sidebar-icon { width: 16px; height: 16px; opacity: 0.6; flex-shrink: 0; }
+    .sidebar-link.active .sidebar-icon, .sidebar-link:hover .sidebar-icon { opacity: 1; }
+    .sidebar-divider { height: 1px; background: var(--border); margin: 1rem 1.5rem; }
+    .sidebar-signout { margin-top: auto; padding: 0 1.5rem 1rem; }
+    .btn-signout {
+      display: block; width: 100%; background: transparent;
+      border: 1px solid var(--border); color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 0.8125rem; font-weight: 600;
+      padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; text-align: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-signout:hover { border-color: var(--teal); color: var(--white); }
+
+    /* MAIN */
+    .main-content { margin-left: var(--sidebar-w); flex: 1; padding: 2.5rem; max-width: 1100px; }
+
+    /* WELCOME */
+    .welcome-banner {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .welcome-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--magenta), #7744bb);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito Sans', sans-serif; font-weight: 900;
+      font-size: 1.1rem; color: var(--navy); flex-shrink: 0;
+    }
+    .welcome-text h2 {
+      font-family: 'Nunito Sans', sans-serif; font-weight: 900;
+      font-size: 1.1rem; letter-spacing: -0.02em; color: var(--magenta);
+    }
+    .welcome-text p { font-size: 0.875rem; color: var(--muted); font-weight: 300; }
+
+    /* SECTION LABEL */
+    .section-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 1rem;
+    }
+
+    /* BUTTERFLY PROGRESS */
+    .butterfly-card {
+      background: var(--navy-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem; margin-bottom: 2rem;
+      display: grid; grid-template-columns: 180px 1fr; gap: 2rem; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .butterfly-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--magenta), var(--teal));
+    }
+    .butterfly-visual {
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+    }
+    .butterfly-svg-wrap {
+      width: 140px; height: 140px;
+      background: rgba(242,244,243,0.03);
+      border: 1px solid var(--border); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .butterfly-unlock-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--magenta); opacity: 0.7;
+    }
+    .butterfly-info h3 {
+      font-family: 'Nunito Sans', sans-serif; font-weight: 900;
+      font-size: 1.15rem; letter-spacing: -0.02em; margin-bottom: 0.4rem;
+    }
+    .butterfly-info p {
+      font-size: 0.875rem; color: var(--muted); font-weight: 300;
+      line-height: 1.65; margin-bottom: 1.25rem; max-width: 420px;
+    }
+    .butterfly-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .bstat {
+      background: var(--navy); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.25rem;
+    }
+    .bstat-label { font-size: 0.75rem; color: var(--muted); font-weight: 300; margin-bottom: 0.25rem; }
+    .bstat-value {
+      font-family: 'Nunito Sans', sans-serif; font-weight: 900;
+      font-size: 1.5rem; color: var(--teal); letter-spacing: -0.02em;
+    }
+
+    /* FOCUS AREAS */
+    .focus-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .focus-card {
+      background: var(--navy-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem 1rem;
+      display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+    }
+    .focus-card:hover { border-color: rgba(46,196,182,0.3); transform: translateY(-2px); }
+    .focus-card.active { border-color: var(--magenta); background: rgba(255,77,208,0.04); }
+    .focus-card.locked { opacity: 0.45; cursor: default; }
+    .focus-card.locked:hover { transform: none; border-color: var(--border); }
+
+    /* Ring */
+    .ring-wrap { position: relative; width: 80px; height: 80px; }
+    .ring-wrap svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: rgba(242,244,243,0.06); stroke-width: 6; }
+    .ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+    .ring-text {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito Sans', sans-serif; font-weight: 900;
+      font-size: 0.9rem;
+    }
+    .focus-name {
+      font-size: 0.75rem; color: var(--muted); font-weight: 300;
+      text-align: center; line-height: 1.4;
+    }
+    .focus-card.active .focus-name { color: var(--white); }
+    .lock-icon { width: 28px; height: 28px; stroke: var(--muted); fill: none; stroke-width: 1.5; }
+
+    /* BOTTOM GRID */
+    .bottom-grid {
+      display: grid; grid-template-columns: 1fr 320px;
+      gap: 1.5rem; margin-bottom: 2rem;
+    }
+
+    /* CONVERSATION MOVES */
+    .moves-card {
+      background: var(--navy-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.75rem;
+    }
+    .moves-card h3 {
+      font-family: 'Nunito Sans', sans-serif; font-weight: 800;
+      font-size: 1rem; margin-bottom: 1.25rem;
+    }
+    .move-row {
+      padding: 0.65rem 0; border-bottom: 1px solid var(--border);
+    }
+    .move-row:last-child { border-bottom: none; }
+    .move-name {
+      font-size: 0.8125rem; color: var(--white); font-weight: 400;
+      margin-bottom: 0.4rem;
+    }
+    .move-bar-wrap {
+      height: 4px; background: rgba(242,244,243,0.06);
+      border-radius: 99px; overflow: hidden;
+    }
+    .move-bar { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+    .bar-green  { background: var(--green); }
+    .bar-yellow { background: var(--yellow); }
+    .bar-red    { background: var(--coral); }
+    .bar-grey   { background: rgba(242,244,243,0.12); }
+
+    /* RECOMMENDATION PANEL */
+    .rec-card {
+      background: var(--navy-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.75rem;
+      display: flex; flex-direction: column; gap: 1.25rem;
+    }
+    .rec-card h3 {
+      font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem;
+    }
+    .stage-icons {
+      display: flex; gap: 0.6rem; align-items: center; justify-content: center;
+      padding: 0.75rem; background: var(--navy);
+      border: 1px solid var(--border); border-radius: 10px;
+    }
+    .stage-icon {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(242,244,243,0.04);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--muted);
+    }
+    .stage-icon.current {
+      border-color: var(--magenta);
+      background: rgba(255,77,208,0.08);
+    }
+    .rec-empty {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0.75rem; padding: 1.5rem 0; text-align: center;
+    }
+    .rec-empty-ring {
+      width: 56px; height: 56px; border-radius: 50%;
+      border: 2px solid rgba(255,77,208,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rec-empty p {
+      font-size: 0.8125rem; color: var(--muted); font-weight: 300; line-height: 1.6;
+    }
+    .rec-hint {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      font-size: 0.75rem; color: var(--muted); font-weight: 300; line-height: 1.5;
+    }
+    .rec-hint svg { width: 14px; height: 14px; flex-shrink: 0; margin-top: 1px; stroke: var(--teal); fill: none; stroke-width: 1.5; }
+
+    /* KEY METRICS */
+    .metrics-grid {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem;
+    }
+    .metric-card {
+      background: var(--navy-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem 1.5rem;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .metric-label { font-size: 0.75rem; color: var(--muted); font-weight: 300; margin-bottom: 0.35rem; }
+    .metric-value {
+      font-family: 'Nunito Sans', sans-serif; font-weight: 900;
+      font-size: 1.75rem; color: var(--white); letter-spacing: -0.025em; line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .metric-sub { font-size: 0.75rem; color: var(--muted); font-weight: 300; }
+    .metric-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(46,196,182,0.08); border: 1px solid rgba(46,196,182,0.15);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .metric-icon svg { width: 16px; height: 16px; stroke: var(--teal); fill: none; stroke-width: 1.5; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .focus-grid { grid-template-columns: repeat(3,1fr); }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 1.5rem; }
+      .butterfly-card { grid-template-columns: 1fr; }
+      .focus-grid { grid-template-columns: repeat(2,1fr); }
+      .metrics-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .focus-grid { grid-template-columns: 1fr 1fr; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .butterfly-stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <a href="index.html" class="nav-logo">
+      <img src="images/tvxr_logo.png" alt="TransformVXR" />
+      Transform<span>VXR</span>
+    </a>
+    <div class="top-bar-right">
+      <span class="user-email">ojas@transformvxr.com</span>
+      <button class="btn-primary" onclick="window.location.href='game.html'">Start Practicing</button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-section-label">Menu</div>
+        <a href="home.html" class="sidebar-link">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+          Home
+        </a>
+        <a href="dashboard.html" class="sidebar-link active">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="1,11 5,7 9,9 15,3"/><polyline points="11,3 15,3 15,7"/></svg>
+          Dashboard
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h12v12H2z"/><path d="M5 5h6M5 8h6M5 11h4"/></svg>
+          Knowledge Base
+        </a>
+        <a href="#" class="sidebar-link">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="3,2 13,8 3,14"/></svg>
+          Instructional Videos
+        </a>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-signout">
+        <button class="btn-signout">Sign out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- WELCOME -->
+      <div class="welcome-banner">
+        <div class="welcome-avatar">L</div>
+        <div class="welcome-text">
+          <h2>Welcome back, Learner</h2>
+          <p>Your transformation journey continues. Keep building your wings.</p>
+        </div>
+      </div>
+
+      <!-- BUTTERFLY PROGRESS -->
+      <div class="section-label">Overall Relational Growth Progress</div>
+      <div class="butterfly-card">
+        <div class="butterfly-visual">
+          <!-- Butterfly SVG placeholder — swap with real asset -->
+          <div class="butterfly-svg-wrap">
+            <svg width="90" height="90" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="25" cy="35" rx="20" ry="28" transform="rotate(-20 25 35)" fill="rgba(255,77,208,0.08)" stroke="rgba(255,77,208,0.25)" stroke-width="1"/>
+              <ellipse cx="65" cy="35" rx="20" ry="28" transform="rotate(20 65 35)" fill="rgba(46,196,182,0.08)" stroke="rgba(46,196,182,0.25)" stroke-width="1"/>
+              <ellipse cx="28" cy="62" rx="14" ry="18" transform="rotate(15 28 62)" fill="rgba(255,77,208,0.05)" stroke="rgba(255,77,208,0.15)" stroke-width="1"/>
+              <ellipse cx="62" cy="62" rx="14" ry="18" transform="rotate(-15 62 62)" fill="rgba(46,196,182,0.05)" stroke="rgba(46,196,182,0.15)" stroke-width="1"/>
+              <line x1="45" y1="18" x2="45" y2="75" stroke="rgba(242,244,243,0.2)" stroke-width="1.5"/>
+              <circle cx="45" cy="45" r="4" fill="rgba(255,77,208,0.4)"/>
+            </svg>
+          </div>
+          <div class="butterfly-unlock-label">0/5 Transformation Unlocked</div>
+        </div>
+        <div class="butterfly-info">
+          <h3>Your transformation butterfly</h3>
+          <p>Master each focus area to unlock your butterfly wings. Reach 90% performance in all areas and complete the Master Challenge to achieve full metamorphosis.</p>
+          <div class="butterfly-stats">
+            <div class="bstat">
+              <div class="bstat-label">Parts unlocked</div>
+              <div class="bstat-value">0/5</div>
+            </div>
+            <div class="bstat">
+              <div class="bstat-label">Avg. Performance</div>
+              <div class="bstat-value" style="color: var(--muted);">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FOCUS AREAS -->
+      <div class="section-label">Focus Areas</div>
+      <div class="focus-grid" style="margin-bottom: 2rem;">
+
+        <!-- Active: Taking Perspective -->
+        <div class="focus-card active">
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="32"/>
+              <circle class="ring-fill bar-red" cx="40" cy="40" r="32"
+                stroke-dasharray="201" stroke-dashoffset="194"/>
+            </svg>
+            <div class="ring-text" style="color:var(--coral)">0%</div>
+          </div>
+          <div class="focus-name">Taking Perspective</div>
+        </div>
+
+        <!-- Recognizing -->
+        <div class="focus-card">
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="32"/>
+              <circle class="ring-fill bar-grey" cx="40" cy="40" r="32"
+                stroke-dasharray="201" stroke-dashoffset="201"/>
+            </svg>
+            <div class="ring-text" style="color:var(--muted)">0%</div>
+          </div>
+          <div class="focus-name">Recognizing &amp; Regulating Emotion</div>
+        </div>
+
+        <!-- Listening with Curiosity -->
+        <div class="focus-card">
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="32"/>
+              <circle class="ring-fill bar-yellow" cx="40" cy="40" r="32"
+                stroke-dasharray="201" stroke-dashoffset="179"/>
+            </svg>
+            <div class="ring-text" style="color:var(--yellow)">11%</div>
+          </div>
+          <div class="focus-name">Listening with Curiosity</div>
+        </div>
+
+        <!-- Showing Empathy -->
+        <div class="focus-card">
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="32"/>
+              <circle class="ring-fill bar-grey" cx="40" cy="40" r="32"
+                stroke-dasharray="201" stroke-dashoffset="201"/>
+            </svg>
+            <div class="ring-text" style="color:var(--muted)">0%</div>
+          </div>
+          <div class="focus-name">Showing Empathy</div>
+        </div>
+
+        <!-- Locked -->
+        <div class="focus-card locked">
+          <div class="ring-wrap">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle class="ring-bg" cx="40" cy="40" r="32"/>
+            </svg>
+            <div class="ring-text">
+              <svg class="lock-icon" viewBox="0 0 24 24">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </div>
+          </div>
+          <div class="focus-name" style="color:var(--muted);opacity:0.6">Practice All Skills</div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM GRID -->
+      <div class="bottom-grid">
+
+        <!-- CONVERSATION MOVES -->
+        <div class="moves-card">
+          <h3>Conversation Moves</h3>
+
+          <div class="move-row">
+            <div class="move-name">Acknowledge Perspective Differences Respectfully</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-grey" style="width:5%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Connection Attempt Doesn't Match the Moment</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-red" style="width:55%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Ending with Care</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-grey" style="width:5%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Lead with People, Not Policy</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-grey" style="width:5%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Let It Land</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-red" style="width:62%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Name the Alignment</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-yellow" style="width:28%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Own it Together</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-red" style="width:48%"></div></div>
+          </div>
+          <div class="move-row">
+            <div class="move-name">Resist the Quick Fix</div>
+            <div class="move-bar-wrap"><div class="move-bar bar-green" style="width:72%"></div></div>
+          </div>
+
+          <!-- Legend -->
+          <div style="display:flex;gap:1.25rem;margin-top:1.25rem;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--muted)">
+              <div style="width:10px;height:3px;border-radius:2px;background:var(--green)"></div>Good
+            </div>
+            <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--muted)">
+              <div style="width:10px;height:3px;border-radius:2px;background:var(--yellow)"></div>Progress needed
+            </div>
+            <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--muted)">
+              <div style="width:10px;height:3px;border-radius:2px;background:var(--coral)"></div>Needs attention
+            </div>
+            <div style="display:flex;align-items:center;gap:0.4rem;font-size:0.7rem;color:var(--muted)">
+              <div style="width:10px;height:3px;border-radius:2px;background:rgba(242,244,243,0.15)"></div>No data
+            </div>
+          </div>
+        </div>
+
+        <!-- RECOMMENDATION PANEL -->
+        <div class="rec-card">
+          <h3>Practice Recommendation</h3>
+
+          <!-- Stage icons placeholder -->
+          <div class="stage-icons">
+            <div class="stage-icon current">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="5" stroke="var(--magenta)" stroke-width="1.5"/>
+                <circle cx="8" cy="8" r="2" fill="var(--magenta)" opacity="0.4"/>
+              </svg>
+            </div>
+            <div class="stage-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 3 C5 3 3 5 3 8 C3 11 5 13 8 13" stroke="var(--muted)" stroke-width="1.5"/>
+                <path d="M8 3 C11 3 13 5 13 8 C13 11 11 13 8 13" stroke="var(--muted)" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="stage-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 8 C4 5 6 3 8 3 C10 3 12 5 12 8" stroke="var(--muted)" stroke-width="1.5"/>
+                <path d="M4 8 C4 11 6 13 8 13 C10 13 12 11 12 8" stroke="var(--muted)" stroke-width="1.5"/>
+                <line x1="8" y1="3" x2="8" y2="13" stroke="var(--muted)" stroke-width="1" opacity="0.4"/>
+              </svg>
+            </div>
+            <div class="stage-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <ellipse cx="5" cy="8" rx="3" ry="5" stroke="var(--muted)" stroke-width="1.5"/>
+                <ellipse cx="11" cy="8" rx="3" ry="5" stroke="var(--muted)" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="stage-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <ellipse cx="4" cy="6" rx="3" ry="4" stroke="var(--muted)" stroke-width="1.5"/>
+                <ellipse cx="12" cy="6" rx="3" ry="4" stroke="var(--muted)" stroke-width="1.5"/>
+                <ellipse cx="4" cy="11" rx="2" ry="3" stroke="var(--muted)" stroke-width="1.5"/>
+                <ellipse cx="12" cy="11" rx="2" ry="3" stroke="var(--muted)" stroke-width="1.5"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="rec-empty">
+            <div class="rec-empty-ring">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="rgba(255,77,208,0.3)" stroke-width="1.5"/>
+                <path d="M12 8v4M12 16v.5" stroke="rgba(255,77,208,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <p>No practice recommendation yet. Complete more activity to generate next steps.</p>
+          </div>
+
+          <button class="btn-primary" style="width:100%;padding:0.7rem;font-size:0.9375rem;" onclick="window.location.href='game.html'">
+            Start Practicing
+          </button>
+
+          <div class="rec-hint">
+            <svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6"/><path d="M7 5v3M7 9.5v.5"/></svg>
+            Learners reaching the Butterfly stage practiced at least 3 variants.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- KEY METRICS -->
+      <div class="section-label">Key Metrics</div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Total Attempts</div>
+            <div class="metric-value">3</div>
+            <div class="metric-sub">Live to Date</div>
+          </div>
+          <div class="metric-icon">
+            <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><circle cx="8" cy="8" r="3"/><circle cx="8" cy="8" r="1" fill="var(--teal)"/></svg>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Time Practicing</div>
+            <div class="metric-value">18m</div>
+            <div class="metric-sub">Live to Date</div>
+          </div>
+          <div class="metric-icon">
+            <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><polyline points="8,5 8,8 10,10"/></svg>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Variant Play</div>
+            <div class="metric-value">51</div>
+            <div class="metric-sub">Keep going!</div>
+          </div>
+          <div class="metric-icon">
+            <svg viewBox="0 0 16 16"><polyline points="1,11 5,7 9,9 15,3"/><polyline points="11,3 15,3 15,7"/></svg>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div>
+            <div class="metric-label">Growth Streak</div>
+            <div class="metric-value">0 <span style="font-size:1rem">days</span></div>
+            <div class="metric-sub">Keep going!</div>
+          </div>
+          <div class="metric-icon">
+            <svg viewBox="0 0 16 16"><polygon points="8,2 10,6 14,6.5 11,9.5 11.8,14 8,12 4.2,14 5,9.5 2,6.5 6,6"/></svg>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', function() {
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+    document.querySelectorAll('.focus-card:not(.locked)').forEach(card => {
+      card.addEventListener('click', function() {
+        document.querySelectorAll('.focus-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
