@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TransformVXR for ABA Organizations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Nunito+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A; --navy-mid: #111F30; --navy-card: #162840;
+    --teal: #2EC4B6; --magenta: #FF4DD0; --magenta-dim: #D93CB0;
+    --white: #F2F4F3; --muted: #7A96AB;
+    --border: rgba(46,196,182,0.13);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; font-weight: 400; background: var(--navy); color: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  /* ── NAV ── */
+  nav { position: sticky; top: 0; z-index: 200; background: rgba(13,27,42,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 8px; font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--white); text-decoration: none; letter-spacing: -0.02em; z-index: 201; }
+  .nav-logo img { width: 32px; height: 32px; object-fit: contain; mix-blend-mode: screen; flex-shrink: 0; }
+  .nav-logo span { color: var(--magenta); }
+  .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+  .nav-links a { font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; white-space: nowrap; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-utils { display: flex; align-items: center; gap: 1rem; }
+  .btn-primary { display: inline-block; background: var(--magenta); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.875rem; padding: 0.55rem 1.25rem; border-radius: 6px; text-decoration: none; transition: background 0.2s, transform 0.15s; white-space: nowrap; }
+  .btn-primary:hover { background: var(--magenta-dim); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero { position: relative; overflow: hidden; padding: 7rem 2rem 5rem; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255,77,208,0.1) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 80% 60%, rgba(46,196,182,0.06) 0%, transparent 60%); pointer-events: none; }
+  .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 55fr 45fr; gap: 3.5rem; align-items: center; position: relative; }
+  .hero-eyebrow { display: inline-flex; align-items: center; border: 1px solid var(--border); border-radius: 99px; padding: 0.35rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--teal); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.75rem; background: rgba(46,196,182,0.06); }
+  .hero h1 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(2.2rem, 4vw, 3.25rem); line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 1.25rem; }
+  .hero-sub { color: var(--muted); font-size: 1rem; font-weight: 300; line-height: 1.75; margin-bottom: 2.5rem; }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+  .link-secondary { font-size: 0.875rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .link-secondary:hover { color: var(--white); }
+
+  /* Hero stat panel */
+  .hero-stat-panel { background: var(--navy-card); border: 1px solid var(--border); border-radius: 14px; padding: 2rem; display: flex; flex-direction: column; gap: 1.75rem; }
+  .hero-stat-number { font-family: 'Nunito Sans', sans-serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 900; color: var(--teal); letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.4rem; }
+  .hero-stat-label { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.6; }
+  .hero-stat-divider { border: none; border-top: 1px solid var(--border); }
+
+  /* ── SECTIONS ── */
+  .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
+  .section-title { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 1rem; font-weight: 300; max-width: 580px; line-height: 1.75; }
+
+  /* ── BAND SECTIONS (alt background) ── */
+  .band { background: var(--navy-mid); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 2rem; }
+  .band-inner { max-width: 1100px; margin: 0 auto; }
+
+  /* ── PROBLEM CARDS ── */
+  .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .problem-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.75rem; transition: border-color 0.25s, transform 0.25s; }
+  .problem-card:hover { border-color: rgba(255,77,208,0.3); transform: translateY(-3px); }
+  .problem-num { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 2.5rem; color: rgba(255,77,208,0.15); line-height: 1; margin-bottom: 1rem; }
+  .problem-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1.1rem; margin-bottom: 0.6rem; line-height: 1.3; }
+  .problem-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; font-weight: 300; }
+
+  /* ── COST BAND ── */
+  .cost-body { font-size: 1.05rem; color: var(--muted); font-weight: 300; line-height: 1.8; max-width: 680px; margin-top: 1.5rem; margin-bottom: 2rem; }
+
+  /* ── STEPS ── */
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .step-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.75rem; transition: border-color 0.25s, transform 0.25s; }
+  .step-card:hover { border-color: rgba(46,196,182,0.3); transform: translateY(-3px); }
+  .step-num { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: 2.5rem; color: rgba(46,196,182,0.15); line-height: 1; margin-bottom: 1rem; }
+  .step-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1.1rem; margin-bottom: 0.6rem; line-height: 1.3; }
+  .step-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; font-weight: 300; }
+
+  /* ── WHY CARDS ── */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .why-card { background: var(--navy-card); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; transition: border-color 0.2s; }
+  .why-card:hover { border-color: rgba(46,196,182,0.3); }
+  .why-card h3 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; line-height: 1.3; }
+  .why-card p { font-size: 0.875rem; color: var(--muted); font-weight: 300; line-height: 1.65; }
+
+  /* ── QUOTE ── */
+  .quote-inner { max-width: 760px; margin: 0 auto; text-align: center; }
+  .quote-mark { font-family: 'Nunito Sans', sans-serif; font-size: 4rem; font-weight: 900; color: var(--teal); opacity: 0.3; line-height: 0.8; margin-bottom: 1.5rem; }
+  .quote-text { font-family: 'Nunito Sans', sans-serif; font-size: clamp(1.1rem, 2vw, 1.35rem); font-weight: 700; color: var(--white); line-height: 1.6; letter-spacing: -0.02em; margin-bottom: 2rem; }
+  .quote-attribution { font-size: 0.85rem; color: var(--muted); font-weight: 300; }
+
+  /* ── CTA BAND ── */
+  .cta-band { padding: 5rem 2rem; text-align: center; position: relative; overflow: hidden; }
+  .cta-band::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,77,208,0.08) 0%, transparent 70%); pointer-events: none; }
+  .cta-band h2 { font-family: 'Nunito Sans', sans-serif; font-weight: 900; font-size: clamp(1.75rem, 3.5vw, 2.75rem); letter-spacing: -0.03em; margin-bottom: 1rem; max-width: 640px; margin-left: auto; margin-right: auto; position: relative; }
+  .cta-band p { color: var(--muted); font-weight: 300; max-width: 520px; margin: 0 auto 2rem; line-height: 1.75; position: relative; }
+  .cta-actions { display: flex; align-items: center; justify-content: center; gap: 1.25rem; flex-wrap: wrap; position: relative; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--navy-mid); border-top: 1px solid var(--border); padding: 3rem 2rem 2rem; }
+  .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem; }
+  .footer-brand p { color: var(--muted); font-size: 0.875rem; font-weight: 300; line-height: 1.65; margin-top: 0.75rem; max-width: 260px; }
+  .footer-col h4 { font-family: 'Nunito Sans', sans-serif; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .footer-col a { display: block; color: var(--muted); text-decoration: none; font-size: 0.875rem; font-weight: 300; margin-bottom: 0.6rem; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { max-width: 1100px; margin: 2.5rem auto 0; padding-top: 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+  .footer-social { display: flex; gap: 1.25rem; }
+  .footer-social a { font-size: 0.8rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-social a:hover { color: var(--teal); }
+
+  /* ── HAMBURGER ── */
+  .nav-hamburger { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 36px; height: 36px; background: none; border: none; cursor: pointer; padding: 4px; z-index: 201; flex-shrink: 0; }
+  .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: transform 0.25s, opacity 0.25s; transform-origin: center; }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── MOBILE DRAWER ── */
+  .nav-mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: rgba(13,27,42,0.99); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); padding: 1.5rem 2rem 2rem; z-index: 199; flex-direction: column; gap: 0; transform: translateY(-8px); opacity: 0; transition: transform 0.25s ease, opacity 0.25s ease; }
+  .nav-mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+  .nav-mobile-menu a { display: block; font-size: 1.1rem; font-weight: 600; color: var(--muted); text-decoration: none; padding: 0.9rem 0; border-bottom: 1px solid var(--border); transition: color 0.2s; font-family: 'DM Sans', sans-serif; }
+  .nav-mobile-menu a:hover { color: var(--white); }
+  .nav-mobile-cta { margin-top: 1.25rem; display: block; text-align: center; background: var(--magenta); color: var(--navy) !important; font-weight: 700 !important; border-radius: 8px; padding: 0.85rem !important; border-bottom: none !important; }
+  .nav-mobile-cta:hover { background: var(--magenta-dim); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0 1.25rem; }
+    .nav-links, .nav-utils { display: none; }
+    .nav-hamburger { display: flex !important; flex-direction: column; }
+    .hero { padding: 3.5rem 1.25rem 3rem; }
+    .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stat-panel { display: none; }
+    .section { padding: 3rem 1.25rem; }
+    .band { padding: 3rem 1.25rem; }
+    .cta-band { padding: 3rem 1.25rem; }
+    .problem-grid, .steps-grid, .why-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+  }
+  @media (max-width: 768px) {
+    .cost-grid { grid-template-columns: 1fr !important; }
+  }
+  @media (max-width: 480px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .hero-ctas { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+  <ul class="nav-links">
+    <li><a href="how-it-works.html">How It Works</a></li>
+    <li><a href="science.html">Science</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-utils">
+    <a href="contact.html" class="btn-primary">Schedule a Conversation</a>
+  </div>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="how-it-works.html">How It Works</a>
+  <a href="science.html">Science</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+  <a href="contact.html" class="nav-mobile-cta">Schedule a Conversation</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-eyebrow">For ABA Practice Owners and Clinical Directors</div>
+      <h1>Your BCBAs are clinically excellent. The conversations that drive your revenue are a different skill entirely.</h1>
+      <p class="hero-sub">Family guidance sessions are authorized and billable. Your BCBAs know the clinical answer. But when a parent is frustrated, defensive, or disengaging, the clinical answer is not enough — and most BCBAs were never given a safe place to practice what comes next. The result shows up in your utilization numbers, your turnover rate, and your cancellation log.</p>
+      <div class="hero-ctas">
+        <a href="contact.html" class="btn-primary">Schedule a Conversation</a>
+        <a href="tvxr-roi-calculator.html" class="link-secondary">See what it costs your practice →</a>
+      </div>
+    </div>
+    <div class="hero-stat-panel">
+      <div>
+        <div class="hero-stat-number">$288K–$384K</div>
+        <div class="hero-stat-label">Annual revenue gap for a mid-size practice delivering half of authorized guidance hours</div>
+      </div>
+      <hr class="hero-stat-divider" style="border:none;border-top:1px solid var(--border);">
+      <div>
+        <div class="hero-stat-number">$25K–$45K</div>
+        <div class="hero-stat-label">Cost per BCBA departure, including recruiting, onboarding, and lost productivity</div>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);">
+      <div>
+        <div class="hero-stat-number">10 min</div>
+        <div class="hero-stat-label">Per session. Private. Behavioral feedback grounded in ABA principles.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROBLEM -->
+<div class="band">
+  <div class="band-inner">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Three things draining your practice. All of them relational.</h2>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <h3>Guidance hours your practice never recovers</h3>
+        <p>Family guidance is among the highest-value billable services in ABA. It is also among the most underdelivered. Not because BCBAs don't know what families need clinically — but because the conversations required to keep families engaged, aligned, and showing up are emotionally demanding in ways clinical training does not address. When a parent cancels, disengages, or loses confidence in the plan, that authorized hour disappears. Across a mid-size practice, those hours add up to a revenue gap that compounds every month.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <h3>Staff who leave before they hit their stride</h3>
+        <p>The majority of BCBAs entering practice today are under 35 with fewer than five years of experience. Practices hope they learn relational skills on the job. Most don't — not because they lack the capability, but because the job gives them no safe place to practice before the stakes are real. The hard conversations happen with actual families. When those conversations go badly often enough, burnout follows. And then they leave.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <h3>Feedback that doesn't change behavior</h3>
+        <p>Corrective feedback that is too vague gets ignored. Feedback that is too blunt damages the relationship and accelerates turnover. Most supervisors default to one or the other — not because they don't care, but because they were never taught how to calibrate. Protocol drift continues. The clinical standard you built your practice around erodes one avoided conversation at a time.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THE COST -->
+<section class="section">
+  <div class="cost-grid" style="display:grid;grid-template-columns:55fr 45fr;gap:3.5rem;align-items:center;">
+    <div>
+      <div class="section-label">The Revenue Reality</div>
+      <h2 class="section-title">This is not a culture problem. It is a revenue problem.</h2>
+      <p class="cost-body">A mid-size ABA practice with 100 active clients delivering half the authorized guidance hours it could be delivering is leaving between $288,000 and $384,000 on the table every year. That number does not include the cost of replacing a BCBA — typically $25,000–$45,000 per departure when recruiting, onboarding, and lost productivity are factored in. The relational skill gap is not soft. It has a dollar figure.</p>
+      <a href="tvxr-roi-calculator.html" class="link-secondary">Run your own numbers →</a>
+    </div>
+    <div>
+      <img src="images/image-office-fs8.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px;min-height:320px;display:block;">
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="band">
+  <div class="band-inner">
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">You deploy it. Your BCBAs use it. Your numbers move.</h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Your BCBAs practice in private</h3>
+        <p>Each BCBA accesses realistic, ABA-specific conversation scenarios — parent pushback, corrective supervision, organizational pressure. They respond in their own words. No colleagues watching. No performance review attached. The private environment produces more authentic behavioral signal and higher voluntary engagement than any top-down training mandate.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Behavioral feedback after every session</h3>
+        <p>After each conversation, the platform surfaces specific, observable feedback. What the BCBA said that moved the conversation forward. What escalated it. What to try differently next time. Grounded in ABA measurement principles. Built for clinical staff, not generic corporate audiences.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Your practice sees the operational result</h3>
+        <p>Better parent conversations mean fewer cancellations and stronger guidance utilization. Clearer supervision conversations mean less protocol drift and more consistent data. Staff who feel supported in the hardest parts of their job stay longer.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY TRANSFORM -->
+<section class="section">
+  <div class="section-label">Why Transform</div>
+  <h2 class="section-title">Every other solution teaches theory. This one changes behavior.</h2>
+  <div class="why-grid">
+    <div class="why-card">
+      <h3>ABA-specific, not adapted from generic coaching</h3>
+      <p>Scenarios are built around the exact conversations BCBAs face — not repackaged corporate communication training. The clinical context is accurate because the platform was built by behavioral scientists with ABA and OBM credentials.</p>
+    </div>
+    <div class="why-card">
+      <h3>Practice, not content consumption</h3>
+      <p>Passive CEU content does not change how a BCBA handles a defensive parent at 4pm on a Thursday. Repeated practice under realistic conditions does. Transform is built on the same behavioral principles BCBAs apply to their clients — applied to the BCBAs themselves.</p>
+    </div>
+    <div class="why-card">
+      <h3>Scalable without supervision bottlenecks</h3>
+      <p>Supervision does not scale. Every hour a supervisor spends coaching conversation skills is an hour not spent on clinical oversight. Transform gives your staff unlimited private practice without touching your supervision bandwidth.</p>
+    </div>
+    <div class="why-card">
+      <h3>Voluntary participation produces better results</h3>
+      <p>BCBAs who choose to engage produce more authentic behavioral signal than those assigned to mandatory training. Voluntary participation is not a limitation — it is a data quality advantage.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="band">
+  <div class="band-inner">
+    <div class="section-label" style="text-align:center;margin-bottom:2rem;">What the field is saying</div>
+    <div class="quote-inner">
+      <div class="quote-mark">"</div>
+      <p class="quote-text">Their immersive, AI-supported learning environment does not replace human connection. It strengthens it. At a time when many organizations struggle to translate insight into real-world behavior, TransformVXR offers a powerful model for building the relational capacities that drive effective leadership.</p>
+      <p class="quote-attribution">Paula Danquah-Brobby, PhD, BCBA-D, LBA, IBA</p>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<section class="cta-band">
+  <div class="section-label" style="margin-bottom:1rem;">Ready to talk</div>
+  <h2>If your guidance utilization is below where it should be, we should talk.</h2>
+  <p>We work with a small number of ABA practices on a pilot basis. If you lead a practice and want to understand what Transform looks like deployed across your clinical staff, reach out directly. No sales process — just a conversation with our team to see if it fits.</p>
+  <div class="cta-actions">
+    <a href="contact.html" class="btn-primary">Schedule a Conversation</a>
+    <a href="tvxr-roi-calculator.html" class="link-secondary">Run your own numbers first →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo"><img src="images/tvxr_logo.png" alt="TransformVXR" />Transform<span>VXR</span></a>
+      <p>AI-powered relational practice for ABA organizations. Build communication consistency across your clinical team.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="about.html">About</a>
+      <a href="how-it-works.html">How It Works</a>
+      <a href="science.html">Science</a>
+      <a href="riq-foundation.html">RIQ Foundation</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="https://www.linkedin.com/company/transformvxr/">LinkedIn</a>
+      <a href="https://www.instagram.com/transform.vxr/">Instagram</a>
+      <a href="https://www.tiktok.com/@transformvxr">TikTok</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>Copyright 2026 Transform VXR. All rights reserved.</p>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/company/transformvxr/">LinkedIn</a>
+      <a href="https://www.instagram.com/transform.vxr/">Instagram</a>
+      <a href="https://www.tiktok.com/@transformvxr">TikTok</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('navHamburger');
+  const mobileMenu = document.getElementById('navMobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>
